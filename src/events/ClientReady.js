@@ -36,21 +36,6 @@ module.exports = class {
         require('@helpers/reminders/Evaluate').init(client);
         if(config.api["ENABLED"]) await require('@api/app').initializeApi(client);
 
-        // Init guess the country
-        for(let guild of client.guilds.cache){
-            let data = { guild: await client.findOrCreateGuild({ id: guild[1].id }) }
-            if(data.guild.settings.guessTheCountry?.channel){
-                let channel = guild[1].channels.cache.get(data.guild.settings.guessTheCountry.channel);
-                if(channel){
-                    channel.messages.fetch({limit: 100}).then((messages) => {
-                        let filteredMsgs = messages.filter(m => m.author.id === client.user.id);
-                        filteredMsgs.forEach(m => m.delete().catch(() => {}));
-                        require("@handlers/guessTheCountry").startGame(client, data.guild, guild[1], data.guild.settings.guessTheCountry.channel);
-                    });
-                }
-            }
-        }
-
         // Support server stats channels
         if (config.support["ID"]) {
             setInterval(async function () {
