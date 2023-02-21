@@ -65,5 +65,6 @@ module.exports = class Validator {
         if(!config.apikeys["AMARI_BOT"]) warn("TOML: apikeys.AMARI_BOT is empty. Amari level as a giveaway requirement won't work");
         if(!config.apikeys["DBL"]) warn("TOML: apikeys.DBL is empty. Posting stats to discordbotlist.com and receiving votes won't work");
         if(!config.apikeys["DBL_WEBHOOK_AUTH"]) warn("TOML: apikeys.DBL_WEBHOOK_AUTH is empty. Receiving votes from discordbotlist.com won't work");
+        if(!config.apikeys["WEATHER"]) warn("TOML: apikeys.WEATHER is empty. Weather command won't work");
     }
 }
