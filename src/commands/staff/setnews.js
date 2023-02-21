@@ -5,7 +5,7 @@ class Setnews extends BaseCommand {
     constructor(client){
         super(client, {
             name: "setnews",
-            description: "Setze die neuste Ankündigung.",
+            description: "Setze die neuste Ankündigung für den Bot.",
 
             cooldown: 3000,
             staffOnly: true,
