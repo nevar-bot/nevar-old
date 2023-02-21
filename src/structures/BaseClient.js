@@ -81,7 +81,7 @@ module.exports = class BaseClient extends Client {
 
     createButton(customId, label, style, emoji = null, disabled = false, url = null){
         const button = new ButtonBuilder()
-            .setLabel(label)
+            .setLabel(label ? label : " ")
             .setStyle(ButtonStyle[style])
             .setDisabled(disabled)
 
