@@ -24,7 +24,7 @@ MONGO_CONNECTION = ""
 # Just a url to whatever you want*
 WEBSITE = ""
 # All the IDs of the owners of the bot*
-OWNER_IDS = ["631176108372656148"]
+OWNER_IDS = []
 
 [ support ]
 # ID of your support server*
