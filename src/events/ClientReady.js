@@ -31,9 +31,9 @@ module.exports = class {
         presenceHandler(client);
 
         require('@helpers/DBL').init(client);
-        require('@handlers/autoUnban').init(client);
-        require('@handlers/autoUnmute').init(client);
-        require('@helpers/reminders/Evaluate').init(client);
+        require('@handlers/unbanMembers').init(client);
+        require('@handlers/unmuteMembers').init(client);
+        require('@handlers/remindMembers').init(client);
         if(config.api["ENABLED"]) await require('@api/app').initializeApi(client);
 
         // Support server stats channels
