@@ -67,19 +67,19 @@ module.exports = class Loader {
         const directory = await readdir("./src/contexts/");
         for(let file of directory) {
             if(file.split('.')[1] === 'js') {
-                    try {
-                        const props = new (require("@contexts/" + file))(this);
-                        if(props.init){
-                            props.init(client);
-                        }
-                        client.contextMenus.set(props.help.name, props);
-                        if(props.help.type === ApplicationCommandType.User) userContexts++;
-                        if(props.help.type === ApplicationCommandType.Message) messageContexts++;
-                        success++;
-                    }catch(exc){
-                        failed++;
-                        client.logger.error("Failed to load context menu " + file + ": " + exc);
+                try {
+                    const props = new (require("@contexts/" + file))(client);
+                    if(props.init){
+                        props.init(client);
                     }
+                    client.contextMenus.set(props.help.name, props);
+                    if(props.help.type === ApplicationCommandType.User) userContexts++;
+                    if(props.help.type === ApplicationCommandType.Message) messageContexts++;
+                    success++;
+                }catch(exc){
+                    failed++;
+                    client.logger.error("Failed to load context menu " + file + ": " + exc);
+                }
             }
         }
         client.logger.log("Loaded " + (success + failed) + " context menus (" + userContexts + " user, " + messageContexts + " message). Success (" + success + ") Failed (" + failed + ")");

@@ -86,7 +86,7 @@ module.exports = class {
             });
             log.save();
             try {
-                context.dispatch(interaction);
+                return context.dispatch(interaction);
             }catch(exc){
                 const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten", "error", "error");
                 return interaction.editReply({ embeds: [errorEmbed] });
