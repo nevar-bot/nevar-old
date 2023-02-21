@@ -69,7 +69,7 @@ class Userinfo extends BaseCommand {
 
         // Custom Badges
         // Nevar staff
-        if(data.staff.state) badges.push(this.client.emotes.flags.Staff + " " + this.client.user.username + "-Staff");
+        if(data.staff.state || this.client.config.general["OWNER_IDS"].includes(member.user.id)) badges.push(this.client.emotes.flags.Staff + " " + this.client.user.username + "-Staff");
         // Nevar partner
         if(data.partner.state) badges.push(this.client.emotes.flags.Partner + " " + this.client.user.username + "-Partner");
         // Nevar Bughunter
