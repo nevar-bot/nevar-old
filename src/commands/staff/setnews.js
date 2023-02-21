@@ -1,64 +1,42 @@
-const Command = require('../../structures/BaseCommand');
+const BaseCommand = require('@structures/BaseCommand');
 const fs = require('fs');
-const { EmbedBuilder, SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder} = require("discord.js");
 
-class Setnews extends Command {
+class Setnews extends BaseCommand {
     constructor(client){
         super(client, {
             name: "setnews",
-            description: "staff/setnews:general:description",
+            description: "Setze die neuste Ankündigung.",
+
             cooldown: 3000,
             staffOnly: true,
             dirname: __dirname,
+
             slashCommand: {
                 addCommand: false,
-                data: new SlashCommandBuilder()
             }
-        });
+        }); 
     }
 
-    async run(interaction, args, data){
-        const { guild, member, channel, user } = interaction;
-        const id = user.id;
+    static message;
+    async dispatch(message, args, data) {
+        this.message = message;
+        await this.setmessage(args.join(" "));
+    }
+    async setmessage(message) {
 
-        let key = this.client.randomKey(10);
-        const messageModal = new ModalBuilder()
-            .setCustomId(id + '_message_modal' + '_' + key)
-            .setTitle(guild.translate("staff/setnews:main:modal:title"));
+        let json = {
+            timestamp: Date.now(),
+            text: message
+        };
 
-        const textInput = new TextInputBuilder()
-            .setCustomId('text')
-            .setLabel(guild.translate("staff/setnews:main:modal:labels:text"))
-            .setStyle(TextInputStyle.Paragraph);
-
-        let firstModalRow = new ActionRowBuilder().addComponents(textInput);
-        messageModal.addComponents(firstModalRow);
-        await interaction.showModal(messageModal);
-        const submitted = await interaction.awaitModalSubmit({
-            time: 600000,
-            filter: i => i.user.id = user.id
-        }).catch(() => {});
-
-        if (submitted) {
-            if (submitted.customId !== id + '_message_modal' + '_' + key) return;
-            let news = submitted.fields.getTextInputValue('text');
-
-            let json = {
-                timestamp: Date.now(),
-                text: news
-            };
-
-            fs.writeFileSync('./storage/news.json', JSON.stringify(json, null, 4));
-
-            let embed = new EmbedBuilder()
-                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                .setDescription(guild.translate("staff/setnews:main:updated")
-                    .replace('{emotes.success}', this.client.emotes.success))
-                .setColor(this.client.embedColor)
-                .setFooter({text: this.client.footer});
-            await submitted.deferReply();
-            let sent = await submitted.followUp({embeds: [embed],});
+        if (!fs.existsSync('./assets/news.json')) {
+            const invalidFileEmbed = this.client.generateEmbed("Die Datei \"assets/news.json\" wurde nicht gefunden.", "error", "error");
+            return this.message.reply({ embeds: [invalidFileEmbed] });
         }
+
+        fs.writeFileSync('./assets/news.json', JSON.stringify(json, null, 4));
+        const successEmbed = this.client.generateEmbed("Die Ankündigung wurde erfolgreich geändert.", "success", "success");
+        return this.message.reply({ embeds: [successEmbed] });
     }
 }
 
