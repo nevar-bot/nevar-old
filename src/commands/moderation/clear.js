@@ -21,7 +21,7 @@ class Clear extends BaseCommand {
                             .setName("anzahl")
                             .setDescription("Gib an, wieviele Nachrichten du löschen möchtest")
                             .setMinValue(1)
-                            .setMaxValue(100)
+                            .setMaxValue(99)
                             .setRequired(true)
                         )
                         .addUserOption(option => option
