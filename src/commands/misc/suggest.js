@@ -1,46 +1,49 @@
-const Command = require('../../structures/BaseCommand');
+const BaseCommand = require('@structures/BaseCommand');
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
-class Suggest extends Command {
+class Suggest extends BaseCommand {
     constructor(client) {
         super(client, {
             name: "suggest",
-            description: "misc/suggest:general:description",
+            description: "Reicht eine Idee ein",
+
             cooldown: 3000,
             dirname: __dirname,
+
             slashCommand: {
-                addCommand: false,
-                data:
-                    new SlashCommandBuilder()
-                        .addStringOption(option =>
-                            option.setRequired(true))
+                addCommand: true,
+                data: new SlashCommandBuilder()
+                    .addStringOption(option => option
+                        .setName("idee")
+                        .setDescription("Gib deine Idee ein")
+                        .setRequired(true)
+                    )
             }
         });
     }
 
-    async run(interaction, args, data) {
-        const {guild, member, channel, user} = interaction;
+    static interaction;
+    async dispatch(interaction, data) {
+        this.interaction = interaction;
 
-        if(data.guild.plugins?.suggestionSystem?.enabled){
-            let embed = new EmbedBuilder()
-                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                .setColor(this.client.embedColor)
-                .setDescription(guild.translate("misc/suggest:main:success")
-                    .replaceAll('{emotes.success}', this.client.emotes.success))
-                .setFooter({text: this.client.footer});
-            await interaction.send(embed);
-            return new(require('../../events/interaction/seperations/MemberSubmitsSuggestion'))(this.client).run(interaction, data, guild, args.join(' '));
-        }else{
-            let embed = new EmbedBuilder()
-                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                .setColor(this.client.embedColor)
-                .setDescription(guild.translate("misc/suggest:main:error")
-                    .replaceAll('{emotes.error}', this.client.emotes.error))
-                .setFooter({text: this.client.footer});
-            return interaction.send(embed);
-        }
-
+        await this.suggest(interaction.options.getString("idee"), data);
     }
 
+    async suggest(idea, data){
+        if(!data.guild.settings.suggestions.enabled){
+            const isNotEnabled = this.client.generateEmbed("Da das Ideen-System nicht aktiviert ist, können keine Ideen eingereicht werden.", "error", "error");
+            return this.interaction.followUp({ embeds: [isNotEnabled] });
+        }
+
+        const channel = this.client.channels.cache.get(data.guild.settings.suggestions.channel);
+        if(!channel){
+            const channelNotFound = this.client.generateEmbed("Der Ideen-Channel wurde nicht gefunden.", "error", "error");
+            return this.interaction.followUp({ embeds: [channelNotFound] });
+        }
+
+        const successEmbed = this.client.generateEmbed("Deine Idee wurde eingereicht.", "success", "success");
+        await this.interaction.followUp({ embeds: [successEmbed] });
+        return new(require('@events/interaction/seperations/suggestion/Submitted'))(this.client).dispatch(this.interaction, data, this.interaction.guild, idea);
+    }
 }
 module.exports = Suggest;

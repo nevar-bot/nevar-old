@@ -103,11 +103,11 @@ module.exports = class {
 
             // User voted
             if(splittedButtonId[0] === "suggestion"){
-                new(require("@events/suggestions/vote"))(this.client).dispatch(interaction, splittedButtonId, data);
+                new(require("@events/interaction/seperations/suggestion/Voted"))(this.client).dispatch(interaction, splittedButtonId, data);
             }
-            // Mod wants to evaluate suggestion
-            if(splittedButtonId[0] === "modSuggestion"){
-                new(require("@events/suggestions/evaluation"))(this.client).dispatch(interaction, splittedButtonId, data, guild);
+            // Moderator wants to review suggestion
+            if(splittedButtonId[0] === "review"){
+                new(require("@events/interaction/seperations/suggestion/Reviewed"))(this.client).dispatch(interaction, splittedButtonId, data, guild);
             }
         }
 
