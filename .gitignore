@@ -9,7 +9,6 @@ package-lock.json
 # Bot
 config.toml
 config-sample.toml
-assets/config.txt
 assets/disabled.json
 assets/news.json
 assets/votes.json

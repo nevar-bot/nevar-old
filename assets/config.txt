@@ -1,0 +1,94 @@
+#####################################################################################
+
+#             _______ _______ ___ ___ _______ ______
+#             |    |  |    ___|   |   |   _   |   __ \
+#             |       |    ___|   |   |       |      <
+#             |__|____|_______|\_____/|___|___|___|__|
+#
+#####################################################################################
+## Automatically generated config for Nevar-{version}
+#####################################################################################
+
+# Don't change anything here except the necessary data
+# If you change the wrong things, the bot will not start
+# All fields with an * behind are absolutely necessary, all fields without can be left blank
+
+#####################################################################################
+#####################################################################################
+#####################################################################################
+[ general ]
+# Enter your bot token here*
+BOT_TOKEN = ""
+# Your MongoDB login url*
+MONGO_CONNECTION = ""
+# Just a url to whatever you want*
+WEBSITE = ""
+# All the IDs of the owners of the bot*
+OWNER_IDS = ["631176108372656148"]
+
+[ support ]
+# ID of your support server*
+ID = ""
+# An invitation from your support server*
+INVITE = ""
+# ID of the channel where the bot sends its logs*
+BOT_LOG = ""
+# ID of the channel where the bot sends its errors*
+ERROR_LOG = ""
+
+[ embeds ]
+# Default footer text for all embeds*
+FOOTER_TEXT = ""
+# Color settings for embeds*
+DEFAULT_COLOR = "#5865F2"
+SUCCESS_COLOR = "#00A56A"
+WARNING_COLOR = "#F7E919"
+ERROR_COLOR = "#D61A3C"
+TRANSPARENT_COLOR = "#36393F"
+
+[ api ]
+# Whether the API should be enabled*
+ENABLED = true
+# If so, a port must be specified
+PORT = 3432
+
+[ channels ]
+# ID and design of the channel where the current number of servers is displayed (the already existing variable in {} is automatically replaced)
+SERVER_COUNT_ID = ""
+SERVER_COUNT_NAME = "💻 ➜ {count} servers"
+
+# ID and design of the channel where the current number of votes is displayed (the already existing variable in {} is automatically replaced)
+USER_COUNT_ID = ""
+USER_COUNT_NAME = "👥 ➜ {count} users"
+
+# ID and design of the channel where the current number of votes is displayed (the already existing variable in {} is automatically replaced)
+VOUTE_COUNT_ID = ""
+VOTE_COUNT_NAME = "🤍 ➜ {count} votes"
+# ID of the channel where new votes get announced
+VOTE_ANNOUNCEMENT_ID = ""
+
+[ apikeys ]
+# All of the following APIs offer a free API key and no paid subscription is required
+# discordbotlist.com
+DBL = ""
+DBL_WEBHOOK_AUTH = ""
+# Amari bot
+AMARI_BOT = ""
+# openweathermap.org/api
+WEATHER = ""
+
+# All presences are defined here
+[[ presence ]]
+STATUS = "online" # The bot's status [online, idle, dnd, invisible]
+TYPE = "Competing" # Status type for the bot [Playing | Listening | Watching | Competing]
+MESSAGE = "{guilds} Servern"
+
+[[ presence]]
+STATUS = "online"
+TYPE = "Playing"
+MESSAGE = "mit {users} Nutzern"
+
+[[ presence ]]
+STATUS = "online"
+TYPE = "Watching"
+MESSAGE = "nevar.eu"
