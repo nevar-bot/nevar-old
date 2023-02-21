@@ -1,0 +1,15 @@
+# Node
+node_modules/
+package-lock.json
+
+# IDE's
+.idea/
+.workspace/
+
+# Bot
+config.toml
+config-sample.toml
+assets/config.txt
+assets/disabled.json
+assets/news.json
+assets/votes.json

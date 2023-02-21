@@ -1,0 +1,208 @@
+{
+  "success": "<:nevar_success:1061706382254034954>",
+  "error": "<:nevar_error:1061706621581004870>",
+  "warning": "<:nevar_warning:1061708005042831430>",
+  "arrow": "<:nevar_arrow_right:1070051501738831952>",
+  "loading": "<:nevar_loading:1061708470715433130>",
+
+
+  "1": "<:nevar_1:1076234573047935067>",
+  "2": "<:nevar_2:1076234632300859475>",
+  "3": "<:nevar_3:1076234732871888997>",
+
+  "code": "<:nevar_code:1061709382183817406>",
+  "discordjs": "<:nevar_discordjs:1061721776687693886>",
+  "javascript": "<:nevar_javascript:1061721819587031040>",
+
+  "logo": {
+    "normal": "<:nevar_logo:1076228356577693868>",
+    "trans": "<:nevar_logo_trans:1076228312273276968>"
+  },
+  "socials": {
+    "instagram": "<:nevar_instagram:1061713562243973169>",
+    "twitter": "<:nevar_twitter:1061714001328869386>",
+    "github": "<:nevar_github:1061713504228347985>"
+  },
+
+  "file": "<:nevar_file:1061708144373407794>",
+  "files": "<:nevar_files:1061713444430155907>",
+
+  "user": "<:nevar_person:1061706440689078302>",
+  "users": "<:nevar_users:1061712723706130533>",
+
+  "new": "<:nevar_new:1061712623361601648>",
+  "beta": "<:nevar_beta:1061712664323162212>",
+
+  "join": "<:nevar_join:1061707853800415262>",
+  "leave": "<:nevar_leave:1061707888726388776>",
+
+  "settings": "<:nevar_settings:1061708781265883186>",
+  "settings2": "<:nevar_settings2:1061714091225391215>",
+
+  "shine": "<:nevar_shine:1061708833619193917>",
+  "shine2": "<:nevar_shine2:1061708928783753356>",
+
+  "growth_up": "<:nevar_growth_up:1061719109512986624>",
+  "growth_down": "<:nevar_growth_down:1061721484386648154>",
+
+  "like": "<:nevar_like:1061713667986558977>",
+  "dislike": "<:nevar_dislike:1061713608465190922>",
+
+  "enable": "<:nevar_enable:1061711982685855764>",
+  "disable": "<:nevar_disable:1061711904688578661>",
+
+  "partner": "<:nevar_partner:1061707555262439445>",
+  "partner2": "<:nevar_partner3:1061713891635241090>",
+
+  "latency": {
+    "bad": "<:nevar_badping:1061707771894050909>",
+    "okay": "<:nevar_idelping:1061708255912529970>",
+    "good": "<:nevar_goodping:1061708208852439073>"
+  },
+
+  "arrows": {
+    "left": "<:nevar_arrow_left:1070052117768851516>",
+    "right": "<:nevar_arrow_right:1070051501738831952>",
+    "up": "<:nevar_arrow_up:1070052282525294684>",
+    "down": "<:nevar_arrow_down:1070052202590240808>",
+    "forward": "<:nevar_arrow_forward:1070052015025172500>",
+    "backward": "<:nevar_arrow_backward:1070051861165506630>"
+  },
+
+  "status": {
+    "dnd": "<:nevar_donotdisturb:1061709321303498782>",
+    "idle": "<:nevar_idle:1061711812397121687>",
+    "offline": "<:nevar_offline:1061711945025208420>",
+    "online": "<:nevar_online:1061712046401519750>"
+  },
+
+  "flags": {
+    "ActiveDeveloper": "<:nevar_activedev:1076552518399709294>",
+    "BugHunterLevel1": "<:nevar_bughunter:1061712885862113320>",
+    "BugHunterLevel2": "<:nevar_bughunter:1061712885862113320>",
+    "CertifiedModerator": "<:nevar_moderator:1061713046780772352>",
+    "HypeSquadOnlineHouse1": "<:nevar_hs_bravery:1061712514586529963>",
+    "HypeSquadOnlineHouse2": "<:nevar_hs_brilliance:1061712571650031716>",
+    "HypeSquadOnlineHouse3": "<:nevar_hs_balance:1061712466276528259>",
+    "Hypesquad": "<:nevar_hypesquad_event:1061707963301113996>",
+    "Partner": "<:nevar_partner2:1061713303333769297>",
+    "PremiumEarlySupporter": "<:nevar_early_supporter:1061713400893284422>",
+    "Staff": "<:nevar_staff:1061713347906650112>",
+    "VerifiedBot": "<:nevar_verified_server:1061713941304201347>",
+    "VerifiedDeveloper": "<:nevar_verified_dev:1061712834796462080>"
+  },
+
+  "events": {
+    "channel": {
+      "create": "<:nevar_channel_create:1061714145352888340>",
+      "delete": "<:nevar_channel_delete:1061716987455230013>",
+      "update": "<:nevar_channel_update:1061719952765222993>"
+    },
+    "emoji": {
+      "create": "<:nevar_emoji_create:1061714192454926346>",
+      "delete": "<:nevar_emoji_delete:1061717419569201192>",
+      "update": "<:nevar_emoji_update:1061720008142630922>"
+    },
+    "integration": {
+      "create": "<:nevar_integration_create:1061714292589727825>",
+      "delete": "<:nevar_integration_delete:1061717790748323920>",
+      "update": "<:nevar_integration_update:1061720682427318423>"
+    },
+    "role": {
+      "create": "<:nevar_role_create:1061714340547407872>",
+      "delete": "<:nevar_role_delete:1061717838521454674>",
+      "update": "<:nevar_role_update:1061721027534663890>"
+    },
+    "sticker": {
+      "create": "<:nevar_sticker_create:1061714389952106627>",
+      "delete": "<:nevar_sticker_delete:1061718128461095094>",
+      "update": "<:nevar_sticker_update:1061721168442310786>"
+    },
+    "thread": {
+      "create": "<:nevar_thread_create:1061714444255756359>",
+      "delete": "<:nevar_thread_delete:1061718494867116153>",
+      "update": "<:nevar_thread_update:1061721243587452929>"
+    },
+    "webhook": {
+      "create": "<:nevar_webhook_create:1061714520789237850>",
+      "delete": "<:nevar_webhook_delete:1061718983595802625>",
+      "update": "<:nevar_webhook_update:1061721331269386390>"
+    },
+    "event": {
+      "create": "<:nevar_event_schedule:1061717738743156746>",
+      "update": "<:nevar_event_update:1061720622977261578>",
+      "delete": "<:nevar_event_delete:1061753546002927676>"
+    },
+    "guild": {
+      "update": "<:nevar_guild_update:1061721080827486358>"
+    },
+    "member": {
+      "ban": "<:nevar_member_ban:1061719336902987868>",
+      "unban": "<:nevar_member_unban:1061719879788531732>",
+      "update": "<:nevar_member_update:1061720751847264277>"
+    }
+  },
+
+  "announce": "<:nevar_announce:1061706709992734761>",
+  "award": "<:nevar_award:1061706742473433158>",
+  "bookmark": "<:nevar_bookmark:1061709204492132464>",
+  "boost": "<:nevar_boost:1061707522928549978>",
+  "bright": "<:nevar_bright:1061706783497912430>",
+  "bug": "<:nevar_bug:1061706222039994519>",
+  "bulb": "<:nevar_bulb:1061707237862686813>",
+  "calendar": "<:nevar_calendar:1061707416611340438>",
+  "channel": "<:nevar_channel:1061707489797746698>",
+  "crown": "<:nevar_crown:1061708604375306411>",
+  "delete": "<:nevar_delete:1061707728877277295>",
+  "discover": "<:nevar_discover:1061707819591680031>",
+  "download": "<:nevar_download:1061706490962006047>",
+  "edit": "<:nevar_edit:1061707926898745344>",
+  "flag": "<:nevar_flag:1061709427499081798>",
+  "folder": "<:nevar_folder:1061709736061440142>",
+  "globe": "<:nevar_globe:1061708176912814110>",
+  "information": "<:nevar_info:1061708291148890202>",
+  "invite": "<:nevar_invite:1061708376368762921>",
+  "label": "<:nevar_label:1061708993543807027>",
+  "link": "<:nevar_link:1061708408719421571>",
+  "magic": "<:nevar_magic:1061708518115266640>",
+  "monitor": "<:nevar_monitor:1061708555176116254>",
+  "pin": "<:nevar_pin:1061708646356107357>",
+  "ping": "<:nevar_ping:1061708678857760899>",
+  "reminder": "<:nevar_reminder:1061708715096547358>",
+  "rocket": "<:nevar_rocket:1061706673271619717>",
+  "search": "<:nevar_search:1061708749544374342>",
+  "star": "<:nevar_star:1061709037823074416>",
+  "timeout": "<:nevar_timeout:1061709087223595130>",
+  "verified": "<:nevar_verified:1061709137966272613>",
+  "verified_server": "<:nevar_verified_server:1061707628675350528>",
+  "controller": "<:nevar_controller:1061711573955121233>",
+  "critical": "<:nevar_critical:1061712097974698086>",
+  "discord": "<:nevar_discord:1061714046564438067>",
+  "gift": "<:nevar_gift:1061711676078043266>",
+  "heart": "<:nevar_heart:1061711625456988311>",
+  "voice": "<:nevar_voice:1076971155799429220>",
+  "forum": "<:nevar_forum:1076969971910979684>",
+  "microphone": "<:nevar_mic:1076970914358501607>",
+  "id": "<:nevar_id:1061711757942476882>",
+  "image": "<:nevar_image:1061711855686525008>",
+  "list": "<:nevar_list:1061713789084516434>",
+  "nitro": "<:nevar_nitro:1061713172165304400>",
+  "question": "<:nevar_question:1061712198025625745>",
+  "quotes": "<:nevar_quotes:1061712147136135350>",
+  "reload": "<:nevar_reload:1061713728971735081>",
+  "slashcommand": "<:nevar_slashcommand:1061712297363525712>",
+  "strike": "<:nevar_strike:1061712347099570256>",
+  "text": "<:nevar_text:1061712247287726101>",
+  "vip": "<:nevar_vip:1061712413919023104>",
+  "fingerprint": "<:nevar_fingerprint:1061721407966433330>",
+  "google_translate": "<:nevar_google_translate:1061721655812047020>",
+  "key": "<:nevar_key:1061721689999814786>",
+  "notify": "<:nevar_notify:1061719239452528690>",
+  "roles": "<:nevar_roles:1061719288806912060>",
+  "tada": "<:nevar_tada:1061721607896309872>",
+  "underage": "<:nevar_underage:1061721729019416597>",
+  "ban": "<:nevar_ban:1061750771839930428>",
+  "wave": "<:nevar_wave:1069019052313415830>",
+  "bot": "<:nevar_bot:1076541962603217036>",
+  "hypesquad": "<:nevar_hypesquad:1061712973997015221>"
+}

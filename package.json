@@ -1,0 +1,76 @@
+{
+  "name": "nevar",
+  "description": "Nevar is a simple, lightweight, and fast discord bot built with discord.js",
+  "version": "5.0.0-ALPHA",
+  "homepage": "https://nevar.eu",
+  "main": "src/app.js",
+  "license": "AGPL-3.0",
+  "repository": "github:nevar-bot/nevar",
+  "readme": "./README.md",
+  "author": "1887jonas <admin@nevar.eu> (https://github.com/1887jonas)",
+  "contributors": [
+    {
+      "name": "Fedox",
+      "email": "admin@nevar.eu",
+      "url": "https://github.com/Fedox-die-Ente"
+    }
+  ],
+  "engines": {
+    "node": ">=19.1.0"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://prohosting24.net/cp/donate/nevar"
+  },
+  "bugs": {
+    "url": "https://github.com/nevar-bot/nevar/issues",
+    "email": "other@nevar.eu"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.20.1",
+    "canvacord": "^5.4.8",
+    "cors": "^2.8.5",
+    "discord-gamecord": "^4.2.0",
+    "discord-giveaways": "^6.0.0",
+    "discord-xp": "^1.1.16",
+    "discord.js": "^14.7.1",
+    "discordbotlist": "^1.0.0",
+    "enhanced-ms": "^2.2.0",
+    "express": "^4.17.1",
+    "helmet": "^6.0.0",
+    "mathjs": "^10.0.0",
+    "module-alias": "^2.2.2",
+    "moment": "^2.29.1",
+    "mongoose": "^6.9.2",
+    "node-schedule": "^2.1.0",
+    "pino": "^8.8.0",
+    "pino-pretty": "^9.1.1",
+    "toml": "^3.0.0"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "discord-bot",
+    "open-source",
+    "bot",
+    "multipurpose"
+  ],
+  "_moduleAliases": {
+    "@root": ".",
+    "@assets": "./assets/",
+    "@src": "./src/",
+    "@commands": "./src/commands/",
+    "@contexts": "./src/contexts/",
+    "@database": "./src/database/",
+    "@events": "./src/events/",
+    "@handlers": "./src/handlers/",
+    "@helpers": "./src/helpers/",
+    "@structures": "./src/structures/",
+    "@schemas": "./src/database/schemas",
+    "@api": "./src/api/"
+  }
+}
