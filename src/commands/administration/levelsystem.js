@@ -262,7 +262,7 @@ class Levelsystem extends BaseCommand {
 
         // Role is higher than the bot's highest role
         if(this.interaction.guild.members.me.roles.highest.position <= role.position){
-            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Autorolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
+            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Levelrolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
             return this.interaction.followUp({ embeds: [roleIsTooHighEmbed] });
         }
 
