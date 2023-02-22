@@ -18,6 +18,7 @@ module.exports = class {
 
         // Initialize levels
         levels.setURL(config.general["MONGO_CONNECTION"]);
+
         // Initialize giveaways manager
         client.logger.log("Initializing giveaway manager...");
         client.giveawayManager._init().then((_) => client.logger.success("Giveaway manager initialized"));
