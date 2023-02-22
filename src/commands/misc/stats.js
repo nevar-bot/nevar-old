@@ -30,9 +30,13 @@ class Stats extends BaseCommand {
     async sendStats(){
         const staffsdata = (await (await mongoose.connection.db.collection("users")).find({ "staff.state": true }).toArray())
         const staffs = [];
+        for(let ownerId of this.client.config.general["OWNER_IDS"]){
+            const owner = await this.client.users.fetch(ownerId).catch(() => {});
+            staffs.push(owner.tag);
+        }
         for(let userdata of staffsdata){
             const user = await this.client.users.fetch(userdata.id).catch(() => {});
-            staffs.push(user.tag + "");
+            if(!staffs.includes(user.tag)) staffs.push(user.tag);
         }
         const uptime = this.client.utils.getRelativeTime(Date.now() - this.client.uptime);
         const serverCount = this.client.guilds.cache.size;
