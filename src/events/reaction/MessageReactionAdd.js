@@ -9,17 +9,16 @@ module.exports = class {
         if(!user || !messageReaction || user.bot) return;
 
         const guildData = await this.client.findOrCreateGuild({ id: messageReaction.message.guild.id });
-        for(let value of guildData.settings.reactionroles){
-            const msgId = value.split('|')[0];
-            const emote = value.split('|')[1];
-            const roleId = value.split('|')[2];
-            if(messageReaction.message.id === msgId){
-                if(messageReaction.emoji.id && messageReaction.emoji.id === emote){
-                    const member = await messageReaction.message.guild.members.fetch(user.id);
-                    member.roles.add(roleId, "REACTION ROLE").catch((e) => {
-                        // an modlog loggen
-                    });
-                }
+        for(let reactionRole of guildData.settings.reactionroles){
+            const channelId = reactionRole.channelId;
+            const messageId = reactionRole.messageId;
+            const emojiId = reactionRole.emoteId;
+            const roleId = reactionRole.roleId;
+            if(messageReaction.message.channel.id === channelId && messageReaction.message.id === messageId && messageReaction.emoji.id === emojiId){
+                const member = await messageReaction.message.guild.members.fetch(user.id).catch(() => {});
+                member.roles.add(roleId, "REACTION ROLE").catch((e) => {
+                    // an modlog loggen
+                });
             }
         }
     }

@@ -1,152 +1,119 @@
-const Command = require('../../structures/BaseCommand');
-const { EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, SlashCommandBuilder, parseEmoji} = require('discord.js');
-const Resolver ="test";
+const BaseCommand = require('@structures/BaseCommand');
+const { ChannelType, SlashCommandBuilder } = require('discord.js');
+const { stringIsEmoji, stringIsCustomEmoji } = require("@helpers/Utils");
 
-class Reactionrole extends Command {
+class Reactionrole extends BaseCommand {
 
     constructor(client) {
         super(client, {
             name: "reactionrole",
-            description: "administration/reactionrole:general:description",
+            description: "Erstellt eine Reactionrole",
+
             memberPermissions: ["ManageGuild"],
             cooldown: 5000,
             dirname: __dirname,
+
             slashCommand: {
-                addCommand: false,
-                data:
-                    new SlashCommandBuilder()
+                addCommand: true,
+                data: new SlashCommandBuilder()
+                    .addChannelOption(option => option
+                        .setName("channel")
+                        .setDescription("Wähle einen Channel")
+                        .setRequired(true)
+                        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews)
+                    )
+                    .addStringOption(option => option
+                        .setName("id")
+                        .setDescription("Gib die ID der Nachricht an")
+                        .setRequired(true)
+                    )
+                    .addRoleOption(option => option
+                        .setName("rolle")
+                        .setDescription("Wähle eine Rolle")
+                        .setRequired(true)
+                    )
+                    .addStringOption(option => option
+                        .setName("emoji")
+                        .setDescription("Gib einen Emoji an")
+                        .setRequired(true)
+                    )
             }
         });
     }
 
-    async run(interaction, args, data){
-        const { guild, member, channel, user } = interaction;
+    static interaction;
+    async dispatch(interaction, data){
+        this.interaction = interaction;
 
-        const id = user.id;
+        await this.addReactionRole(interaction.options.getChannel("channel"), interaction.options.getString("id"), interaction.options.getRole("rolle"), interaction.options.getString("emoji"), data);
+    }
 
-        let key = this.client.randomKey(10);
-
-        const reactionroleModal = new ModalBuilder()
-            .setCustomId(id + '_reactionrole_modal' + '_' + key)
-            .setTitle(guild.translate("administration/reactionrole:main:modal:title"));
-
-        const channelInput = new TextInputBuilder()
-            .setCustomId('channel')
-            .setLabel(guild.translate("language:collectors:channel"))
-            .setStyle(TextInputStyle.Short);
-        const idInput = new TextInputBuilder()
-            .setCustomId('id')
-            .setLabel(guild.translate("administration/reactionrole:main:modal:labels:id"))
-            .setStyle(TextInputStyle.Short);
-        const emojiInput = new TextInputBuilder()
-            .setCustomId('emoji')
-            .setLabel(guild.translate("language:collectors:emoji"))
-            .setStyle(TextInputStyle.Short);
-        const roleInput = new TextInputBuilder()
-            .setCustomId('role')
-            .setLabel(guild.translate("language:collectors:role"))
-            .setStyle(TextInputStyle.Short);
-
-        let channelInputRow = new ActionRowBuilder().addComponents(channelInput);
-        let idInputRow = new ActionRowBuilder().addComponents(idInput);
-        let emojiInputRow = new ActionRowBuilder().addComponents(emojiInput);
-        let roleInputRow = new ActionRowBuilder().addComponents(roleInput);
-
-        reactionroleModal.addComponents(channelInputRow, idInputRow, emojiInputRow, roleInputRow);
-
-        await interaction.showModal(reactionroleModal);
-
-        const submitted = await interaction.awaitModalSubmit({
-            time: 600000,
-            filter: i => i.user.id = user.id
-        }).catch(() => {});
-
-        if (submitted) {
-            if(submitted.customId !== id + '_reactionrole_modal' + '_' + key) return;
-
-            let channel = submitted.fields.getTextInputValue('channel');
-            let message = submitted.fields.getTextInputValue('id');
-            let emoji = submitted.fields.getTextInputValue('emoji');
-            let role = submitted.fields.getTextInputValue('role');
-
-            let channelInput = await Resolver.channelResolver(channel, guild, "GuildText");
-            if(channelInput){
-                let messageInput = await channelInput.messages.fetch(message).catch(() => {});
-                if(messageInput){
-                    let emojiInput = parseEmoji(emoji);
-
-                    if(!emojiInput?.id){
-                        let regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
-                        if (regex.test(emoji)) emojiInput = emoji
-                    }
-
-
-                    if(emojiInput){
-                        let roleInput = await Resolver.roleResolver(role, guild);
-                        if(roleInput){
-                            messageInput.react(emojiInput).catch((e) => {console.log(e)});
-                            data.guild.plugins.reactionRoles.push(messageInput.id + ' | ' + (emojiInput?.id ? emojiInput.id : emojiInput) + ' | ' + roleInput.id);
-                            data.guild.markModified("plugins.reactionRoles");
-                            await data.guild.save();
-                            let embed = new EmbedBuilder()
-                                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                                .setDescription(guild.translate("administration/reactionrole:main:setup")
-                                    .replace('{emotes.success}', this.client.emotes.success))
-                                .setColor(this.client.embedColor)
-                                .setFooter({text: this.client.footer});
-                            await submitted.deferReply();
-                            return submitted.followUp({
-                                embeds: [embed]
-                            });
-                        }else{
-                            let embed = new EmbedBuilder()
-                                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                                .setDescription(guild.translate("administration/reactionrole:main:invalid:role")
-                                    .replace('{emotes.success}', this.client.emotes.success))
-                                .setColor(this.client.embedColor)
-                                .setFooter({text: this.client.footer});
-                            await submitted.deferReply();
-                            return submitted.followUp({
-                                embeds: [embed]
-                            });
-                        }
-                    }else{
-                        let embed = new EmbedBuilder()
-                            .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                            .setDescription(guild.translate("administration/reactionrole:main:invalid:emoji")
-                                .replace('{emotes.success}', this.client.emotes.success))
-                            .setColor(this.client.embedColor)
-                            .setFooter({text: this.client.footer});
-                        await submitted.deferReply();
-                        return submitted.followUp({
-                            embeds: [embed]
-                        });
-                    }
-                }else{
-                    let embed = new EmbedBuilder()
-                        .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                        .setDescription(guild.translate("administration/reactionrole:main:invalid:id")
-                            .replace('{emotes.success}', this.client.emotes.success))
-                        .setColor(this.client.embedColor)
-                        .setFooter({text: this.client.footer});
-                    await submitted.deferReply();
-                    return submitted.followUp({
-                        embeds: [embed]
-                    });
-                }
-            }else{
-                let embed = new EmbedBuilder()
-                    .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                    .setDescription(guild.translate("administration/reactionrole:main:invalid:channel")
-                        .replace('{emotes.success}', this.client.emotes.success))
-                    .setColor(this.client.embedColor)
-                    .setFooter({text: this.client.footer});
-                await submitted.deferReply();
-                return submitted.followUp({
-                    embeds: [embed]
-                });
-            }
+    async addReactionRole(channel, id, role, emote, data){
+        // Role is @everyone
+        if(role.id === this.interaction.guild.roles.everyone.id){
+            const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht als eine Reactionrole hinzugefügt werden.", "error", "error");
+            return this.interaction.followUp({ embeds: [everyoneEmbed] });
         }
+
+        // Role is managed by an integration
+        if(role.managed){
+            const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Reactionrole hinzugefügt werden.", "error", "error");
+            return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
+        }
+
+        // Role is higher than the bot's highest role
+        if(this.interaction.guild.members.me.roles.highest.position <= role.position){
+            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Reactionrole hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
+            return this.interaction.followUp({ embeds: [roleIsTooHighEmbed] });
+        }
+
+        // Invalid emoji
+        if(!stringIsEmoji(emote) && !stringIsCustomEmoji(emote)){
+            const invalidEmojiEmbed = this.client.generateEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
+            return this.interaction.followUp({ embeds: [invalidEmojiEmbed] });
+        }
+
+        // Get emoji id if string is custom emoji
+        const originEmote = emote;
+        if(stringIsCustomEmoji(emote)) emote = emote.replace(/<a?:\w+:(\d+)>/g, "$1");
+        // Emoji not available
+        if(stringIsCustomEmoji(originEmote) && !this.client.emojis.cache.find((e) => e.id === emote)){
+            const unusableEmojiEmbed = this.client.generateEmbed("Der Emoji muss auf einem Server wo ich bin verfügbar sein.", "error", "error");
+            return this.interaction.followUp({ embeds: [unusableEmojiEmbed] });
+        }
+
+        // Get message
+        const message = await channel.messages.fetch(id).catch(() => {});
+        // Message not found
+        if(!message){
+            const messageNotFoundEmbed = this.client.generateEmbed("Die Nachricht konnte nicht gefunden werden.", "error", "error");
+            return this.interaction.followUp({ embeds: [messageNotFoundEmbed] });
+        }
+
+        // Save to database
+        const channelId = channel.id;
+        const messageId = id;
+        let emoteId;
+        stringIsCustomEmoji(originEmote) ? emoteId = emote : emoteId = originEmote;
+        const roleId = role.id;
+
+        const reactionRole = {
+            channelId: channelId,
+            messageId: messageId,
+            emoteId: emoteId,
+            roleId: roleId
+        }
+        data.guild.settings.reactionroles.push(reactionRole);
+        data.guild.markModified("settings.reactionroles");
+        await data.guild.save();
+
+        await message.react(emote).catch(() => {
+            const reactionFailedEmbed = this.client.generateEmbed("Ich konnte nicht auf die Nachricht reagieren.", "error", "error");
+            return this.interaction.followUp({ embeds: [reactionFailedEmbed] });
+        });
+
+        const successEmbed = this.client.generateEmbed("Die Reactionrole wurde hinzugefügt.", "success", "success");
+        return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }
 
