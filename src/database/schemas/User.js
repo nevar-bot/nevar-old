@@ -23,7 +23,8 @@ const Schema = new mongoose.Schema({
             state: false,
             reason: null,
             date: null,
-            moderator: null
+            moderator: null,
+            name: null,
         }
     },
     staff: {
