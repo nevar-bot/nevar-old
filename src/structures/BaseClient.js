@@ -26,7 +26,7 @@ module.exports = class BaseClient extends Client {
 
         this.wait = require("util").promisify(setTimeout); // await client.wait(1000) | Wait 1 second
         this.config = toml.parse(fs.readFileSync("./config.toml", "utf8"));
-        this.emotes = require("@assets/emojis.json");
+        this.emotes = require("../../assets/emojis.json");
         this.support = this.config.support["INVITE"];
         this.permissions = require("@helpers/Permissions");
 

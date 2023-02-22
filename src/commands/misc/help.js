@@ -1,230 +1,168 @@
-const Command = require('../../structures/BaseCommand');
-const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
+const BaseCommand = require('@structures/BaseCommand');
+const { ActionRowBuilder, SlashCommandBuilder, ComponentType, StringSelectMenuBuilder } = require('discord.js');
 const moment = require('moment');
 const fs = require("fs");
 
-class Help extends Command {
+function getKeyByValue(object, value){
+    return Object.keys(object).find(key => object[key] === value);
+}
+
+class Help extends BaseCommand {
 
     constructor(client) {
         super(client, {
             name: "help",
-            description: "misc/help:general:description",
+            description: "Sendet eine Übersicht aller Befehle, oder Hilfe zu einem bestimmten Befehl",
+
             cooldown: 3000,
             dirname: __dirname,
+
             slashCommand: {
-                addCommand: false,
-                data:
-                    new SlashCommandBuilder()
-                        .addStringOption(option => option.setRequired(false))
+                addCommand: true,
+                data: new SlashCommandBuilder()
+                    .addStringOption(option => option
+                        .setName("befehl")
+                        .setDescription("Gib einen Befehl an, zu dem du Hilfe benötigst")
+                        .setRequired(false)
+                    )
             }
         });
     }
 
-    async run(interaction, args, data) {
-        const { guild, member, channel, user } = interaction;
+    static interaction;
+    async dispatch(interaction, data) {
+        this.interaction = interaction;
 
-        // check if user requested command help
-        let cmd;
-        if(args[0]) cmd = this.client.commands.get(args[0].toString().toLowerCase());
+        if(interaction.options.getString("befehl")){
+            await this.showHelpForCommand(interaction.options.getString("befehl"));
+        }else{
+            await this.showHelp(data);
+        }
+    }
 
-        if(cmd){
-            // send help embed for specific command
-            const embed = new EmbedBuilder()
-                .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                .setColor(this.client.embedColor)
-                .setTitle(guild.translate("misc/help:main:command:helpFor")
-                    .replace('{command}', cmd.help.name.charAt(0).toUpperCase() + cmd.help.name.slice(1))
-                    .replace('{category}', guild.translate("misc/help:main:categoriesList:" + cmd.help.category)))
-                .setDescription('```● ' + guild.translate(cmd.help.description) + '```')
-                .addFields([
-                    {
-                        name:
-                            this.client.emotes.arrow + ' ' + guild.translate("misc/help:main:command:syntax:name"),
-                        value:
-                            '```' + guild.translate("misc/help:main:command:syntax:value")
-                                .replace('{syntax}', guild.translate(cmd.help.category + '/' + cmd.help.name + ':general:syntax')) + '```'
-                    },
-                    {
-                        name:
-                            this.client.emotes.arrow + ' ' + guild.translate("misc/help:main:command:examples:name"),
-                        value:
-                            '```' + guild.translate("misc/help:main:command:examples:value")
-                                .replace('{examples}', guild.translate(cmd.help.category + '/' + cmd.help.name + ':general:examples')) + '```'
-                    },
-                    {
-                        name:
-                            this.client.emotes.arrow + ' ' + guild.translate("misc/help:main:command:cooldown:name"),
-                        value:
-                            '```● ' + guild.translate("misc/help:main:command:cooldown:value")
-                                .replace('{cooldown}', cmd.conf.cooldown/1000) + '```',
-                    },
-                    {
-                        name:
-                            this.client.emotes.arrow + ' ' + guild.translate("misc/help:main:command:permissions:name"),
-                        value:
-                            '```● ' + guild.translate("misc/help:main:command:permissions:value")
-                                .replace('{permissions}', cmd.conf.memberPermissions.length > 0 ? cmd.conf.memberPermissions.join('\n● ') : guild.translate("language:noEntries")) + '```'
-                    }
-                ])
-                .setThumbnail(this.client.user.displayAvatarURL())
-                .setFooter({text: this.client.footer});
-             return interaction.send(embed);
+    async showHelp(data){
+        // Get all categories
+        const categoriesList = [];
+
+        const categories = {
+            "administration": "Administration",
+            "fun": "Fun",
+            "minigames": "Minispiele",
+            "misc": "Sonstiges",
+            "moderation": "Moderation",
+            "owner": "Owner",
+            "staff": "Staff"
         }
 
-        // send help embed for all commands
-        let desc = guild.translate("misc/help:main:links")
-            .replace('{emotes.client}', this.client.emotes.discord)
-            .replace('{support}', this.client.supportUrl)
-            .replace('{emotes.logo}', this.client.emotes.logo.transparent)
-            .replace('{invite}', this.client.invite)
-            .replace('{emotes.web}', this.client.emotes.url)
-            .replace('{website}', this.client.website)
-
-        desc += guild.translate("misc/help:main:prefix")
-            .replace('{prefix}', data.guild.prefix)
-
-        const categories = [];
-        const commands = this.client.commands;
-        let staffs = JSON.parse(fs.readFileSync('./storage/staffs.json'));
-
-        commands.forEach((command) => {
-            if (!categories.includes(command.help.category)) {
-                if (command.help.category === "owner" && ((member.user.id !== this.client.config.general.ownerId) && staffs[member.user.id] !== 'head_staff')) return;
-                if (command.help.category === "staff" && (!staffs[member.user.id] && member.user.id !== this.client.config.general.ownerId)) return;
-
-                categories.push(command.help.category);
+        // Create a category list
+        for(let command of this.client.commands) {
+            if (!categoriesList.includes(categories[command[1].help.category])) {
+                categoriesList.push(categories[command[1].help.category]);
             }
-        });
-
-        categories.sort();
-
-
-        // fix deprecated shit
-        let row = new ActionRowBuilder()
-            .addComponents(
-                new SelectMenuBuilder()
-                    .setCustomId(member.user.id + '_helpmenu')
-                    .setPlaceholder(guild.translate("misc/help:main:placeholder"))
-            )
-        let sortedCategories = [];
-
-       for(let category of categories){
-           let emoji = this.client.emojis.cache.find((emoji) => emoji.toString() === this.client.emotes.categories[category]);
-           row.components[0].addOptions([
-               {
-                   label: guild.translate("misc/help:main:categoriesList:" + category),
-                   value: member.user.id + '_' + category,
-                   emoji: {
-                       animated: emoji.animated,
-                       id: emoji.id,
-                       name: emoji.name
-                   }
-               }
-           ]);
-            sortedCategories.push(this.client.emotes.categories[category] + ' **' + guild.translate("misc/help:main:categoriesList:" + category) + '**');
         }
 
-       let commandIds = [];
-       let fetchedCommands = await this.client.application.commands.fetch().catch(() => {});
-       if(fetchedCommands) fetchedCommands.forEach((command) => commandIds.push({ name: command.name, id: command.id }));
+        // Create the link section of the embed
+        const links =
+            this.client.emotes.discord + "**[SUPPORT](" + this.client.config.support["INVITE"] + ")** | " +
+            this.client.emotes.growth_up + "**[EINLADEN](" + this.client.getInvite() + ")** |" +
+            this.client.emotes.globe + "**[WEBSITE](" + this.client.config.general["WEBSITE"] + ")** | " +
+            this.client.emotes.gift + " **[UNTERSTÜTZEN](https://prohosting24.de/cp/donate/nevar)**";
 
-        let news = JSON.parse(fs.readFileSync('./storage/news.json'))
-        let mainEmbed = new EmbedBuilder()
-            .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-            .setDescription(desc)
-            .setColor(this.client.embedColor)
-            .setThumbnail(this.client.user.displayAvatarURL())
-            .addFields([
-                {
-                    name:
-                        guild.translate("misc/help:main:categories"),
-                    value:
-                        guild.translate("misc/help:main:categories_value").replace('{categories}', sortedCategories.join('\n')),
-                    inline: true
-                },
-                {
-                    name:
-                        guild.translate("misc/help:main:news:title")
-                            .replace('{date}', moment.tz(new Date(news.timestamp), guild.translate("language:timezone")).format(guild.translate("language:onlyDateFormat"))),
-                    value:
-                        guild.translate("misc/help:main:news:news")
-                            .replace('{news}', news.text),
-                    inline: true
-                }
-            ])
-            .setFooter({text: guild.translate("misc/help:main:footer")});
+        // Create the description section of the embed
+        const description =
+            this.client.emotes.arrow + " Hier findest du alle Befehle, die ich aktuell anbiete. Wähle unten einfach eine Kategorie, um eine entsprechende Liste zu erhalten."
 
-        let sent = await interaction.send(mainEmbed, false, [row]);
-        if(!sent) return;
-        const collector = sent.createMessageComponentCollector({
-            filter: (i) => i.customId === member.user.id + '_helpmenu',
-        });
+        // Create the news section of the embed
+        const newsJson = JSON.parse(fs.readFileSync("./assets/news.json"));
+        const newsDate = moment(newsJson.timestamp).format("DD.MM.YYYY")
+        const news = this.client.emotes.new + " **Neues vom " + newsDate + ":**\n" + newsJson.text
 
-        collector.on("collect", async (chooseCategory) => {
-            if(chooseCategory.customId !== chooseCategory.user.id + '_helpmenu') return;
-            await this.client.wait(500);
-            let currentIndex = 0;
-            let category = chooseCategory.values[0].split('_')[1];
+        // Create the embed
+        const helpEmbed = this.client.generateEmbed("{0}\n\n{1}\n\n{2}", null, "normal", links, description, news);
+
+        // Create the category select menu
+        const categoryStringSelectMenu = new StringSelectMenuBuilder()
+            .setCustomId("category_select")
+            .setPlaceholder("Wähle eine Kategorie");
+
+        // Add the categories to the select menu
+        for(let category of categoriesList){
+            if(category === "Staff" && !data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(this.interaction.user.id)) continue;
+            if(category === "Owner" && data.user.staff.role !== "head-staff" && !this.client.config.general["OWNER_IDS"].includes(this.interaction.user.id)) continue;
+            categoryStringSelectMenu.addOptions({
+                label: category,
+                emoji: this.client.emotes.slashcommand,
+                value: category,
+            });
+        }
+
+        // Create the action row
+        const categoryActionRow = new ActionRowBuilder()
+            .addComponents(categoryStringSelectMenu);
+
+        // Send the embed with the select menu
+        const helpEmbedSent = await this.interaction.followUp({ embeds: [helpEmbed], components: [categoryActionRow], fetchReply: true });
+
+        // Create collector for the select menu
+        const categoryCollector = await helpEmbedSent.createMessageComponentCollector({ filter: i => i.user.id === this.interaction.user.id, componentType: ComponentType.SelectMenu });
+
+        categoryCollector.on("collect", async (categoryInteraction) => {
+            // Get selected category
+            const category = getKeyByValue(categories, categoryInteraction.values[0]);
+
+            // Get all commands of the selected category
             let commands = this.client.commands.filter((command) => command.help.category === category);
+            let commandsArray = [...commands.values()];
 
+            // Get all disabled commands
+            const disabledCommands = JSON.parse(fs.readFileSync("./assets/disabled.json"));
 
-            let backId = member.user.id + '_back';
-            let forwardId = member.user.id + '_forward';
-            let homeId = member.user.id + '_home';
+            // Get all application commands
+            const commandIds = [];
+            const fetchedCommands = (await this.client.application.commands.fetch().catch(() => {})).filter(c => c.type === 1);
+            if(fetchedCommands) fetchedCommands.forEach((command) => commandIds.push({ name: command.name, id: command.id }));
 
-            let backButton = new ButtonBuilder({
-                style: ButtonStyle.Secondary,
-                label: guild.translate("language:labels:back"),
-                emoji: this.client.emotes.arrow_left,
-                custom_id: backId
-            });
+            let formattedCommands = [];
+            for(let command of commandsArray){
 
-            let forwardButton = new ButtonBuilder({
-                style: ButtonStyle.Secondary,
-                label: guild.translate("language:labels:forward"),
-                emoji: this.client.emotes.arrow_right,
-                custom_id: forwardId
-            });
+                const commandId = commandIds.find((s) => s.name === command.help.name)?.id;
+                const availableAsSlashCommand = !!commandId;
+                const isDisabled = disabledCommands.includes(command.help.name);
+                const commandMentionString = availableAsSlashCommand ? "</" + command.help.name + ":" + commandId + ">" : command.help.name;
 
-            let homeButton = new ButtonBuilder({
-                style: ButtonStyle.Primary,
-                label: guild.translate("misc/help:main:home"),
-                emoji: this.client.emotes.home,
-                custom_id: homeId
-            });
+                const text =
+                    (isDisabled ? this.client.emotes.error + " ~~" + commandMentionString + "~~" : this.client.emotes.slashcommand + " " + commandMentionString) + "\n" + this.client.emotes.text + " " + command.help.description + "\n";
 
-            const cmds = [... commands.values()];
-            let disabledCommands = JSON.parse(fs.readFileSync('./storage/disabledcmds.json'));
-            let generateEmbed = async start => {
-                let current = cmds.slice(start, start + 5);
-                if(current.length === 0) current = [guild.translate("language:error")]
-
-                let pagesTotal = Math.round(cmds.length / 5);
-                if(pagesTotal === 0) pagesTotal = 1;
-                let currentPage = Math.round(start / 5) + 1;
-
-                let text =  '{text}'.replace('{text}',
-                    current.map(cmd => (
-                        ((cmd === guild.translate("language:error") ? guild.translate("language:error")
-                            .replace('{emotes.error}', this.client.emotes.error)
-                            .replace('{support}', this.client.supportUrl) : (disabledCommands.includes(cmd.help.name) ? this.client.emotes.error : this.client.emotes.arrow) + ' **' + (disabledCommands.includes(cmd.help.name) ? '~~' + ('</' + commandIds.find((s) => s.name === cmd.help.name).name + ':' + commandIds.find((s) => s.name === cmd.help.name).id + '>') + '~~' : '</' + commandIds.find((s) => s.name === cmd.help.name).name + ':' + commandIds.find((s) => s.name === cmd.help.name).id + '>') + '**' +
-                            '\n» ' + (disabledCommands.includes(cmd.help.name) ? '~~' : '') + guild.translate(cmd.help.description).replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, '') + (disabledCommands.includes(cmd.help.name) ? '~~' : '') + '\n\n'))
-
-                    )).join(''));
-
-                return new EmbedBuilder()
-                    .setAuthor({name: this.client.user.username, iconURL: this.client.user.displayAvatarURL(), url: this.client.website})
-                    .setTitle(guild.translate("misc/help:main:showing")
-                        .replace('{page}', currentPage)
-                        .replace('{pages}', pagesTotal)
-                        .replace('{category}', this.client.emotes.categories[category] + ' ' + guild.translate("misc/help:main:categoriesList:" + category)))
-                    .setDescription(text)
-                    .setColor(this.client.embedColor)
-                    .setFooter({text: this.client.footer});
+                formattedCommands.push(text);
             }
 
-            const canFitOnePage = cmds.length <= 5;
-            await chooseCategory.update({
+            let currentIndex = 0;
+            const backId = this.interaction.user.id + "_back";
+            const forwardId = this.interaction.user.id + "_forward";
+            const homeId = this.interaction.user.id + "_home";
+
+            const backButton = this.client.createButton(backId, "Zurück", "Secondary", this.client.emotes.arrows.left, false, null);
+            const forwardButton = this.client.createButton(forwardId, "Weiter", "Secondary", this.client.emotes.arrows.right, false, null);
+            const homeButton = this.client.createButton(homeId, "Zur Startseite", "Primary", this.client.emotes.discover, false, null);
+
+            const generateEmbed = async (start) => {
+                let current = formattedCommands.slice(start, start +5);
+
+                const pages = {
+                    total: Math.ceil(commandsArray.length / 5),
+                    current: Math.round(start / 5) + 1
+                };
+                if(pages.total === 0) pages.total = 1;
+
+                const text = current.map(item => "\n" + item).join("");
+                const paginatedEmbed = this.client.generateEmbed(text, null, "normal");
+                paginatedEmbed.setTitle(categories[category] + " ● Seite " + pages.current + " von " + pages.total);
+                paginatedEmbed.setThumbnail(this.interaction.guild.iconURL({ dynamic: true, size: 4096 }));
+                return paginatedEmbed;
+            }
+
+            const canFitOnePage = formattedCommands.length <= 5;
+            await categoryInteraction.update({
                 embeds : [await generateEmbed(0)],
                 components: canFitOnePage
                     ? [new ActionRowBuilder({components: [homeButton]})]
@@ -232,24 +170,22 @@ class Help extends Command {
             })
             if(canFitOnePage) return;
 
-            const collector2 = sent.createMessageComponentCollector({
-                filter: ({user}) => user.id === member.user.id
-            });
+            const paginationCollector = helpEmbedSent.createMessageComponentCollector({ filter: i => i.user.id === this.interaction.user.id, componentType: ComponentType.Button });
 
             currentIndex = 0;
 
-            collector2.on('collect', async (collectPagination) => {
-                if(collectPagination.customId === backId || collectPagination.customId === forwardId){
-                    collectPagination.customId === backId ? (currentIndex -= 5) : (currentIndex += 5);
+            paginationCollector.on('collect', async (paginationInteraction) => {
+                if(paginationInteraction.customId === backId || paginationInteraction.customId === forwardId){
+                    paginationInteraction.customId === backId ? (currentIndex -= 5) : (currentIndex += 5);
 
-                    await collectPagination.deferUpdate().catch(() => {});
-                    await sent.edit({
+                    await paginationInteraction.deferUpdate().catch(() => {});
+                    await helpEmbedSent.edit({
                         embeds: [await generateEmbed(currentIndex)],
                         components: [
                             new ActionRowBuilder({
                                 components: [
                                     ...(currentIndex ? [backButton] : []),
-                                    ...(currentIndex + 5 < cmds.length ? [forwardButton] : []),
+                                    ...(currentIndex + 5 < formattedCommands.length ? [forwardButton] : []),
                                     homeButton
                                 ]
                             })
@@ -258,22 +194,32 @@ class Help extends Command {
                 }
             });
 
-            const homeCollector = sent.createMessageComponentCollector({
-                filter: (i) => i.customId === member.user.id + '_home',
+            const homeCollector = helpEmbedSent.createMessageComponentCollector({
+                filter: (i) => i.customId === this.interaction.user.id + '_home',
             });
 
             homeCollector.on("collect", async (homeInteraction) => {
                 if(homeInteraction.customId !== homeInteraction.user.id + '_home') return;
                 commands = [];
-                collector2.stop();
+                commandsArray = [];
+                formattedCommands = [];
+                paginationCollector.stop();
                 await homeInteraction.deferUpdate().catch(() => {});
-                sent.edit({
-                   embeds: [mainEmbed],
-                   components: [row]
+                await helpEmbedSent.edit({
+                    embeds: [helpEmbed],
+                    components: [categoryActionRow]
                 });
                 currentIndex = 0;
             });
-        })
+        });
+    }
+
+    async showHelpForCommand(command){
+        // TODO
+
+
+        const isNotSupportedEmbed = this.client.generateEmbed("Hilfe für einzelne Befehle wird derzeit nicht unterstützt.", "error", "error");
+        return this.interaction.followUp({ embeds: [isNotSupportedEmbed] });
     }
 }
 
