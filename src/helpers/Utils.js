@@ -53,11 +53,17 @@ module.exports = class Utils {
     }
 
     static urlIsImage(str){
-        return (str.match(/\.(jpeg|jpg|gif|png|webp)$/) != null);
+        return(str.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gmi) != null);
     }
 
     static stringIsCustomEmoji(str){
         const pattern = new RegExp(/<?(a)?:?(\w{2,32}):(\d{17,19})>?/);
+        return pattern.test(str);
+    }
+
+    static stringIsHexColor(str){
+        if(!str.startsWith("#")) str = "#" + str;
+        const pattern = new RegExp(/^#[0-9A-F]{6}$/i);
         return pattern.test(str);
     }
 
