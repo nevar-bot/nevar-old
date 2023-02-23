@@ -59,6 +59,13 @@ class Unmute extends BaseCommand {
         await memberData.save();
         this.client.databaseCache.mutedUsers.delete(user.id + this.interaction.guild.id);
 
+        const logText =
+            " **Mitglied entmutet**\n\n" +
+            this.client.emotes.arrow + "Mitglied: " + user.tag + "\n" +
+            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag;
+        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.timeout, "normal", member.user.displayAvatarURL({ dynamic: true }));
+
+
         const successEmbed = this.client.generateEmbed("{0} wurde entmutet.", "success", "success", user.tag);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }

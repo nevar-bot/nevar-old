@@ -50,7 +50,12 @@ module.exports = class {
                                 ]
                             }
                         ]
-                    }).catch((e) => {});
+                    }).catch((e) => {
+                        const logText =
+                            " **Fehler beim Erstellen von Sprachchannel**\n\n" +
+                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel erstellen, konnte dies aber nicht.";
+                        return newMember.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", newMember.guild.iconURL());
+                    });
 
                     if(tempChannel){
                         await newMember.member.voice.setChannel(tempChannel)
@@ -69,7 +74,12 @@ module.exports = class {
                 const guildData = await this.client.findOrCreateGuild({id: newMember.guild.id});
                 if(guildData.settings?.joinToCreate?.channels?.includes(oldChannel.id)){
                     if(oldChannel.members.size >= 1) return;
-                    await oldChannel.delete().catch(() => {});
+                    await oldChannel.delete().catch((e) => {
+                        const logText =
+                            " **Fehler beim Löschen von Sprachchannel**\n\n" +
+                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel löschen, konnte dies aber nicht.";
+                        return newMember.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", newMember.guild.iconURL());
+                    });
                     guildData.settings.joinToCreate.channels = guildData.settings.joinToCreate.channels.filter(c => c !== oldChannel.id);
                     guildData.markModified("settings.joinToCreate");
                     await guildData.save();

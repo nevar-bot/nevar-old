@@ -5,6 +5,7 @@ const fs = require("fs");
 const axios = require("axios");
 const giveawaysHandler = require("@handlers/giveaway");
 const Logger = require("@helpers/Logger");
+const log = require("discord-logs");
 
 module.exports = class BaseClient extends Client {
     constructor() {
@@ -18,7 +19,7 @@ module.exports = class BaseClient extends Client {
                 GatewayIntentBits.GuildMessages,
                 GatewayIntentBits.GuildMessageTyping
             ],
-            partials: [Partials.User, Partials.Message, Partials.Reaction, Partials.Channel],
+            partials: [Partials.User, Partials.Message, Partials.Reaction, Partials.Channel, Partials.GuildMember],
             allowedMentions:{
                 parse: ["users"]
             }
@@ -56,6 +57,8 @@ module.exports = class BaseClient extends Client {
         }
 
         this.utils = require("@helpers/Utils");
+
+        log(this);
 
     }
 

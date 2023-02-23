@@ -58,8 +58,15 @@ class Clear extends BaseCommand {
         const deletedEmbed = this.client.generateEmbed("Ich habe {0} Nachrichten {1} gelöscht.", "success", "success", messages.length, string);
         const embedSent = await this.interaction.followUp({ embeds: [deletedEmbed] });
 
+        const logText =
+            " **Nachrichten gelöscht**\n\n" +
+            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
+            this.client.emotes.arrow + " Anzahl: " + messages.length;
+        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.delete, "normal", this.interaction.user.displayAvatarURL({ dynamic: true }));
+
         await this.client.wait(7000);
         embedSent.delete().catch(() => {});
+
     }
 }
 

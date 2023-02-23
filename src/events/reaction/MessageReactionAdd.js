@@ -17,7 +17,10 @@ module.exports = class {
             if(messageReaction.message.channel.id === channelId && messageReaction.message.id === messageId && messageReaction.emoji.id === emojiId){
                 const member = await messageReaction.message.guild.members.fetch(user.id).catch(() => {});
                 member.roles.add(roleId, "REACTION ROLE").catch((e) => {
-                    // an modlog loggen
+                    const logText =
+                        " **Fehler beim Vergeben von Rolle**\n\n" +
+                        this.client.emotes.arrow + "Ich wollte eine Reactionrole vergeben, konnte dies aber nicht.";
+                    return messageReaction.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", messageReaction.guild.iconURL());
                 });
             }
         }

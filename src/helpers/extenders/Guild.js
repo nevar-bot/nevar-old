@@ -96,3 +96,13 @@ Guild.prototype.fetchMemberStats = async function () {
     const members = total - bots;
     return [total, bots, members];
 };
+
+Guild.prototype.logAction = async function(log, logType, emoji, embedType, thumbnail){
+    const { client } = this;
+    const guildData = await client.findOrCreateGuild({ id: this.id });
+    const logChannel = this.channels.cache.get(guildData.settings.logs.channels[logType]);
+    if(!logChannel) return;
+    const logEmbed = client.generateEmbed(emoji + " " + log, null, embedType);
+    logEmbed.setThumbnail(thumbnail)
+    return logChannel.send({ embeds: [logEmbed]}).catch(() => {});
+}

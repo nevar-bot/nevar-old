@@ -63,5 +63,13 @@ module.exports = class {
                 return welcomeChannel.send({ content: welcomeMessage }).catch(() => {});
             }
         }
+
+        // Log to member log
+        const logText =
+            " **Neues Mitglied**\n\n" +
+            this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
+            this.client.emotes.arrow + "Aktion: Hat den Server betreten";
+
+        return guild.logAction(logText, "guild", this.client.emotes.events.guild.update, "success", member.user.displayAvatarURL({ dynamic: true }));
     }
 }

@@ -101,8 +101,11 @@ module.exports = class {
                 if(channelId !== message.channel.id) continue;
                 this.client.wait(Number(time)).then(() => {
                    if(!message.pinned) message.delete().catch((exception) => {
-                       // an mod log loggen
-                   });
+                       const logText =
+                           " **Fehler beim Löschen von Nachricht**\n\n" +
+                           this.client.emotes.arrow + "Ich wollte eine Nachricht aufgrund des eingestellten Autodeletes in " + message.channel.toString() + " löschen, konnte dies aber nicht.";
+                       return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
+                  });
                 });
             }
         }
@@ -114,7 +117,10 @@ module.exports = class {
                 const emoji = autoreact.split("|")[1];
                 if(channelId !== message.channel.id) continue;
                 message.react(emoji).catch((exception) => {
-                    // an mod log loggen
+                    const logText =
+                        " **Fehler beim Reagieren auf Nachricht**\n\n" +
+                        this.client.emotes.arrow + "Ich wollte auf eine Nachricht aufgrund des eingestellten Autoreacts in " + message.channel.toString() + " reagieren, konnte dies aber nicht.";
+                    return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
                 });
             }
         }
@@ -152,7 +158,10 @@ module.exports = class {
                             const roleId = levelRole.split("|")[1];
                             if(Number(level) === newLevel || Number(level) < newLevel){
                                 message.member.roles.add(roleId).catch((exception) => {
-                                    // an mod log loggen
+                                    const logText =
+                                        " **Fehler beim Vergeben von Level-Rolle**\n\n" +
+                                        this.client.emotes.arrow + "Ich wollte " + message.member.user.tag + " eine Level-Rolle vergeben, konnte dies aber nicht.";
+                                    return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
                                 });
                             }
                         }
@@ -180,6 +189,10 @@ module.exports = class {
 
                     channel.send({ content: parsedMessage }).catch((exception) => {
                         // an mod log loggen
+                        const logText =
+                            " **Fehler beim Senden von Level-Up-Nachricht**\n\n" +
+                            this.client.emotes.arrow + "Ich wollte eine Level-Up-Nachricht in " + channel.toString() + " senden, konnte dies aber nicht.";
+                        return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
                     });
 
                 }

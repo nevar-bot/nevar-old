@@ -20,8 +20,16 @@ const Schema = new mongoose.Schema({
     settings: {
         type: Object,
         default: {
-            tracker: {
-                enabled: true
+            logs: {
+                enabled: true,
+                channels: {
+                    moderation: null,
+                    member: null,
+                    guild: null,
+                    role: null,
+                    thread: null,
+                    channel: null,
+                }
             },
             joinToCreate: {
                 enabled: false,
@@ -36,10 +44,6 @@ const Schema = new mongoose.Schema({
                 enabled: false,
                 channel: null,
                 review_channel: null
-            },
-            guessTheCountry: {
-                enabled: false,
-                channel: null
             },
             invites: {
                 enabled: false,

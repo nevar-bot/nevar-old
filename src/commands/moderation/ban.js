@@ -132,6 +132,13 @@ class Ban extends BaseCommand {
                         await victimData.save();
                         this.client.databaseCache.bannedUsers.set(ban.victim.user.id + this.interaction.guild.id, victimData);
 
+                        const logText =
+                            " **Mitglied gebannt**\n\n" +
+                            this.client.emotes.arrow + " Mitglied: " + ban.victim.user.tag + "\n" +
+                            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
+                            this.client.emotes.arrow + " Grund: " + ban.reason;
+                        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", ban.victim.user.displayAvatarURL({ dynamic: true }));
+
                         const publicText =
                             "{0} wurde gebannt.\n\n" +
                             this.client.emotes.arrow + " Grund: " + ban.reason + "\n" +

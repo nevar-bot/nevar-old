@@ -40,6 +40,13 @@ class Resetwarns extends BaseCommand {
         memberData.markModified("warnings");
         await memberData.save();
 
+        const logText =
+            " **Verwarnungen zurückgesetzt**\n\n" +
+            this.client.emotes.arrow + "Mitglied: " + user.tag + "\n" +
+            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag;
+        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", user.displayAvatarURL({ dynamic: true }));
+
+
         const successEmbed = this.client.generateEmbed("Die Verwarnungen von {0} wurden zurückgesetzt.", "success", "success", user.tag);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }

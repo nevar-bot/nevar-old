@@ -37,5 +37,13 @@ module.exports = class {
                 return goodbyeMessage.send({ content: goodbyeMessage }).catch(() => {});
             }
         }
+
+        // Log to member log
+        const logText =
+            " **Mitglied verloren**\n\n" +
+            this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
+            this.client.emotes.arrow + "Aktion: Hat den Server verlassen";
+
+        return guild.logAction(logText, "guild", this.client.emotes.events.guild.update, "error", member.user.displayAvatarURL({ dynamic: true }));
     }
 }

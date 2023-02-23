@@ -49,6 +49,10 @@ module.exports = class Loader {
                     client.giveawayManager.on(eventName, (...args) => event.dispatch(...args));
                     success++;
                 }
+                if(type === "log"){
+                    client.on(eventName, (...args) => event.dispatch(...args));
+                    success++;
+                }
                 delete require.cache[require.resolve(filePath)];
             } catch (ex) {
                 failed++;
