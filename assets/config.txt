@@ -62,7 +62,7 @@ USER_COUNT_ID = ""
 USER_COUNT_NAME = "👥 ➜ {count} users"
 
 # ID and design of the channel where the current number of votes is displayed (the already existing variable in {} is automatically replaced)
-VOUTE_COUNT_ID = ""
+VOTE_COUNT_ID = ""
 VOTE_COUNT_NAME = "🤍 ➜ {count} votes"
 # ID of the channel where new votes get announced
 VOTE_ANNOUNCEMENT_ID = ""
