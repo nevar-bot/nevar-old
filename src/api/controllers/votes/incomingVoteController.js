@@ -30,7 +30,7 @@ exports.handleVote = async function(req, res) {
         const voteNowButton = client.createButton(null, "Jetzt voten", "Link", this.client.emotes.rocket, "https://discordbotlist.com/bots/" + client.user.id + "/upvote");
         const buttonRow = client.createComponentsRow(voteNowButton);
 
-        await client.channels.cache.get(client.config.channels["VOTE_ANNOUNCEMENT_ID"]).send({embeds: [voteEmbed], components: [buttonRow]}).catch(() => {});
+        await client.channels.cache.get(client.config.channels["VOTE_ANNOUNCEMENT_ID"]).send({embeds: [voteEmbed], components: [buttonRow]}).catch((e) => {console.log("Couldn't send vote announcement: " + e)});
 
         const voteObj = JSON.parse(fs.readFileSync('./storage/votes.json'));
 
