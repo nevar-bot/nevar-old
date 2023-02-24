@@ -66,9 +66,7 @@ class Addemoji extends BaseCommand {
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(exception){
             // Error
-            const exceptionIdentifier = Date.now();
-            this.client.logException(exception, exceptionIdentifier, guild.name, user, "addemoji-Command");
-            const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.\n{0} Benötigst du Hilfe, melde dich mit folgendem Fehlercode beim [Support]({1}):```{2}```", "error", "error", this.client.emotes.arrow, this.client.support, exceptionIdentifier);
+            const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }
