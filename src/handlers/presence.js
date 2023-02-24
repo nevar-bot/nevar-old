@@ -11,7 +11,7 @@ function updatePresence(client){
         let message = presence["MESSAGE"];
         message = message.replaceAll("{guilds}", client.guilds.cache.size);
         const members = client.guilds.cache.map((g) => g.memberCount).reduce((partial_sum, a) => partial_sum + a, 0);
-        message = message.replaceAll("{users}", members);
+        message = message.replaceAll("{users}", client.format(members));
 
         client.user.setPresence({
             status: presence["STATUS"],
