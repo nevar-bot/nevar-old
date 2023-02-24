@@ -52,7 +52,8 @@ module.exports = class {
                 let votes = JSON.parse(fs.readFileSync('./assets/votes.json'));
 
                 const date = new Date();
-                const month = date.toLocaleString('de-DE', {month: "long"});
+                let month = date.toLocaleString('de-DE', {month: "long"});
+                month = month.charAt(0).toUpperCase() + month.slice(1);
 
                 let months = moment.months();
                 let voteMonth = months[(new Date(Date.now()).getMonth())];
