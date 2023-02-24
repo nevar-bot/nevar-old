@@ -43,7 +43,7 @@ module.exports = class {
                 let supportGuild = client.guilds.cache.get(config.support["ID"]);
                 let serverChannel, voteChannel, userChannel;
                 if (config.channels["SERVER_COUNT_ID"]) serverChannel = supportGuild.channels.cache.get(config.channels["SERVER_COUNT_ID"]);
-                if (config.channels["VOUTE_COUNT_ID"]) voteChannel = supportGuild.channels.cache.get(config.channels["VOUTE_COUNT_ID"]);
+                if (config.channels["VOTE_COUNT_ID"]) voteChannel = supportGuild.channels.cache.get(config.channels["VOTE_COUNT_ID"]);
                 if (config.channels["USER_COUNT_ID"]) userChannel = supportGuild.channels.cache.get(config.channels["USER_COUNT_ID"]);
 
                 if (serverChannel) serverChannel.setName(config.channels["SERVER_COUNT_NAME"].replace('{count}', client.guilds.cache.size));
