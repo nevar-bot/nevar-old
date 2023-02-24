@@ -77,8 +77,7 @@ module.exports = class {
                     await oldChannel.delete().catch((e) => {
                         const logText =
                             " **Fehler beim Löschen von Sprachchannel**\n\n" +
-                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel löschennode ." +
-                            ", konnte dies aber nicht.";
+                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel löschen, konnte dies aber nicht.";
                         return newMember.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", newMember.guild.iconURL());
                     });
                     guildData.settings.joinToCreate.channels = guildData.settings.joinToCreate.channels.filter(c => c !== oldChannel.id);
