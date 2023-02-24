@@ -59,7 +59,7 @@ module.exports = class {
                 let voteMonth = months[(new Date(Date.now()).getMonth())];
                 if (voteChannel) voteChannel.setName(config.channels["VOTE_COUNT_NAME"]
                     .replace('{count}', client.format(votes[voteMonth.toLowerCase()] || 0))
-                    .replace('{month}', month.toLowerCase()))
+                    .replace('{month}', month))
             }, 120 * 1000)
         }
 
