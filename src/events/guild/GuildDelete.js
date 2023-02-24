@@ -8,7 +8,7 @@ module.exports = class {
 
     getType(){ return this.type }
     async dispatch(guild) {
-        if (!guild || !guild.id) return
+        if (!guild || !guild.id || !guild.ownerId) return
 
         // Send log message to support server
         const supportGuild = this.client.guilds.cache.get(this.client.config.support["ID"]);
@@ -26,7 +26,7 @@ module.exports = class {
 
         const text =
             "Name: **" + name + "**\n" +
-            this.client.emotes.crown + " Eigentümer: **" + owner.tag + "**\n" +
+            this.client.emotes.crown + " Eigentümer: **" + owner?.tag + "**\n" +
             this.client.emotes.id + " ID: **" + id + "**\n" +
             this.client.emotes.users + " Mitglieder: **" + membercount + "**\n\n" +
             this.client.emotes.calendar + " Erstellt am: **" + created + "**\n" +
