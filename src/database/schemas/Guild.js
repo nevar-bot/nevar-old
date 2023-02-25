@@ -51,7 +51,7 @@ const Schema = new mongoose.Schema({
             levels: {
                 enabled: false,
                 channel: null,
-                message: "GG {member:name}, du bist jetzt Level {level}!",
+                message: "GG {user:username}, du bist jetzt Level {level}!",
                 roles: [],
                 doubleXP: [],
                 xp: {
