@@ -69,7 +69,7 @@ module.exports = class {
 
         // WARNING: ONLY FOR DEVELOPMENT PURPOSES
         // REMOVE IN PRODUCTION
-        await require('@handlers/registerInteractions').init(client);
+        //await require('@handlers/registerInteractions').init(client);
 
     }
 };
