@@ -32,12 +32,21 @@ class Stats extends BaseCommand {
         const staffs = [];
         for(let ownerId of this.client.config.general["OWNER_IDS"]){
             const owner = await this.client.users.fetch(ownerId).catch(() => {});
-            staffs.push(owner.tag);
+            staffs.push(owner.tag + " (Head-Staff)");
         }
         for(let userdata of staffsdata){
             const user = await this.client.users.fetch(userdata.id).catch(() => {});
-            if(!staffs.includes(user.tag)) staffs.push(user.tag);
+            const staffRole = userdata.staff.role;
+            let textStaff = "";
+            if(staffRole === "head-staff") textStaff = "Head-Staff";
+            if(staffRole === "staff") textStaff = "Staff";
+            
+            if(staffRole === "head-staff") staffs.unshift(user.tag + ` (${textStaff})`);
+            else
+            if(!staffs.includes(user.tag)) staffs.push(user.tag + ` (${textStaff})`);
         }
+    
+
         const uptime = this.client.utils.getRelativeTime(Date.now() - this.client.uptime);
         const serverCount = this.client.guilds.cache.size;
         const voteCount = JSON.parse(fs.readFileSync('./assets/votes.json'))[moment().format("MMMM").toLowerCase()] || 0;
