@@ -14,7 +14,10 @@ module.exports = class {
             const messageId = reactionRole.messageId;
             const emojiId = reactionRole.emoteId;
             const roleId = reactionRole.roleId;
-            if(messageReaction.message.channel.id === channelId && messageReaction.message.id === messageId && messageReaction.emoji.id === emojiId){
+
+            let emoji = messageReaction.emoji.id ? messageReaction.emoji.id : messageReaction.emoji.name
+
+            if(messageReaction.message.channel.id === channelId && messageReaction.message.id === messageId && emoji === emojiId){
                 const member = await messageReaction.message.guild.members.fetch(user.id).catch(() => {});
                 member.roles.remove(roleId, "REACTION ROLE").catch((e) => {
                     const logText =
