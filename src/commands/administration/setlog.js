@@ -58,6 +58,22 @@ class Setlog extends BaseCommand {
     async dispatch(interaction, data){
         this.interaction = interaction;
 
+        if(!data.guild.settings.logs) {
+            data.guild.settings.logs = {
+                enabled: true,
+                channels: {
+                    moderation: null,
+                    member: null,
+                    guild: null,
+                    role: null,
+                    thread: null,
+                    channel: null,
+                }
+            }
+            data.guild.markModified("settings.logs");
+            await data.guild.save();
+        }
+
         await this.setLogs(data);
     }
 
