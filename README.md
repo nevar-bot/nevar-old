@@ -57,7 +57,7 @@
 
 ## About The Project
 
-BaseClient is a multipurpose Discord bot, made with JavaScript.
+Nevar is a multipurpose Discord bot, made with JavaScript.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
