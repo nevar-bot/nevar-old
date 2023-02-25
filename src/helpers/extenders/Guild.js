@@ -62,15 +62,20 @@ Guild.prototype.findMatchingRoles = function (query) {
 
 Guild.prototype.resolveMember = async function (query, exact = false) {
     if (!query || typeof query !== "string") return;
+    const { client } = this;
 
     const patternMatch = query.match(MEMBER_MENTION);
     if (patternMatch) {
         const id = patternMatch[1];
-        const fetched = await this.members.fetch({ user: id }).catch(() => {});
+        const fetched = await this.members.fetch({ user: id }).catch((e) => {
+            client.logException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
+        });
         if (fetched) return fetched;
     }
 
-    await this.members.fetch({ query }).catch(() => {});
+    await this.members.fetch({ query }).catch((e) => {
+        client.logException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
+    });
 
     const matchingTags = this.members.cache.filter((mem) => mem.user.tag === query);
     if (matchingTags.size === 1) return matchingTags.first();
@@ -100,9 +105,12 @@ Guild.prototype.fetchMemberStats = async function () {
 Guild.prototype.logAction = async function(log, logType, emoji, embedType, thumbnail){
     const { client } = this;
     const guildData = await client.findOrCreateGuild({ id: this.id });
-    const logChannel = this.channels.cache.get(guildData.settings.logs.channels[logType]);
+    if(!guildData.settings?.logs?.channels[logType]) return;
+    const logChannel = this.channels.cache.get(guildData.settings?.logs?.channels[logType]);
     if(!logChannel) return;
     const logEmbed = client.generateEmbed(emoji + " " + log, null, embedType);
     logEmbed.setThumbnail(thumbnail)
-    return logChannel.send({ embeds: [logEmbed]}).catch(() => {});
+    return logChannel.send({ embeds: [logEmbed]}).catch((e) => {
+        client.logException(e, this.name, null, "<Guild||Prototype>.logAction(\"" + log + "\", \"" + logType + "\", \"" + emoji + "\", \"" + embedType + "\", \"" + thumbnail + "\")");
+    });
 }
