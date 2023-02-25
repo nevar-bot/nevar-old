@@ -207,7 +207,7 @@ module.exports = class BaseClient extends Client {
                 const guild = await this.findOrCreateGuild({ id: guildID });
                 if(guild){
                     guild.members.push(memberData._id);
-                    await guild.save();
+                    await guild.save().catch(() => {});
                 }
                 this.databaseCache.members.set(`${memberID}${guildID}`, memberData);
                 return isLean ? memberData.toJSON() : memberData;
