@@ -17,7 +17,9 @@ module.exports = class {
         const logChannel = supportGuild.channels.cache.get(this.client.config.support["BOT_LOG"]);
         if(!logChannel) return;
 
-        const owner = await this.client.users.fetch(guild.ownerId).catch(() => {});
+        const owner = await this.client.users.fetch(guild.ownerId).catch((e) => {
+            this.client.logException(e, guild.name, null, "<this>.users.fetch(\"" + guild.ownerId + "\"");
+        });
         const id = guild.id;
         const name = guild.name;
         const membercount = guild.memberCount;

@@ -99,7 +99,7 @@ module.exports = class BaseClient extends Client {
         return new ActionRowBuilder().addComponents(components);
     }
 
-    logException(exception, identifier = null, guild = null, user = null, action = null){
+    logException(exception, guild = null, user = null, action = null){
         const supportGuild = this.guilds.cache.get(this.config.support["ID"]);
         const errorLogChannel = supportGuild?.channels.cache.get(this.config.support["ERROR_LOG"]);
         if(!supportGuild || !errorLogChannel) return;
@@ -107,11 +107,10 @@ module.exports = class BaseClient extends Client {
         const exceptionEmbed = this.generateEmbed("Ein Fehler ist aufgetreten", "error", "error");
         let description = exceptionEmbed.data.description;
 
-        if(identifier) description += "\n\n" + this.emotes.arrow + " Identifizierungsnummer: " + identifier;
         if(guild) description += "\n" + this.emotes.arrow + " Server: " + guild;
         if(user) description += "\n" + this.emotes.arrow + " Nutzer: " + user.tag + " (" + user.id + ")";
         if(action) description += "\n" + this.emotes.arrow + " Aktion: " + action;
-        description += "\n```js\n" + exception + "```";
+        description += "\n```js\n" + exception.toString() + "```";
 
         exceptionEmbed.setDescription(description);
         exceptionEmbed.setThumbnail(this.user.displayAvatarURL({ dynamic: true }));
@@ -166,21 +165,27 @@ module.exports = class BaseClient extends Client {
 
     async deleteUser({ id: userID }){
         if(this.databaseCache.users.get(userID)){
-            await this.usersData.findOneAndDelete({id: userID}).catch(() => {});
+            await this.usersData.findOneAndDelete({id: userID}).catch((e) => {
+                this.logException(e, null, null, "this.deleteUser(" + userID + ")")
+            });
             this.databaseCache.users.delete(userID);
         }
     }
 
     async deleteMember({id: memberID, guildID}){
         if(this.databaseCache.members.get(`${memberID}${guildID}`)){
-            await this.membersData.findOne({id: memberID, guildID: guildID}).deleteOne().exec().catch(() => {});
+            await this.membersData.findOne({id: memberID, guildID: guildID}).deleteOne().exec().catch((e) => {
+                this.logException(e, null, null, "this.deleteMember(" + memberID + ", " + guildID + ")");
+            });
             this.databaseCache.members.delete(`${memberID}${guildID}`);
         }
     }
 
     async deleteGuild({id: guildID}){
         if(this.databaseCache.guilds.get(guildID)){
-            await this.guildsData.findOne({id: guildID}).deleteOne().exec().catch(() => {});
+            await this.guildsData.findOne({id: guildID}).deleteOne().exec().catch((e) => {
+                this.logException(e, null, null, "this.deleteGuild(" + guildID + ")");
+            });
             this.databaseCache.guilds.delete(guildID);
         }
     }
@@ -207,7 +212,9 @@ module.exports = class BaseClient extends Client {
                 const guild = await this.findOrCreateGuild({ id: guildID });
                 if(guild){
                     guild.members.push(memberData._id);
-                    await guild.save().catch(() => {});
+                    await guild.save().catch((e) => {
+                        this.logException(e, null, null, "await guild.save()");
+                    });
                 }
                 this.databaseCache.members.set(`${memberID}${guildID}`, memberData);
                 return isLean ? memberData.toJSON() : memberData;

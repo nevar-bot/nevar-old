@@ -29,7 +29,9 @@ module.exports = class {
         // --- HANDLE CONTEXT MENUS --
         // ---------------------------
         if(interaction.isContextMenuCommand()){
-            await interaction.deferReply();
+            await interaction.deferReply().catch((e) => {
+                this.client.logException(e, guild.name, member.user.username, "<ContextInterction>.deferReply()");
+            });
             const context = this.client.contextMenus.get(interaction.commandName);
 
             // USER IS BLOCKED
@@ -88,9 +90,9 @@ module.exports = class {
             try {
                 return context.dispatch(interaction);
             }catch(exc){
+                this.client.logException(exc, guild.name, member.user.username, "<ClientContext>.dispatch(<Interaction>)");
                 const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten", "error", "error");
                 return interaction.editReply({ embeds: [errorEmbed] });
-                // TODO: Error an supportserver loggen
             }
         }
 
@@ -117,7 +119,9 @@ module.exports = class {
         if(interaction.isCommand()){
             const command = this.client.commands.get(interaction.commandName);
             if(!command) return;
-            await interaction.deferReply().catch(() => {});
+            await interaction.deferReply().catch((e) => {
+                this.client.logException(e, guild.name, member.user.username, "<Interaction>.deferReply()");
+            });
             const args = interaction.options?._hoistedOptions || [];
 
             // USER IS BLOCKED
@@ -209,6 +213,7 @@ module.exports = class {
             try {
                 command.dispatch(interaction, data)
             }catch (e) {
+                this.client.logException(e, guild.name, member.user.username, "<ClientCommand>.dispatch(<Interaction>, <Data>)");
                 const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten", "error", "error");
                 return interaction.editReply({ embeds: [errorEmbed] });
             }

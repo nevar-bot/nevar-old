@@ -13,6 +13,7 @@ const client = new BaseClient();
 process.on("unhandledRejection", (err) => {
     client.logger.error("Unhandled exception", err);
     console.log(err);
+    client.logException(err, null, null, null);
 });
 
 (async () => {

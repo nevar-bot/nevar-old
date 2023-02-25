@@ -90,7 +90,9 @@ module.exports = class {
             if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
             if(clientCommand.help.category === "owner" && data.user.staff.role !== "owner" && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
 
-            clientCommand.dispatch(message, args, data).catch(() => {});
+            clientCommand.dispatch(message, args, data).catch((e) => {
+                this.client.logException(e, message.guild, message.author.tag, "<ClientMessageCommand>.dispatch()");
+            });
         }
 
         // AUTODELETE
@@ -188,7 +190,6 @@ module.exports = class {
                     if(!channel) return;
 
                     channel.send({ content: parsedMessage }).catch((exception) => {
-                        // an mod log loggen
                         const logText =
                             " **Fehler beim Senden von Level-Up-Nachricht**\n\n" +
                             this.client.emotes.arrow + "Ich wollte eine Level-Up-Nachricht in " + channel.toString() + " senden, konnte dies aber nicht.";

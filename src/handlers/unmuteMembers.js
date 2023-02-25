@@ -18,7 +18,11 @@ module.exports = {
                 if(!member) continue;
 
                 await member.roles.remove(guildData.settings.muterole, "Automatischer Unmute").catch((e) => {
-                    // An mod log loggen
+                    const desc =
+                        "Automatischer Unmute fehlgeschlagen\n\n" +
+                        client.emotes.arrow + " Nutzer: " + memberData.id + "\n" +
+                        client.emotes.arrow + " Aktion: Automatischer Unmute";
+                    guild.logAction(desc, "moderation", "error", "error", null);
                 });
 
                 memberData.muted = {

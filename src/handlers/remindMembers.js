@@ -18,7 +18,9 @@ module.exports = {
                         const channel = guild.channels.cache.get(reminder.channel);
                         if(!channel) continue;
 
-                        const member = await guild.members.fetch(memberData.id).catch(() => {});
+                        const member = await guild.members.fetch(memberData.id).catch((e) => {
+                            client.logException(e, guild.name, null, "<Guild>.members.fetch(\"" + memberData.id + "\"");
+                        });
                         if(!member) continue;
 
                         const reminderAgo = client.utils.getRelativeTime(reminder.startDate);
