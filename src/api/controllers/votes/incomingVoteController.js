@@ -15,7 +15,7 @@ exports.handleVote = async function(req, res) {
         let user = await client.users.fetch(userId).catch(() => {});
         if(!user) return res.sendStatus(400);
 
-        let supportGuild = client.guilds.cache.get(client.config.support.id);
+        let supportGuild = client.guilds.cache.get(client.config.support["ID"]);
         if(!supportGuild) return res.sendStatus(500);
 
         let supportGuildData = await client.findOrCreateGuild({id: supportGuild.id});
@@ -27,12 +27,12 @@ exports.handleVote = async function(req, res) {
         const voteEmbed = client.generateEmbed(text, "shine", "normal");
         voteEmbed.setThumbnail(user.displayAvatarURL());
 
-        const voteNowButton = client.createButton(null, "Jetzt voten", "Link", this.client.emotes.rocket, "https://discordbotlist.com/bots/" + client.user.id + "/upvote");
+        const voteNowButton = client.createButton(null, "Jetzt voten", "Link", client.emotes.rocket, false, "https://discordbotlist.com/bots/" + client.user.id + "/upvote");
         const buttonRow = client.createComponentsRow(voteNowButton);
 
         await client.channels.cache.get(client.config.channels["VOTE_ANNOUNCEMENT_ID"]).send({embeds: [voteEmbed], components: [buttonRow]}).catch((e) => {console.log("Couldn't send vote announcement: " + e)});
 
-        const voteObj = JSON.parse(fs.readFileSync('./storage/votes.json'));
+        const voteObj = JSON.parse(fs.readFileSync('./assets/votes.json'));
 
         const months = moment.months();
         const month = months[(new Date(Date.now()).getMonth())];
