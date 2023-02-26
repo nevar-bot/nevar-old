@@ -24,6 +24,6 @@ module.exports = class {
 
         if(changes.length === 0) return;
 
-        return guild.logAction(logText, "guild", this.client.emotes.events.emoji.delete, "normal", newMember.user.displayAvatarURL({ dynamic: true }));
+        return guild.logAction(logText, "member", this.client.emotes.events.emoji.delete, "normal", newMember.user.displayAvatarURL({ dynamic: true }));
     }
 }
