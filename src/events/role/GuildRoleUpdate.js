@@ -17,6 +17,6 @@ module.exports = class {
 
         if(changes.length === 0) return;
 
-        return guild.logAction(logText, "guild", this.client.emotes.events.role.update, "normal");
+        return guild.logAction(logText, "role", this.client.emotes.events.role.update, "normal");
     }
 }

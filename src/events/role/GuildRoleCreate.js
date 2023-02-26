@@ -12,6 +12,6 @@ module.exports = class {
             this.client.emotes.arrow + " Name: **" + role.name + "**\n" +
             this.client.emotes.arrow + " ID: **" + role.id + "**";
 
-        return guild.logAction(logText, "guild", this.client.emotes.events.role.create, "success");
+        return guild.logAction(logText, "role", this.client.emotes.events.role.create, "success");
     }
 }
