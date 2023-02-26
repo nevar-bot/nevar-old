@@ -43,7 +43,7 @@ class Suggest extends BaseCommand {
 
         const successEmbed = this.client.generateEmbed("Deine Idee wurde eingereicht.", "success", "success");
         await this.interaction.followUp({ embeds: [successEmbed] });
-        return new(require('@events/interaction/seperations/suggestion/Submitted'))(this.client).dispatch(this.interaction, data, this.interaction.guild, idea);
+        return this.client.emit("SuggestionSubmitted", this.interaction, data, this.interaction.guild, idea);
     }
 }
 module.exports = Suggest;

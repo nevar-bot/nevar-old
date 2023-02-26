@@ -132,13 +132,6 @@ class Ban extends BaseCommand {
                         await victimData.save();
                         this.client.databaseCache.bannedUsers.set(ban.victim.user.id + this.interaction.guild.id, victimData);
 
-                        const logText =
-                            " **Mitglied gebannt**\n\n" +
-                            this.client.emotes.arrow + " Mitglied: " + ban.victim.user.tag + "\n" +
-                            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
-                            this.client.emotes.arrow + " Grund: " + ban.reason;
-                        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", ban.victim.user.displayAvatarURL({ dynamic: true }));
-
                         const publicText =
                             "{0} wurde gebannt.\n\n" +
                             this.client.emotes.arrow + " Grund: " + ban.reason + "\n" +
@@ -149,6 +142,7 @@ class Ban extends BaseCommand {
                         publicBanEmbed.setImage("https://media4.giphy.com/media/H99r2HtnYs492/giphy.gif");
                         await clicked.update({ embeds: [publicBanEmbed], components: [] });
                     }catch(exc) {
+                        console.log(exc);
                         privateMessage.delete().catch(() => {});
                         const cantBanEmbed = this.client.generateEmbed("Ich konnte {0} nicht bannen.", "error", "error", ban.victim.user.tag);
                         await clicked.update({embeds: [cantBanEmbed], components: []});

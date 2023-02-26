@@ -74,12 +74,10 @@ class Warn extends BaseCommand {
         await member.user.send({ embeds:[privateEmbed] }).catch(() => {});
 
         const logText =
-            " **Mitglied verwarnt**\n\n" +
-            this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
-            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
-            this.client.emotes.arrow + " Grund: " + reason;
+            " **" + member.user.tag + " wurde verwarnt**\n\n" +
+            this.client.emotes.user + " Moderator: " + this.interaction.user.tag + "\n" +
+            this.client.emotes.text + " Grund: " + reason;
         await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", member.user.displayAvatarURL({ dynamic: true }));
-
 
         const publicText =
             " " + member.user.tag + " wurde verwarnt.\n\n" +

@@ -36,7 +36,6 @@
     "cors": "^2.8.5",
     "discord-gamecord": "^4.2.0",
     "discord-giveaways": "^6.0.1",
-    "discord-logs": "^2.2.1",
     "discord-xp": "^1.1.16",
     "discord.js": "^14.7.1",
     "discordbotlist": "^1.0.0",

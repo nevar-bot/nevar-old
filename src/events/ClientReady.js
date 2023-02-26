@@ -7,11 +7,7 @@ const levels = require("discord-xp");
 module.exports = class {
     constructor(client) {
         this.client = client;
-        this.type = "client";
     }
-
-    getType(){ return this.type }
-
     async dispatch() {
         const client = this.client;
         const config = client.config;

@@ -5,10 +5,7 @@ const fs = require("fs");
 module.exports = class {
     constructor(client) {
         this.client = client;
-        this.type = "client";
     }
-    getType(){ return this.type }
-
     async dispatch(interaction) {
         if(!interaction || !interaction.type || !interaction.member || !interaction.guildId) return;
 
@@ -29,23 +26,39 @@ module.exports = class {
         // --- HANDLE CONTEXT MENUS --
         // ---------------------------
         if(interaction.isContextMenuCommand()){
-            await interaction.deferReply().catch((e) => {
-                this.client.logException(e, guild.name, member.user.username, "<ContextInterction>.deferReply()");
-            });
+            try {
+                await interaction.deferReply();
+            }catch(e){
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                await interaction.reply({ embeds: [errorEmbed] }).catch((e) => {});
+                return this.client.logException(e, guild.name, member.user, "`<ContextInterction>.deferReply()`");
+            }finally{
+                if(!interaction.deferred){
+                    const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                    await interaction.reply({ embeds: [errorEmbed] }).catch((e) => {});
+                    return this.client.logException(new Error("ContextInteraction is not deferred, no information why"), guild.name, member.user, "`<ContextInterction>.deferReply()`");
+                }
+            }
+
             const context = this.client.contextMenus.get(interaction.commandName);
+            if(!context){
+                this.client.logException(new Error("Context menu " + interaction.commandName + " not found"), guild.name, member.user, "`<Client>.contextMenus.get(\"" + interaction.commandName + "\")`");
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                return interaction.followUp({ embeds: [errorEmbed] });
+            }
 
             // USER IS BLOCKED
             if(data.user.blocked.state){
                 const reason = data.user.blocked.reason || "Kein Grund angegeben";
                 const blockedEmbed = this.client.generateEmbed("Du wurdest von {0} blockiert und kannst keine Befehle mehr nutzen.\n{1} Grund: {2}", "error", "error", this.client.user.username, this.client.emotes.arrow, reason);
-                return interaction.editReply({ embeds: [blockedEmbed] });
+                return interaction.followUp({ embeds: [blockedEmbed] });
             }
 
             // GUILD IS BLOCKED
             if(data.guild.blocked.state){
                 const reason = data.guild.blocked.reason || "Kein Grund angegeben";
                 const blockedEmbed = this.client.generateEmbed("Da dieser Server von {0} blockiert wurde, können Befehle hier nicht mehr genutzt werden.\n{1} Grund: {2}", "error", "error", this.client.user.username, this.client.emotes.arrow, reason);
-                return interaction.editReply({ embeds: [blockedEmbed] });
+                return interaction.followUp({ embeds: [blockedEmbed] });
             }
 
             // USER IS IN COOLDOWN
@@ -57,11 +70,11 @@ module.exports = class {
             const time = userCooldown[context.help.name] || 0;
             if(time > Date.now()){
                 // STAFFS DONT HAVE COOLDOWNS
-                if(!data.user.staff.state){
+                if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(member.user.id)){
                     const seconds = Math.ceil((time - Date.now()) / 1000);
                     const secondsString = seconds > 1 ? "Sekunden" : "Sekunde";
                     const cooldownEmbed = this.client.generateEmbed("Du musst noch {0} {1} warten, bis du diesen Befehl erneut nutzen kannst.", "error", "error", seconds, secondsString);
-                    return interaction.editReply({ embeds: [cooldownEmbed] });
+                    return interaction.followUp({ embeds: [cooldownEmbed] });
                 }
             }
             interactionCooldowns[member.user.id][context.help.name] = Date.now() + context.conf.cooldown;
@@ -87,12 +100,13 @@ module.exports = class {
                 }
             });
             log.save();
+
             try {
                 return context.dispatch(interaction);
-            }catch(exc){
-                this.client.logException(exc, guild.name, member.user.username, "<ClientContext>.dispatch(<Interaction>)");
-                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten", "error", "error");
-                return interaction.editReply({ embeds: [errorEmbed] });
+            }catch(e){
+                this.client.logException(e, guild.name, member.user, "`<ClientContextMenu>.dispatch(<Interaction>)`");
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                return interaction.followUp({ embeds: [errorEmbed] });
             }
         }
 
@@ -100,16 +114,16 @@ module.exports = class {
         // --- HANDLE SUGGESTION REACTIONS --
         // ----------------------------------
         if(interaction.isButton()){
-            let splittedButtonId = interaction.customId.split("_");
+            const splittedButtonId = interaction.customId.split("_");
             if(!splittedButtonId) return;
 
             // User voted
             if(splittedButtonId[0] === "suggestion"){
-                new(require("@events/interaction/seperations/suggestion/Voted"))(this.client).dispatch(interaction, splittedButtonId, data);
+                this.client.emit("SuggestionVoted", interaction, splittedButtonId, data);
             }
             // Moderator wants to review suggestion
             if(splittedButtonId[0] === "review"){
-                new(require("@events/interaction/seperations/suggestion/Reviewed"))(this.client).dispatch(interaction, splittedButtonId, data, guild);
+                this.client.emit("SuggestionReviewed", interaction, splittedButtonId, data, guild);
             }
         }
 
@@ -118,29 +132,45 @@ module.exports = class {
         // ----------------------------
         if(interaction.isCommand()){
             const command = this.client.commands.get(interaction.commandName);
-            if(!command) return;
-            await interaction.deferReply().catch((e) => {
-                this.client.logException(e, guild.name, member.user.username, "<Interaction>.deferReply()");
-            });
+            if(!command){
+                this.client.logException(new Error("Command " + interaction.commandName + " not found"), guild.name, member.user, "`<Client>.commands.get(\"" + interaction.commandName + "\")`");
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                return interaction.reply({ embeds: [errorEmbed] });
+            }
+
+            try {
+                await interaction.deferReply();
+            }catch(e){
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                await interaction.reply({ embeds: [errorEmbed] }).catch((e) => {});
+                return this.client.logException(e, guild.name, member.user.username, "<Interaction>.deferReply()");
+            }finally{
+                if(!interaction.deferred){
+                    const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
+                    await interaction.reply({ embeds: [errorEmbed] }).catch((e) => {});
+                    return this.client.logException(new Error("CommandInteraction is not deferred, no information why"), guild.name, member.user, "`<CommandInteraction>.deferReply()`");
+                }
+            }
+
             const args = interaction.options?._hoistedOptions || [];
 
             // USER IS BLOCKED
             if(data.user.blocked.state){
                 const reason = data.user.blocked.reason || "Kein Grund angegeben";
                 const blockedEmbed = this.client.generateEmbed("Du wurdest von {0} blockiert und kannst keine Befehle mehr nutzen.\n{1} Grund: {2}", "error", "error", this.client.user.username, this.client.emotes.arrow, reason);
-                return interaction.editReply({ embeds: [blockedEmbed] });
+                return interaction.followUp({ embeds: [blockedEmbed] });
             }
 
             // GUILD IS BLOCKED
             if(data.guild.blocked.state){
                 const reason = data.guild.blocked.reason || "Kein Grund angegeben";
                 const blockedEmbed = this.client.generateEmbed("Da dieser Server von {0} blockiert wurde, können Befehle hier nicht mehr genutzt werden.\n{1} Grund: {2}", "error", "error", this.client.user.username, this.client.emotes.arrow, reason);
-                return interaction.editReply({ embeds: [blockedEmbed] });
+                return interaction.followUp({ embeds: [blockedEmbed] });
             }
 
             // CHECK IF BOT HAS ALL NEEDED PERMISSIONS
             const neededBotPermissions = [];
-            guild.me = await guild.members.fetch(this.client.user.id);
+            guild.me = await guild.members.fetch(this.client.user.id).catch((e) => {});
             if(!command.conf.botPermissions.includes("EmbedLinks")) command.conf.botPermissions.push("EmbedLinks");
             for(let permission of command.conf.botPermissions){
                 if(!channel.permissionsFor(guild.me).has(PermissionsBitField.Flags[permission])){
@@ -149,13 +179,13 @@ module.exports = class {
             }
             if(neededBotPermissions.length > 0){
                 const missingPermissionEmbed = this.client.generateEmbed("Folgende Berechtigungen fehlen mir, um den Befehl ausführen zu können:\n\n{0} {1}", "error", "error", this.client.emotes.arrow, neededBotPermissions.join("\n" + this.client.emotes.arrow + " "));
-                return interaction.editReply({ embeds: [missingPermissionEmbed] });
+                return interaction.followUp({ embeds: [missingPermissionEmbed] });
             }
 
             // COMMAND IS NSFW
             if (!channel.nsfw && command.conf.nsfw) {
                 const nsfwEmbed = this.client.generateEmbed("Dieser Befehl darf nur in NSFW-Channels genutzt werden.", "error", "error");
-                return interaction.editReply({ embeds: [nsfwEmbed] });
+                return interaction.followUp({ embeds: [nsfwEmbed] });
             }
 
             // COMMAND IS DISABLED
@@ -164,7 +194,7 @@ module.exports = class {
                 // STAFFS AND OWNERS CAN USE DISABLED COMMANDS
                 if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(member.user.id)){
                     const disabledEmbed = this.client.generateEmbed("Dieser Befehl ist derzeit deaktiviert.", "error", "error");
-                    return interaction.editReply({ embeds: [disabledEmbed] });
+                    return interaction.followUp({ embeds: [disabledEmbed] });
                 }
             }
 
@@ -177,7 +207,7 @@ module.exports = class {
             const time = userCooldown[command.help.name] || 0;
             if(time > Date.now()){
                 // STAFFS DONT HAVE COOLDOWNS
-                if(!data.user.staff.state){
+                if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(member.user.id)){
                     const seconds = Math.ceil((time - Date.now()) / 1000);
                     const secondsString = seconds > 1 ? "Sekunden" : "Sekunde";
                     const cooldownEmbed = this.client.generateEmbed("Du musst noch {0} {1} warten, bis du diesen Befehl erneut nutzen kannst.", "error", "error", seconds, secondsString);
@@ -213,8 +243,8 @@ module.exports = class {
             try {
                 command.dispatch(interaction, data)
             }catch (e) {
-                this.client.logException(e, guild.name, member.user.username, "<ClientCommand>.dispatch(<Interaction>, <Data>)");
-                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten", "error", "error");
+                this.client.logException(e, guild.name, member.user, "`<ClientCommand>.dispatch(<Interaction>, <Data>)`");
+                const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
                 return interaction.editReply({ embeds: [errorEmbed] });
             }
         }

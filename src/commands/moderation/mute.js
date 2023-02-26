@@ -145,10 +145,9 @@ class Mute extends BaseCommand {
                             await mute.victim.send({ embeds: [privateMuteEmbed] }).catch(() => {});
 
                             const logText =
-                                " **Mitglied gemutet**\n\n" +
-                                this.client.emotes.arrow + "Mitglied: " + mute.victim.user.tag + "\n" +
-                                this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
-                                this.client.emotes.arrow + " Grund: " + mute.reason;
+                                " **" + mute.victim.user.tag + " wurde gemutet**\n\n" +
+                                this.client.emotes.user + " Moderator: " + this.interaction.user.tag + "\n" +
+                                this.client.emotes.text + " Grund: " + mute.reason;
                             await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.timeout, "normal", mute.victim.user.displayAvatarURL({ dynamic: true }));
 
 

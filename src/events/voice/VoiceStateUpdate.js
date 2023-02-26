@@ -1,14 +1,9 @@
 const { PermissionsBitField, ChannelType } = require('discord.js');
 
 module.exports = class {
-
     constructor(client) {
         this.client = client;
-        this.type = "client";
     }
-
-    getType(){ return this.type }
-
     async dispatch(oldMember, newMember){
         if(!oldMember || !newMember) return;
 
@@ -52,9 +47,8 @@ module.exports = class {
                         ]
                     }).catch((e) => {
                         const logText =
-                            " **Fehler beim Erstellen von Sprachchannel**\n\n" +
-                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel erstellen, konnte dies aber nicht.";
-                        return newMember.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", newMember.guild.iconURL());
+                            " **Erstellen von Join2Create-Channel fehlgeschlagen**";
+                        return newMember.guild.logAction(logText, "guild", this.client.emotes.error, "error");
                     });
 
                     if(tempChannel){
@@ -76,9 +70,8 @@ module.exports = class {
                     if(oldChannel.members.size >= 1) return;
                     await oldChannel.delete().catch((e) => {
                         const logText =
-                            " **Fehler beim Löschen von Sprachchannel**\n\n" +
-                            this.client.emotes.arrow + "Ich wollte einen temporären Sprachchannel löschen, konnte dies aber nicht.";
-                        return newMember.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", newMember.guild.iconURL());
+                            " **Löschen von Join2Create-Channel fehlgeschlagen**";
+                        return newMember.guild.logAction(logText, "guild", this.client.emotes.error, "error");
                     });
                     guildData.settings.joinToCreate.channels = guildData.settings.joinToCreate.channels.filter(c => c !== oldChannel.id);
                     guildData.markModified("settings.joinToCreate");

@@ -1,10 +1,7 @@
 module.exports = class {
     constructor(client){
         this.client = client;
-        this.type = "client";
     }
-
-    getType(){ return this.type }
     async dispatch(member){
         if(!member || !member.id || !member.guild) return;
         const guild = member.guild;
@@ -12,6 +9,12 @@ module.exports = class {
         const guildData = await this.client.findOrCreateGuild({
             id: guild.id
         });
+
+        // Log to member log
+        const logText =
+            " **" + member.user.tag + " hat den Server verlassen**";
+
+        await guild.logAction(logText, "guild", this.client.emotes.events.member.ban, "error", member.user.displayAvatarURL({ dynamic: true }));
 
         if(guildData.settings?.farewell.enabled){
             function parseMessage(str){
@@ -29,10 +32,8 @@ module.exports = class {
             const goodbyeChannel = guild.channels.cache.get(guildData.settings.farewell.channel) || await guild.channels.fetch(guildData.settings.farewell.channel).catch(() => {});
             if(!goodbyeChannel) {
                 const desc =
-                    "Abschiedsnachricht konnte nicht gesendet werden\n\n" +
-                    this.client.emotes.arrow + " Nutzer: " + member.user.tag + "\n" +
-                    this.client.emotes.arrow + " Aktion: Der Channel konnte nicht gefunden werden";
-                return guild.logAction(desc, "guild", this.client.emotes.error, "error", member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                    " **Senden von Verabschiedungsnachricht fehlgeschlagen, da der Channel nicht gefunden wurde**";
+                return guild.logAction(desc, "guild", this.client.emotes.error, "error");
             }
 
             if(guildData.settings.farewell.type === "embed"){
@@ -40,28 +41,16 @@ module.exports = class {
                 goodbyeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
                 return goodbyeChannel.send({ embeds: [goodbyeEmbed] }).catch((e) => {
                     const desc =
-                        "Abschiedsnachricht konnte nicht gesendet werden\n\n" +
-                        this.client.emotes.arrow + " Nutzer: " + member.user.tag + "\n" +
-                        this.client.emotes.arrow + " Aktion: Embed konnte nicht gesendet werden";
-                    return guild.logAction(desc, "guild", this.client.emotes.error, "error", member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                        " **Senden von Verabschiedungsnachricht fehlgeschlagen**";
+                    return guild.logAction(desc, "guild", this.client.emotes.error, "error");
                 });
             }else if(guildData.settings.welcome.type === "text"){
                 return goodbyeChannel.send({ content: goodbyeMessage }).catch((e) => {
                     const desc =
-                        "Abschiedsnachricht konnte nicht gesendet werden\n\n" +
-                        this.client.emotes.arrow + " Nutzer: " + member.user.tag + "\n" +
-                        this.client.emotes.arrow + " Aktion: Textnachricht konnte nicht gesendet werden";
-                    return guild.logAction(desc, "guild", this.client.emotes.error, "error", member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                        " **Senden von Verabschiedungsnachricht fehlgeschlagen**";
+                    return guild.logAction(desc, "guild", this.client.emotes.error, "error");
                 });
             }
         }
-
-        // Log to member log
-        const logText =
-            " **Mitglied verloren**\n\n" +
-            this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
-            this.client.emotes.arrow + "Aktion: Hat den Server verlassen";
-
-        return guild.logAction(logText, "guild", this.client.emotes.events.guild.update, "error", member.user.displayAvatarURL({ dynamic: true }));
     }
 }

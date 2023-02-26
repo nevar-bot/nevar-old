@@ -1,7 +1,7 @@
 module.exports = class {
     constructor(client) {
         this.client = client;
-        this.type = "other";
+        this.type = "client";
     }
 
     getType(){ return this.type }

@@ -4,11 +4,7 @@ module.exports = class {
     constructor(client) {
         this.client = client;
         this.timeouts = new Set();
-        this.type = "client";
     }
-
-    getType(){ return this.type }
-
     async dispatch(message) {
         if (!message || !message.member || !message.guild || !message.guild.available) return;
 
@@ -32,12 +28,12 @@ module.exports = class {
 
         // AUTHOR MENTIONS AFK USER
         if((message.mentions.repliedUser || message.mentions.users) && !message.author.bot){
-            await new (require('./seperations/MemberIsAway'))(this.client).dispatch(message, data, guild);
+            this.client.emit("MemberIsAway", message, data, guild);
         }
 
         // AUTHOR IS AFK
         if(data.user.afk.state){
-            await new (require('./seperations/MemberIsBack'))(this.client).dispatch(message, data, guild);
+            this.client.emit("MemberIsBack", message, data, guild);
         }
 
         // MENTIONED BOT
@@ -91,6 +87,7 @@ module.exports = class {
             if(clientCommand.help.category === "owner" && data.user.staff.role !== "owner" && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
 
             clientCommand.dispatch(message, args, data).catch((e) => {
+                console.log("test");
                 this.client.logException(e, message.guild, message.author.tag, "<ClientMessageCommand>.dispatch()");
             });
         }
@@ -104,9 +101,8 @@ module.exports = class {
                 this.client.wait(Number(time)).then(() => {
                    if(!message.pinned) message.delete().catch((exception) => {
                        const logText =
-                           " **Fehler beim Löschen von Nachricht**\n\n" +
-                           this.client.emotes.arrow + "Ich wollte eine Nachricht aufgrund des eingestellten Autodeletes in " + message.channel.toString() + " löschen, konnte dies aber nicht.";
-                       return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
+                           " **Löschen von Nachricht durch Autodelete fehlgeschlagen**";
+                       return guild.logAction(logText, "guild", this.client.emotes.error, "error");
                   });
                 });
             }
@@ -120,9 +116,8 @@ module.exports = class {
                 if(channelId !== message.channel.id) continue;
                 message.react(emoji).catch((exception) => {
                     const logText =
-                        " **Fehler beim Reagieren auf Nachricht**\n\n" +
-                        this.client.emotes.arrow + "Ich wollte auf eine Nachricht aufgrund des eingestellten Autoreacts in " + message.channel.toString() + " reagieren, konnte dies aber nicht.";
-                    return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
+                        " **Reagieren auf Nachricht durch Autoreact fehlgeschlagen**";
+                    return guild.logAction(logText, "guild", this.client.emotes.error, "error");
                 });
             }
         }
@@ -161,9 +156,8 @@ module.exports = class {
                             if(Number(level) === newLevel || Number(level) < newLevel){
                                 message.member.roles.add(roleId).catch((exception) => {
                                     const logText =
-                                        " **Fehler beim Vergeben von Level-Rolle**\n\n" +
-                                        this.client.emotes.arrow + "Ich wollte " + message.member.user.tag + " eine Level-Rolle vergeben, konnte dies aber nicht.";
-                                    return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
+                                        " **Vergeben von Levelrolle fehlgeschlagen**";
+                                    return guild.logAction(logText, "guild", this.client.emotes.error, "error");
                                 });
                             }
                         }
@@ -191,9 +185,8 @@ module.exports = class {
 
                     channel.send({ content: parsedMessage }).catch((exception) => {
                         const logText =
-                            " **Fehler beim Senden von Level-Up-Nachricht**\n\n" +
-                            this.client.emotes.arrow + "Ich wollte eine Level-Up-Nachricht in " + channel.toString() + " senden, konnte dies aber nicht.";
-                        return guild.logAction(logText, "moderation", this.client.emotes.error, "normal", message.guild.iconURL());
+                            " **Senden von Level-Up-Nachricht fehlgeschlagen**";
+                        return guild.logAction(logText, "guild", this.client.emotes.error, "error");
                     });
 
                 }

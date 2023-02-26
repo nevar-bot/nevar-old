@@ -38,21 +38,9 @@ module.exports = class Loader {
             try {
                 const eventName = path.basename(file, ".js");
                 const event = new(require(filePath))(client);
-                const type = event.getType();
-                // Discord events
-                if(type === "client"){
-                    client.on(Events[eventName], (...args) => event.dispatch(...args));
-                    success++;
-                }
-                // Giveaway manager events
-                if(type === "giveaway"){
-                    client.giveawayManager.on(eventName, (...args) => event.dispatch(...args));
-                    success++;
-                }
-                if(type === "log"){
-                    client.on(eventName, (...args) => event.dispatch(...args));
-                    success++;
-                }
+                if(!Events[eventName]) Events[eventName] = eventName;
+                client.on(Events[eventName], (...args) => event.dispatch(...args));
+                success++;
                 delete require.cache[require.resolve(filePath)];
             } catch (ex) {
                 failed++;

@@ -13,10 +13,9 @@ module.exports = {
 
                 guild.members.unban(memberData.id, "Automatischer Unban").catch((e) => {
                     const desc =
-                        "Automatischer Unban fehlgeschlagen\n\n" +
-                        client.emotes.arrow + " Nutzer: " + memberData.id + "\n" +
-                        client.emotes.arrow + " Aktion: Automatischer Unban";
-                    guild.logAction(desc, "moderation", "error", "error", null);
+                        " **Automatischer Unban fehlgeschlagen**\n\n" +
+                        client.emotes.user + " Nutzer: " + memberData.id;
+                    guild.logAction(desc, "moderation", this.client.emotes.error, "error");
                 });
 
                 memberData.banned = {

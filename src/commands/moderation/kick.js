@@ -65,11 +65,10 @@ class Kick extends BaseCommand {
                 await member.send({ embeds: [privateEmbed] }).catch(() => {});
 
                 const logText =
-                    " **Mitglied gekickt**\n\n" +
-                    this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
-                    this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
-                    this.client.emotes.arrow + " Grund: " + reason;
-                await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", member.user.displayAvatarURL({ dynamic: true }));
+                    " **" + member.user.tag + " wurde gekickt**\n\n" +
+                    this.client.emotes.user + " Moderator: " + this.interaction.member.user.tag + "\n" +
+                    this.client.emotes.text + " Grund: " + reason;
+                await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.events.member.ban, "normal", member.user.displayAvatarURL({ dynamic: true }));
 
                 const publicText =
                     " " + member.user.tag + " wurde gekickt.\n\n" +

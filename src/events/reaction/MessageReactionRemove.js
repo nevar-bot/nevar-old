@@ -1,10 +1,7 @@
 module.exports = class {
     constructor(client) {
         this.client = client;
-        this.type = "client";
     }
-
-    getType(){ return this.type }
     async dispatch(messageReaction, user){
         if(!user || !messageReaction || user.bot) return;
 
@@ -21,9 +18,8 @@ module.exports = class {
                 const member = await messageReaction.message.guild.members.fetch(user.id).catch(() => {});
                 member.roles.remove(roleId, "REACTION ROLE").catch((e) => {
                     const logText =
-                        " **Fehler beim Entziehen von Rolle**\n\n" +
-                        this.client.emotes.arrow + "Ich wollte eine Reactionrole entziehen, konnte dies aber nicht.";
-                    return messageReaction.guild.logAction(logText, "moderation", this.client.emotes.error, "normal", messageReaction.guild.iconURL());
+                        " **Entziehen von Reaction-Rolle fehlgeschlagen**";
+                    return messageReaction.guild.logAction(logText, "moderation", this.client.emotes.error, "error");
                 });
             }
         }

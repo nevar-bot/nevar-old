@@ -4,10 +4,7 @@ const moment = require("moment");
 module.exports = class {
     constructor(client) {
         this.client = client
-        this.type = "client"
     }
-
-    getType(){ return this.type }
     async dispatch(guild){
         if(!guild || !guild.id || !guild.available) return
         await guild.fetch();

@@ -54,11 +54,10 @@ class RemoveWarn extends BaseCommand {
         await targetData.save();
 
         const logText =
-            " **Verwarnung entfernt**\n\n" +
-            this.client.emotes.arrow + "Mitglied: " + member.user.tag + "\n" +
-            this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
-            this.client.emotes.arrow + " Warn-Nr.: " + num;
-        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", member.user.displayAvatarURL({ dynamic: true }));
+            " **Verwarnung von " + member.user.tag + " entfernt**\n\n" +
+            this.client.emotes.user + " Moderator: " + this.interaction.user.tag + "\n" +
+            this.client.emotes.text + " Warn-Nr.: " + num;
+        await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.delete, "normal", member.user.displayAvatarURL({ dynamic: true }));
 
 
         const successEmbed = this.client.generateEmbed("Die {0}. Verwarnung von {1} wurde entfernt.", "success", "success", num, member.user.tag);

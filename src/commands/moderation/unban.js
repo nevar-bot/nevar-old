@@ -64,13 +64,6 @@ class Unban extends BaseCommand {
             await memberData.save();
             this.client.databaseCache.bannedUsers.delete(memberData.id + memberData.guildID);
 
-            const logText =
-                " **Nutzer entbannt**\n\n" +
-                this.client.emotes.arrow + "Nutzer: " + user.tag + "\n" +
-                this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag;
-            await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.ban, "normal", user.displayAvatarURL({ dynamic: true }));
-
-
             const successEmbed = this.client.generateEmbed("{0} wurde entbannt.", "success", "success", user.tag);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(e){

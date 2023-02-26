@@ -17,9 +17,12 @@ module.exports = class BaseClient extends Client {
                 GatewayIntentBits.GuildVoiceStates,
                 GatewayIntentBits.GuildBans,
                 GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.GuildMessageTyping
+                GatewayIntentBits.GuildMessageTyping,
+                GatewayIntentBits.GuildEmojisAndStickers,
+                GatewayIntentBits.GuildScheduledEvents,
+                GatewayIntentBits.GuildInvites,
             ],
-            partials: [Partials.User, Partials.Message, Partials.Reaction, Partials.Channel, Partials.GuildMember],
+            partials: [Partials.User, Partials.Message, Partials.Reaction, Partials.Channel, Partials.GuildMember, Partials.GuildScheduledEvent, Partials.ThreadMember],
             allowedMentions:{
                 parse: ["users"]
             }

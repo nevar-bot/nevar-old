@@ -1,13 +1,7 @@
-const moment = require("moment/moment");
-const {EmbedBuilder} = require("discord.js");
 module.exports = class {
     constructor(client) {
         this.client = client;
-        this.type = "other";
     }
-
-    getType(){ return this.type }
-
     async dispatch(message, data, guild) {
         const since = data.user.afk.since;
         const afkReason = data.user.afk.reason;

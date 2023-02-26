@@ -10,10 +10,8 @@ configValidator();
 // Initialize client
 const client = new BaseClient();
 
-process.on("unhandledRejection", (err) => {
-    client.logger.error("Unhandled exception", err);
-    console.log(err);
-    client.logException(err, null, null, null);
+process.on("unhandledRejection", (e) => {
+    return client.logException(e, null, null, null);
 });
 
 (async () => {
