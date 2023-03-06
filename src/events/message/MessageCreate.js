@@ -86,9 +86,13 @@ module.exports = class {
             if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
             if(clientCommand.help.category === "owner" && data.user.staff.role !== "owner" && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
 
+            try {
+                clientCommand.dispatch(message, args, data);
+            }catch(e){
+                return this.client.logException(e, message.guild)
+            }
             clientCommand.dispatch(message, args, data).catch((e) => {
-                console.log("test");
-                this.client.logException(e, message.guild, message.author.tag, "<ClientMessageCommand>.dispatch()");
+                this.client.logException(e, message.guild, message.author, "<ClientMessageCommand>.dispatch(<Message>, <Args>, <Data>)");
             });
         }
 

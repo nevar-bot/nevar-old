@@ -36,7 +36,7 @@ module.exports = class {
                 if(!interaction.deferred){
                     const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten, bitte kontaktiere den Support.", "error", "error");
                     await interaction.reply({ embeds: [errorEmbed] }).catch((e) => {});
-                    return this.client.logException(new Error("ContextInteraction is not deferred, no information why"), guild.name, member.user, "`<ContextInterction>.deferReply()`");
+                    return this.client.logException(new Error("ContextInteraction is not deferred, no information why"), guild.name, member.user, "`<ContextInteraction>.deferReply()`");
                 }
             }
 

@@ -5,7 +5,6 @@ const fs = require("fs");
 const axios = require("axios");
 const giveawaysHandler = require("@handlers/giveaway");
 const Logger = require("@helpers/Logger");
-const log = require("discord-logs");
 
 module.exports = class BaseClient extends Client {
     constructor() {
@@ -60,9 +59,6 @@ module.exports = class BaseClient extends Client {
         }
 
         this.utils = require("@helpers/Utils");
-
-        log(this);
-
     }
 
     generateEmbed(message, emote, type, ...args) {
@@ -169,7 +165,7 @@ module.exports = class BaseClient extends Client {
     async deleteUser({ id: userID }){
         if(this.databaseCache.users.get(userID)){
             await this.usersData.findOneAndDelete({id: userID}).catch((e) => {
-                this.logException(e, null, null, "this.deleteUser(" + userID + ")")
+                this.logException(e, null, null, "<Client>.deleteUser(\"" + userID + "\")")
             });
             this.databaseCache.users.delete(userID);
         }
@@ -178,7 +174,7 @@ module.exports = class BaseClient extends Client {
     async deleteMember({id: memberID, guildID}){
         if(this.databaseCache.members.get(`${memberID}${guildID}`)){
             await this.membersData.findOne({id: memberID, guildID: guildID}).deleteOne().exec().catch((e) => {
-                this.logException(e, null, null, "this.deleteMember(" + memberID + ", " + guildID + ")");
+                this.logException(e, null, null, "<Client>.deleteMember(\"" + memberID + "\", " + guildID + "\")");
             });
             this.databaseCache.members.delete(`${memberID}${guildID}`);
         }
@@ -187,7 +183,7 @@ module.exports = class BaseClient extends Client {
     async deleteGuild({id: guildID}){
         if(this.databaseCache.guilds.get(guildID)){
             await this.guildsData.findOne({id: guildID}).deleteOne().exec().catch((e) => {
-                this.logException(e, null, null, "this.deleteGuild(" + guildID + ")");
+                this.logException(e, null, null, "<Client>.deleteGuild(\"" + guildID + "\")");
             });
             this.databaseCache.guilds.delete(guildID);
         }
@@ -216,7 +212,7 @@ module.exports = class BaseClient extends Client {
                 if(guild){
                     guild.members.push(memberData._id);
                     await guild.save().catch((e) => {
-                        this.logException(e, null, null, "await guild.save()");
+                        this.logException(e, null, null, "await <GuildData>.save()");
                     });
                 }
                 this.databaseCache.members.set(`${memberID}${guildID}`, memberData);

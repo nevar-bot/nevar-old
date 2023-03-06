@@ -6,6 +6,7 @@ module.exports = class {
     async dispatch(oldMember, newMember) {
         if(!oldMember || !newMember || !newMember.guild) return;
         const { guild } = newMember;
+        if(!guild.members.cache.find((m) => m.id === oldMember.id)) return;
         
         const changes = [];
         if(oldMember.nickname !== newMember.nickname) changes.push(this.client.emotes.edit + " Nickname von **" + oldMember.displayName + "** auf **" + newMember.displayName + "** geändert");

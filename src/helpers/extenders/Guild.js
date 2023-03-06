@@ -110,7 +110,5 @@ Guild.prototype.logAction = async function(log, logType, emoji, embedType, thumb
     if(!logChannel) return;
     const logEmbed = client.generateEmbed(emoji + " " + log, null, embedType);
     logEmbed.setThumbnail(thumbnail)
-    return logChannel.send({ embeds: [logEmbed]}).catch((e) => {
-        client.logException(e, this.name, null, "<Guild||Prototype>.logAction(\"" + log + "\", \"" + logType + "\", \"" + emoji + "\", \"" + embedType + "\", \"" + thumbnail + "\")");
-    });
+    return logChannel.send({ embeds: [logEmbed]}).catch((e) => {});
 }
