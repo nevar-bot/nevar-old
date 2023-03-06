@@ -39,9 +39,9 @@ class Searchserver extends BaseCommand {
         const botPercentage = Math.round((botCount / memberCount) * 100);
         const humanPercentage = Math.round((humanCount / memberCount) * 100);
 
-        const createdDate = moment(guild.createdTimestamp).format("DD.MM.YYYY HH:mm:ss");
+        const createdDate = moment(guild.createdTimestamp).format("DD.MM.YYYY HH:mm");
         const createdDiff = this.client.utils.getRelativeTime(guild.createdTimestamp);
-        const invitedDate = moment(guild.joinedAt).format("DD.MM.YYYY HH:mm:ss");
+        const invitedDate = moment(guild.joinedAt).format("DD.MM.YYYY HH:mm");
         const invitedDiff = this.client.utils.getRelativeTime(guild.joinedTimestamp);
         const executedCommands = (await (await mongoose.connection.db.collection("logs")).find({ "guild.id": guild.id }).toArray()).length;
 

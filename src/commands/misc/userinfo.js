@@ -41,10 +41,10 @@ class Userinfo extends BaseCommand {
         const data = await this.client.findOrCreateUser({ id: member.user.id });
 
         const name = member.user.tag;
-        const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm:ss");
+        const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
         const createdDiff = this.client.utils.getRelativeTime(member.user.createdTimestamp);
         const nickname = member.nickname ? member.nickname : member.user.username;
-        const joinedAt = moment(member.joinedTimestamp).format("DD.MM.YYYY HH:mm:ss");
+        const joinedAt = moment(member.joinedTimestamp).format("DD.MM.YYYY HH:mm");
         const joinedDiff = this.client.utils.getRelativeTime(member.joinedTimestamp);
         const bot = member.user.bot ? "Ja" : "Nein";
         const userFlags = (await member.user.fetchFlags()).toArray();
