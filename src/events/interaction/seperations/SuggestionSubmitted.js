@@ -6,11 +6,12 @@ module.exports = class {
 
     getType(){ return this.type }
 
-    async dispatch(interaction, data, guild, suggestion) {
+    async dispatch(interaction, data, guild, suggestion, image) {
         // Send suggestion to suggestion channel
         const suggestionEmbed = this.client.generateEmbed(suggestion, "arrow", "normal");
         suggestionEmbed.setTitle("Idee von " + interaction.member.user.username);
         suggestionEmbed.setThumbnail(interaction.member.user.displayAvatarURL({ dynamic: true }));
+        suggestionEmbed.setImage(image);
         suggestionEmbed.setFooter({ text: "👍 0 • 👎 0" });
 
         const id = interaction.member.user.id;
