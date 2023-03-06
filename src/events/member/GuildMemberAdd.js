@@ -1,3 +1,4 @@
+const moment = require("moment/moment");
 module.exports = class {
     constructor(client){
         this.client = client;
@@ -16,8 +17,13 @@ module.exports = class {
         });
 
         // Log to member log
+        const createdAt = moment(member.joinedTimestamp).format("DD.MM.YYYY HH:mm");
+        const createdDiff = this.client.utils.getRelativeTime(member.joinedTimestamp);
+
         const logText =
-            " **" + member.user.tag + " hat den Server betreten**";
+            " **" + member.user.tag + " hat den Server betreten**\n\n" +
+            this.client.emotes.calendar + " Account erstellt am: **" + createdAt + "**\n" +
+            this.client.emotes.reminder + " Account erstellt vor: **" + createdDiff + "**";
 
         await guild.logAction(logText, "guild", this.client.emotes.events.member.unban, "success", member.user.displayAvatarURL({ dynamic: true }));
 
