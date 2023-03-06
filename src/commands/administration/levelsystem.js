@@ -115,6 +115,10 @@ class Levelsystem extends BaseCommand {
                             .setName("variablen")
                             .setDescription("Listet alle Variablen, die in der Level-Up Nachricht verwendet werden können")
                         )
+                        .addSubcommand(subcommand => subcommand
+                            .setName("test")
+                            .setDescription("Testet die Level-Up Nachricht")
+                        )
             }
         });
     }
@@ -169,6 +173,9 @@ class Levelsystem extends BaseCommand {
                 break;
             case "variablen":
                 await this.listVariables();
+                break;
+            case "test":
+                await this.sendPreview(data);
                 break;
         }
     }
@@ -453,6 +460,45 @@ class Levelsystem extends BaseCommand {
             "**{server:membercount}** - Anzahl an Mitgliedern des Servers"
         ];
         await this.client.utils.sendPaginatedEmbed(this.interaction, 3, variables, "Verfügbare Variablen", "Es sind keine Variablen verfügbar", "shine");
+    }
+
+    async sendPreview(data){
+        if(!data.guild.settings.levels.enabled){
+            const notEnabledEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [notEnabledEmbed] });
+        }
+        if(!data.guild.settings.levels.message){
+            const noMessageEmbed = this.client.generateEmbed("Es wurde keine Nachricht für die Level-Up Nachricht festgelegt.", "error", "error");
+            return this.interaction.followUp({ embeds: [noMessageEmbed] });
+        }
+
+        const member = this.interaction.member;
+        const self = this;
+        function parseMessage(str){
+            return str
+                .replaceAll(/{level}/g, 1)
+                .replaceAll(/{user}/g, member)
+                .replaceAll(/{user:username}/g, member.user.username)
+                .replaceAll(/{user:tag}/g, member.user.tag)
+                .replaceAll(/{user:discriminator}/g, member.user.discriminator)
+                .replaceAll(/{user:nickname}/g, member.nickname)
+                .replaceAll(/{user:id}/g, member.user.id)
+                .replaceAll(/{server:name}/g, self.interaction.guild.name)
+                .replaceAll(/{server:id}/g, self.interaction.guild.id)
+                .replaceAll(/{server:membercount}/g, self.interaction.guild.memberCount)
+        }
+
+        const channel = this.client.channels.cache.get(data.guild.settings.levels.channel) || this.interaction.channel;
+        const message = parseMessage(data.guild.settings.levels.message);
+
+        try {
+            await channel.send({ content: message });
+            const successEmbed = this.client.generateEmbed("Die Level-Up Nachricht wurde getestet", "success", "success");
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }catch(e){
+            const errorEmbed = this.client.generateEmbed("Die Level-Up Nachricht konnte nicht gesendet werden", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
     }
 }
 
