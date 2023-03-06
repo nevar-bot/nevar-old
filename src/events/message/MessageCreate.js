@@ -89,11 +89,8 @@ module.exports = class {
             try {
                 clientCommand.dispatch(message, args, data);
             }catch(e){
-                return this.client.logException(e, message.guild)
+                return this.client.logException(e, message.guild, message.author, "<ClientMessageCommand>.dispatch(<Message>, <Args>, <Data>)");
             }
-            clientCommand.dispatch(message, args, data).catch((e) => {
-                this.client.logException(e, message.guild, message.author, "<ClientMessageCommand>.dispatch(<Message>, <Args>, <Data>)");
-            });
         }
 
         // AUTODELETE
