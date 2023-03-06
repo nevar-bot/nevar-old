@@ -459,7 +459,7 @@ class Levelsystem extends BaseCommand {
             "**{server:id}** - ID des Servers",
             "**{server:membercount}** - Anzahl an Mitgliedern des Servers"
         ];
-        await this.client.utils.sendPaginatedEmbed(this.interaction, 3, variables, "Verfügbare Variablen", "Es sind keine Variablen verfügbar", "shine");
+        await this.client.utils.sendPaginatedEmbed(this.interaction, 10, variables, "Verfügbare Variablen", "Es sind keine Variablen verfügbar", "shine");
     }
 
     async sendPreview(data){
