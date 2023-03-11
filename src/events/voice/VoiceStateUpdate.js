@@ -29,29 +29,27 @@ module.exports = class {
                         parent: guildData.settings.joinToCreate.category ? guildData.settings.joinToCreate.category : newMember.channel.parentId,
                         bitrate: parseInt(guildData.settings.joinToCreate.bitrate)*1000,
                         position: guildData.settings.joinToCreate.category ? 0 : newMember.channel.position,
-                        userLimit: guildData.settings.joinToCreate.userLimit,
-                        permissionOverwrites: [
-                            {
-                                id: newMember.member.user.id,
-                                allow: [
-                                    PermissionsBitField.Flags.Connect,
-                                    PermissionsBitField.Flags.Speak,
-                                    PermissionsBitField.Flags.ViewChannel,
-                                    PermissionsBitField.Flags.ManageChannels,
-                                    PermissionsBitField.Flags.Stream,
-                                    PermissionsBitField.Flags.MuteMembers,
-                                    PermissionsBitField.Flags.DeafenMembers,
-                                    PermissionsBitField.Flags.MoveMembers
-                                ]
-                            }
-                        ]
+                        userLimit: guildData.settings.joinToCreate.userLimit
                     }).catch((e) => {
                         const logText =
                             " **Erstellen von Join2Create-Channel fehlgeschlagen**";
                         return newMember.guild.logAction(logText, "guild", this.client.emotes.error, "error");
                     });
 
+
                     if(tempChannel){
+                        await tempChannel.lockPermissions();
+                        await tempChannel.permissionOverwrites.create(newMember.member.user, {
+                            Connect: true,
+                            Speak: true,
+                            ViewChannel: true,
+                            ManageChannels: true,
+                            Stream: true,
+                            MuteMembers: true,
+                            DeafenMembers: true,
+                            MoveMembers: true
+                        });
+
                         await newMember.member.voice.setChannel(tempChannel)
                             .catch(() => { tempChannel.delete().catch(() => {}) })
                             .then(async () => {
