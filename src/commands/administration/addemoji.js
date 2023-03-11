@@ -26,6 +26,7 @@ class Addemoji extends BaseCommand {
                         .setRequired(false)
                         .setName("name")
                         .setDescription("Gib einen Namen für den Emoji ein")
+                        .setMaxLength(32)
                     )
             }
         });
