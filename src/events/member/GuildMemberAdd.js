@@ -18,12 +18,12 @@ module.exports = class {
 
         // Log to member log
         const createdAt = moment(member.createdTimestamp).format("DD.MM.YYYY HH:mm");
-        const createdDiff = this.client.utils.getRelativeTime(member.createdTimestamp);
+        const createdDiff = this.client.utils.getRelativeTime(moment(member.createdTimestamp));
 
         const logText =
             " **" + member.user.tag + " hat den Server betreten**\n\n" +
-            this.client.emotes.calendar + " Account erstellt am: **" + createdAt + "**\n" +
-            this.client.emotes.reminder + " Account erstellt vor: **" + createdDiff + "**";
+            this.client.emotes.calendar + " Account erstellt am: **" + createdAt + "**";
+           // this.client.emotes.reminder + " Account erstellt vor: **" + createdDiff + "**";
 
         await guild.logAction(logText, "guild", this.client.emotes.events.member.unban, "success", member.user.displayAvatarURL({ dynamic: true }));
 
