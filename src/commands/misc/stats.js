@@ -5,7 +5,6 @@ const fs = require('fs');
 const mongoose = require("mongoose");
 
 class Stats extends BaseCommand {
-
     constructor(client) {
         super(client, {
             name: "stats",
@@ -29,21 +28,21 @@ class Stats extends BaseCommand {
 
     async sendStats(){
         const staffsdata = (await (await mongoose.connection.db.collection("users")).find({ "staff.state": true }).toArray())
+        const head_staffs = [];
         const staffs = [];
+
         for(let ownerId of this.client.config.general["OWNER_IDS"]){
-            const owner = await this.client.users.fetch(ownerId).catch(() => {});
-            staffs.push(owner.tag + " (Head-Staff)");
+            const headStaff = await this.client.users.fetch(ownerId).catch(() => {});
+            head_staffs.push(headStaff.tag);
         }
+
         for(let userdata of staffsdata){
             const user = await this.client.users.fetch(userdata.id).catch(() => {});
-            const staffRole = userdata.staff.role;
-            let textStaff = "";
-            if(staffRole === "head-staff") textStaff = "Head-Staff";
-            if(staffRole === "staff") textStaff = "Staff";
-            
-            if(staffRole === "head-staff") staffs.unshift(user.tag + ` (${textStaff})`);
-            else
-            if(!staffs.includes(user.tag)) staffs.push(user.tag + ` (${textStaff})`);
+            if(userdata.staff.role === "head-staff"){
+                if(!head_staffs.includes(user.tag)) head_staffs.push(user.tag);
+            }else if(userdata.staff.role === "staff"){
+                if(!head_staffs.includes(user.tag) && !staffs.includes(user.tag)) staffs.push(user.tag);
+            }
         }
     
 
@@ -58,14 +57,17 @@ class Stats extends BaseCommand {
         const botVersion = packageJson.version;
         const nodeVer = process.version.replace("v", "");
         const djsV = require("discord.js").version;
+        const date = new Date(Date.now());
+        let month = date.toLocaleString('de-DE', {month: "long"});
+        month = month.charAt(0).toUpperCase() + month.slice(1);
 
         const text =
-            this.client.emotes.users + " Staffs: **\n"+ this.client.emotes.shine2 + " " + staffs.join("\n" + this.client.emotes.shine2 + " ") + "**\n\n" +
+            this.client.emotes.users + " Staffs: **\n"+ this.client.emotes.shine + " " + head_staffs.join("\n" + this.client.emotes.shine + " " ) + "\n" + this.client.emotes.shine2 + " " + staffs.join("\n" + this.client.emotes.shine2 + " ") + "**\n\n" +
             this.client.emotes.rocket + " Server: **" + this.client.format(serverCount) + "**\n" +
             this.client.emotes.users + " Nutzer: **" + this.client.format(userCount) + "**\n" +
             this.client.emotes.channel + " Channel: **" + this.client.format(channelCount) + "**\n\n" +
             this.client.emotes.reminder + " Uptime: **" + uptime + "**\n" +
-            this.client.emotes.shine + " Votes diesen Monat: **" + this.client.format(voteCount) + "**\n\n" +
+            this.client.emotes.shine + " Votes im " + month + ": **" + this.client.format(voteCount) + "**\n\n" +
             this.client.emotes.slashcommand + " Befehle: **" + commandCount + "**\n" +
             this.client.emotes.loading + " Befehle ausgeführt: **" + this.client.format(executedCommands) + "**\n\n" +
             this.client.emotes.code + " Bot-Version: **" + botVersion + "**\n" +
