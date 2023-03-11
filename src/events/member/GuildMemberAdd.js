@@ -18,7 +18,7 @@ module.exports = class {
 
         // Log to member log
         const createdAt = moment(member.createdTimestamp).format("DD.MM.YYYY HH:mm");
-        const createdDiff = this.client.utils.getRelativeTime(moment(member.createdTimestamp));
+        const createdDiff = this.client.utils.getRelativeTime(member.createdTimestamp);
 
         const logText =
             " **" + member.user.tag + " hat den Server betreten**\n\n" +
