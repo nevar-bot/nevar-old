@@ -9,6 +9,13 @@ const Schema = new mongoose.Schema({
         ended: Boolean,
         winnerCount: Number,
         prize: String,
+        buttons: {
+            join: mongoose.Mixed,
+            leave: mongoose.Mixed,
+            joinReply: mongoose.Mixed,
+            leaveReply: mongoose.Mixed
+        },
+        entrantIds: { type: [String], default: undefined },
         messages: {
             giveaway: String,
             giveawayEnded: String,

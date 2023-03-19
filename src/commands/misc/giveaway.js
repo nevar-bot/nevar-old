@@ -119,12 +119,8 @@ class Giveaway extends BaseCommand {
             winnerCount: winner,
             prize: win,
             hostedBy: this.interaction.user,
-            botsCanWin: false,
-            embedColor: this.client.config.embeds["DEFAULT_COLOR"],
-            embedColorEnd: this.client.config.embeds["WARNING_COLOR"],
-            thumbnail: this.client.user.displayAvatarURL(),
-            reaction: this.client.emotes.tada,
 
+            thumbnail: this.client.user.displayAvatarURL(),
             messages: {
                 giveaway:
                     "🎉🎉 **GEWINNSPIEL** 🎉🎉",

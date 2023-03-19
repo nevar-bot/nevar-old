@@ -7,9 +7,13 @@ class MongooseGiveaways extends GiveawaysManager {
         super(client, {
             default: {
                 botsCanWin: false,
-                embedColor: client.config.embeds.default_color,
-                embedColorEnd: client.config.embeds.error_color,
-                reaction: "🎉"
+                embedColor: client.config.embeds["DEFAULT_COLOR"],
+                embedColorEnd: client.config.embeds["WARNING_COLOR"],
+                buttons: {
+                    join: client.createButton("join", null, "Primary", client.emotes.tada, false, null),
+                    joinReply: client.emotes.join + " Du hast am Giveaway teilgenommen",
+                    leaveReply: client.emotes.leave + " Du nimmst nicht mehr am Giveaway teil",
+                }
             }
         }, false);
     }
