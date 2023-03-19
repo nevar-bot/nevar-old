@@ -153,7 +153,8 @@ class Giveaway extends BaseCommand {
                 endedAt:
                     "Beendet",
                 hostedBy:
-                    this.client.emotes.user + " Veranstaltet durch: {this.hostedBy}",
+                    "\n" + this.client.emotes.user + " Veranstaltet durch: {this.hostedBy}\n" +
+                    this.client.emotes.users + " Teilnehmer: {this.entrantIds.length}",
             }
         });
 
