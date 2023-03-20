@@ -35,8 +35,8 @@ class Invite extends BaseCommand {
         const buttonRow = this.client.createComponentsRow(inviteButton, supportButton, websiteButton, voteButton);
 
         // Second row
-        const twitterButton = this.client.createButton(null, "Twitter", "Link", this.client.emotes.socials.twitter, true, "https://twitter.com/nevar_bot");
-        const instagramButton = this.client.createButton(null, "Instagram", "Link", this.client.emotes.socials.instagram, true, "https://www.instagram.com/nevar_bot/");
+        const twitterButton = this.client.createButton(null, "Twitter", "Link", this.client.emotes.socials.twitter, false, "https://twitter.com/nevar_eu");
+        const instagramButton = this.client.createButton(null, "Instagram", "Link", this.client.emotes.socials.instagram, false, "https://www.instagram.com/nevar_eu/");
         const githubButton = this.client.createButton(null, "GitHub", "Link", this.client.emotes.socials.github, false, "https://github.com/nevar-bot");
         const donateButton = this.client.createButton(null, "Unterstützen", "Link", this.client.emotes.gift, false, "https://prohosting24.de/cp/donate/nevar");
         const buttonRow2 = this.client.createComponentsRow(twitterButton, instagramButton, githubButton, donateButton);
