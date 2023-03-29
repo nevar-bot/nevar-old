@@ -38,7 +38,7 @@ module.exports = {
                 };
 
                 await axios(config).catch((e) => console.log(e));
-            }, 5000)
+            }, 600000)
         }
     }
 };
