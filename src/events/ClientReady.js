@@ -22,7 +22,7 @@ module.exports = class {
         //Update interactions every day at 00:00
         schedule.scheduleJob('0 0 * * *', async () => {
             await require('@handlers/registerInteractions').init(client);
-        })
+        });
 
         // Update bot presence
         presenceHandler(client);
