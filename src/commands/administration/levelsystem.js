@@ -548,6 +548,7 @@ class Levelsystem extends BaseCommand {
             data.guild.markModified("settings.levels.exclude");
             await data.guild.save();
         }
+
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
             const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
@@ -603,6 +604,15 @@ class Levelsystem extends BaseCommand {
     }
 
     async removeExclude(channel, role, data){
+        if(!data.guild.settings.levels.exclude){
+            data.guild.settings.levels.exclude = {
+                channels: [],
+                roles: []
+            };
+            data.guild.markModified("settings.levels.exclude");
+            await data.guild.save();
+        }
+
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
             const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
@@ -646,6 +656,15 @@ class Levelsystem extends BaseCommand {
     }
 
     async listExcluded(data){
+        if(!data.guild.settings.levels.exclude){
+            data.guild.settings.levels.exclude = {
+                channels: [],
+                roles: []
+            };
+            data.guild.markModified("settings.levels.exclude");
+            await data.guild.save();
+        }
+
         let response = data.guild.settings.levels.exclude;
         const excludedNamesArray = [];
 
