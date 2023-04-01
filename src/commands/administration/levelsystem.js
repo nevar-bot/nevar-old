@@ -119,6 +119,31 @@ class Levelsystem extends BaseCommand {
                             .setName("test")
                             .setDescription("Testet die Level-Up Nachricht")
                         )
+                        .addSubcommand(subcommand => subcommand
+                            .setName("exclude")
+                            .setDescription("Fügt einen Channel oder eine Rolle zur Blacklist hinzu")
+                            .addStringOption(option => option
+                                .setName("aktion")
+                                .setDescription("Wähle eine Aktion")
+                                .setRequired(true)
+                                .addChoices(
+                                    { name: "hinzufügen", value: "add" },
+                                    { name: "entfernen", value: "remove" },
+                                    { name: "liste", value: "list" }
+                                )
+                            )
+                            .addChannelOption(option => option
+                                .setName("channel")
+                                .setDescription("Wähle einen Channel")
+                                .setRequired(false)
+                                .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews)
+                            )
+                            .addRoleOption(option => option
+                                .setName("rolle")
+                                .setDescription("Wähle eine Rolle")
+                                .setRequired(false)
+                            )
+                        )
             }
         });
     }
@@ -177,6 +202,19 @@ class Levelsystem extends BaseCommand {
             case "test":
                 await this.sendPreview(data);
                 break;
+            case "exclude":
+                const excludeAction = interaction.options.getString("aktion");
+                switch(excludeAction){
+                    case "add":
+                        await this.addExclude(interaction.options.getChannel("channel"), interaction.options.getRole("rolle"), data);
+                        break;
+                    case "remove":
+                        await this.removeExclude(interaction.options.getChannel("channel"), interaction.options.getRole("rolle"), data);
+                        break;
+                    case "list":
+                        await this.listExcluded(data);
+                        break;
+                }
         }
     }
 
@@ -499,6 +537,149 @@ class Levelsystem extends BaseCommand {
             const errorEmbed = this.client.generateEmbed("Die Level-Up Nachricht konnte nicht gesendet werden", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
+    }
+
+    async addExclude(channel, role, data){
+        if(!data.guild.settings.levels.exclude){
+            data.guild.settings.levels.exclude = {
+                channels: [],
+                roles: []
+            };
+            data.guild.markModified("settings.levels.exclude");
+            await data.guild.save();
+        }
+        // Levelsystem is disabled
+        if(!data.guild.settings.levels.enabled){
+            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
+
+        const toExclude = channel || role;
+        // No channel or role was given
+        if(!toExclude || toExclude.constructor.name !== "TextChannel" && toExclude.constructor.name !== "Role"){
+            const errorEmbed = this.client.generateEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
+
+        if(toExclude.constructor.name === "TextChannel"){
+            // Channel is already on the blacklist
+            if(data.guild.settings.levels.exclude.channels.includes(toExclude.id)){
+                const errorEmbed = this.client.generateEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
+                return this.interaction.followUp({ embeds: [errorEmbed] });
+            }
+
+            // Save to database
+            data.guild.settings.levels.exclude.channels.push(toExclude.id);
+            data.guild.markModified("settings.levels.exclude.channels");
+            await data.guild.save();
+            const successEmbed = this.client.generateEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }else if(toExclude.constructor.name === "Role"){
+            // Role is already on the blacklist
+            if(data.guild.settings.levels.exclude.roles.includes(toExclude.id)){
+                const errorEmbed = this.client.generateEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
+                return this.interaction.followUp({ embeds: [errorEmbed] });
+            }
+
+            // Role is @everyone
+            if(toExclude.id === this.interaction.guild.roles.everyone.id){
+                const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht auf die Blacklist gesetzt werden.", "error", "error");
+                return this.interaction.followUp({ embeds: [everyoneEmbed] });
+            }
+
+            // Role is managed by an integration
+            if(toExclude.managed){
+                const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht auf die Blacklist gesetzt werden.", "error", "error");
+                return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
+            }
+
+            // Save to database
+            data.guild.settings.levels.exclude.roles.push(toExclude.id);
+            data.guild.markModified("settings.levels.exclude.roles");
+            await data.guild.save();
+            const successEmbed = this.client.generateEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }
+    }
+
+    async removeExclude(channel, role, data){
+        // Levelsystem is disabled
+        if(!data.guild.settings.levels.enabled){
+            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
+
+        const toExclude = channel || role;
+        // No channel or role was given
+        if(!toExclude || toExclude.constructor.name !== "TextChannel" && toExclude.constructor.name !== "Role"){
+            const errorEmbed = this.client.generateEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
+
+        if(toExclude.constructor.name === "TextChannel"){
+            // Channel is not on the blacklist
+            if(!data.guild.settings.levels.exclude.channels.includes(toExclude.id)){
+                const errorEmbed = this.client.generateEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
+                return this.interaction.followUp({ embeds: [errorEmbed] });
+            }
+
+            // Save to database
+            data.guild.settings.levels.exclude.channels = data.guild.settings.levels.exclude.channels.filter(c => c !== toExclude.id);
+            data.guild.markModified("settings.levels.exclude.channels");
+            await data.guild.save();
+            const successEmbed = this.client.generateEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }else if(toExclude.constructor.name === "Role"){
+            // Role is not on the blacklist
+            if(!data.guild.settings.levels.exclude.roles.includes(toExclude.id)){
+                const errorEmbed = this.client.generateEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
+                return this.interaction.followUp({ embeds: [errorEmbed] });
+            }
+
+            // Save to database
+            data.guild.settings.levels.exclude.roles = data.guild.settings.levels.exclude.roles.filter(r => r !== toExclude.id);
+            data.guild.markModified("settings.levels.exclude.roles");
+            await data.guild.save();
+            const successEmbed = this.client.generateEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }
+    }
+
+    async listExcluded(data){
+        let response = data.guild.settings.levels.exclude;
+        const excludedNamesArray = [];
+
+        for(let i = 0; i < response.roles.length; i++){
+            const cachedRole = this.interaction.guild.roles.cache.get(response.roles[i]);
+            if(!cachedRole){
+                response.roles.splice(i, 1);
+            }else{
+                excludedNamesArray.push(this.client.emotes.ping + " **" + cachedRole.name + "**");
+            }
+        }
+
+        if(data.guild.settings.levels.exclude.roles !== response.roles){
+            data.guild.settings.levels.exclude.roles = response.roles;
+            data.guild.markModified("settings.levels.exclude.roles");
+            await data.guild.save();
+        }
+
+        for(let i = 0; i < response.channels.length; i++){
+            const cachedChannel = this.interaction.guild.channels.cache.get(response.channels[i]);
+            if(!cachedChannel){
+                response.channels.splice(i, 1);
+            }else{
+                excludedNamesArray.push(this.client.emotes.channel + " **" + cachedChannel.name + "**");
+            }
+        }
+
+        if(data.guild.settings.levels.exclude.channels !== response.channels){
+            data.guild.settings.levels.exclude.channels = response.channels;
+            data.guild.markModified("settings.levels.exclude.channels");
+            await data.guild.save();
+        }
+
+        await this.client.utils.sendPaginatedEmbed(this.interaction, 5, excludedNamesArray, "Level-Blacklist", "Es sind keine Rollen oder Channel auf der Blacklist vorhanden", null);
     }
 }
 

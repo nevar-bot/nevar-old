@@ -131,6 +131,16 @@ module.exports = class {
             const minXp = data.guild.settings.levels.xp.min || 1;
             const maxXp = data.guild.settings.levels.xp.max || 30;
 
+            // check excluded channels and roles
+            if(data.guild.settings.levels.exclude){
+                for(let excludedRoleId of data.guild.settings.levels.exclude.roles){
+                    if(message.member.roles.cache.get(excludedRoleId)) return;
+                }
+                for(let excludedChannelId of data.guild.settings.levels.exclude.channels){
+                    if(message.channel.id === excludedChannelId) return;
+                }
+            }
+
             let xp = this.client.utils.getRandomInt(minXp, maxXp);
 
             // double xp
