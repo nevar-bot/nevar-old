@@ -1,7 +1,7 @@
 {
   "name": "nevar",
   "description": "Nevar is a simple, lightweight, and fast discord bot built with discord.js",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "homepage": "https://nevar.eu",
   "main": "src/app.js",
   "license": "AGPL-3.0",
@@ -37,7 +37,7 @@
     "discord-gamecord": "^4.2.0",
     "discord-giveaways": "github:nevar-bot/discord-giveaways#feat/button-support",
     "discord-xp": "^1.1.16",
-    "discord.js": "^14.7.1",
+    "discord.js": "^14.8.0",
     "discordbotlist": "^1.0.0",
     "enhanced-ms": "^2.2.0",
     "express": "^4.17.1",
