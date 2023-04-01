@@ -101,7 +101,7 @@ class FloodGame {
         const row = this.options.client.createComponentsRow(btn1, btn2, btn3, btn4, btn5);
 
         const msg = await this.sendMessage({ embeds: [embed], components: [row] });
-        const collector = msg.createMessageComponentCollector({ idle: this.options.timeoutTime });
+        const collector = msg.createMessageComponentCollector({ filter: btn => btn.user.id === this.interaction.user.id });
 
         collector.on('collect', async btn => {
             await btn.deferUpdate().catch(e => {});
