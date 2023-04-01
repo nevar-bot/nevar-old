@@ -20,9 +20,9 @@ class Embed extends BaseCommand {
                         .setDescription("Gib den Namen des Autors an")
                         .setRequired(true)
                     )
-                    .addStringOption(option => option
+                    .addAttachmentOption(option => option
                         .setName("icon")
-                        .setDescription("Gib den Link zum Avatar des Autors an")
+                        .setDescription("Wähle den Avatar des Autors")
                         .setRequired(false)
                     )
                     .addStringOption(option => option
@@ -35,14 +35,14 @@ class Embed extends BaseCommand {
                         .setDescription("Gib die Beschreibung des Embeds an")
                         .setRequired(false)
                     )
-                    .addStringOption(option => option
+                    .addAttachmentOption(option => option
                         .setName("thumbnail")
-                        .setDescription("Gib einen Link zum Thumbnail-Bild an")
+                        .setDescription("Wähle das Thumbnail des Embeds")
                         .setRequired(false)
                     )
-                    .addStringOption(option => option
+                    .addAttachmentOption(option => option
                         .setName("bild")
-                        .setDescription("Gib einen Link zum Bild des Embeds an")
+                        .setDescription("Wähle das Bild des Embeds")
                         .setRequired(false)
                     )
                     .addStringOption(option => option
@@ -50,9 +50,9 @@ class Embed extends BaseCommand {
                         .setDescription("Gib den Text des Footers an")
                         .setRequired(false)
                     )
-                    .addStringOption(option => option
+                    .addAttachmentOption(option => option
                         .setName("footericon")
-                        .setDescription("Gib den Link zum Avatar des Footers an")
+                        .setDescription("Wähle das Icon des Footers")
                         .setRequired(false)
                     )
                     .addStringOption(option => option
@@ -73,53 +73,53 @@ class Embed extends BaseCommand {
 
     async generateEmbed(){
         const author = this.interaction.options.getString("autor");
-        const authorIcon = this.interaction.options.getString("icon") || "https://i.pinimg.com/474x/7c/8f/47/7c8f476123d28d103efe381543274c25.jpg";
+        const authorIcon = this.interaction.options.getAttachment("icon");
         const title = this.interaction.options.getString("titel");
         const description = this.interaction.options.getString("beschreibung");
-        const thumbnail = this.interaction.options.getString("thumbnail");
-        const image = this.interaction.options.getString("bild");
+        const thumbnail = this.interaction.options.getAttachment("thumbnail");
+        const image = this.interaction.options.getAttachment("bild");
         const footerText = this.interaction.options.getString("footertext");
-        const footerIcon = this.interaction.options.getString("footericon");
-        const color = this.interaction.options.getString("farbe");
+        const footerIcon = this.interaction.options.getAttachment("footericon");
+        const color = this.interaction.options.getString("farbe") || this.client.config.embeds["DEFAULT_COLOR"];
 
         if(color && !this.client.utils.stringIsHexColor(color)){
             const errorEmbed = this.client.generateEmbed("Du musst eine Farbe im Hex-Format angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
-        if(authorIcon && !this.client.utils.urlIsImage(authorIcon)){
-            const errorEmbed = this.client.generateEmbed("Das Autor-Icon muss eine URL zu einem Bild sein sein.", "error", "error");
+        if(authorIcon && !authorIcon.contentType.startsWith("image/")){
+            const errorEmbed = this.client.generateEmbed("Das Autor-Icon muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
-        if(thumbnail && !this.client.utils.urlIsImage(thumbnail)){
-            const errorEmbed = this.client.generateEmbed("Das Thumbnail muss eine URL zu einem Bild sein sein.", "error", "error");
+        if(thumbnail && !thumbnail.contentType.startsWith("image/")){
+            const errorEmbed = this.client.generateEmbed("Das Thumbnail muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
-        if(image && !this.client.utils.urlIsImage(image)){
-            const errorEmbed = this.client.generateEmbed("Das Bild muss eine URL zu einem Bild sein sein.", "error", "error");
+        if(image && !image.contentType.startsWith("image/")){
+            const errorEmbed = this.client.generateEmbed("Das Embed-Bild muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
-        if(footerIcon && !this.client.utils.urlIsImage(footerIcon)){
-            const errorEmbed = this.client.generateEmbed("Das Footer-Icon muss eine URL zu einem Bild sein sein.", "error", "error");
+        if(footerIcon && !footerIcon.contentType.startsWith("image/")){
+            const errorEmbed = this.client.generateEmbed("Das Footer-Icon muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Generate embed
         const embed = new EmbedBuilder()
-            .setAuthor({ name: author, iconURL: authorIcon, url: this.client.config.general["WEBSITE"] })
+            .setAuthor({ name: author, iconURL: (authorIcon ? authorIcon.proxyURL : null), url: this.client.config.general["WEBSITE"] })
             .setTitle(title)
             .setDescription(description)
-            .setThumbnail(thumbnail)
-            .setImage(image)
-            .setFooter({ text: footerText, iconURL: footerIcon })
+            .setThumbnail(thumbnail ? thumbnail.proxyURL : null)
+            .setImage(image ? image.proxyURL : null)
+            .setFooter({ text: footerText, iconURL: (footerIcon ? footerIcon.proxyURL : null) })
             .setColor(color);
 
         const webhook = await this.interaction.channel.createWebhook({
             name: author,
-            avatar: authorIcon
+            avatar: authorIcon ? authorIcon.proxyURL : "https://i.pinimg.com/474x/7c/8f/47/7c8f476123d28d103efe381543274c25.jpg"
         }).catch(() => {});
 
         if(webhook){
