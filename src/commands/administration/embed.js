@@ -119,7 +119,7 @@ class Embed extends BaseCommand {
 
         const webhook = await this.interaction.channel.createWebhook({
             name: author,
-            avatar: authorIcon ? authorIcon.proxyURL : "https://i.pinimg.com/474x/7c/8f/47/7c8f476123d28d103efe381543274c25.jpg"
+            avatar: authorIcon ? authorIcon.proxyURL : null
         }).catch(() => {});
 
         if(webhook){
