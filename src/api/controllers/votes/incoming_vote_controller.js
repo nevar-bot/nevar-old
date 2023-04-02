@@ -1,24 +1,24 @@
 const fs = require("fs");
 const moment = require("moment");
 
-exports.handleVote = async function(req, res) {
+async function post(req, res){
+    const { app } = req;
     const { client } = require("@src/app");
 
-    let authorizationHeader = req.headers?.authorization;
+    const authorizationHeader = req.headers?.authorization;
     if(!authorizationHeader) return res.sendStatus(401);
 
     if(authorizationHeader === client.config.apikeys["DBL_WEBHOOK_AUTH"]){
-
-        let userId = req.body.id;
+        const userId = req.body.id;
         if(!userId) return res.sendStatus(400);
 
-        let user = await client.users.fetch(userId).catch(() => {});
+        const user = await client.users.fetch(userId).catch(() => {});
         if(!user) return res.sendStatus(400);
 
-        let supportGuild = client.guilds.cache.get(client.config.support["ID"]);
+        const supportGuild = client.guilds.cache.get(client.config.support["ID"]);
         if(!supportGuild) return res.sendStatus(500);
 
-        let supportGuildData = await client.findOrCreateGuild({id: supportGuild.id});
+        const supportGuildData = await client.findOrCreateGuild({id: supportGuild.id});
         if(!supportGuildData) return res.sendStatus(500);
 
         const text =
@@ -43,3 +43,5 @@ exports.handleVote = async function(req, res) {
     }
     return res.sendStatus(401);
 }
+
+module.exports = { post };

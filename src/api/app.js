@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
+const fs = require("fs");
 
 async function initializeApi(client) {
     const app = express();
@@ -10,50 +11,18 @@ async function initializeApi(client) {
     app.use(bodyParser.json());
     app.use(cors());
 
-    require("./routes/levels/guildRoute")(app);
-    require("./routes/levels/memberRoute")(app);
-    require("./routes/votes/incomingVoteRoute")(app);
-    require("./routes/votes/voteStatsRoute")(app);
-    require("./routes/client/statsRoute")(app);
-    require("./routes/client/commandRoute")(app);
-    require("./routes/client/staffRoute")(app);
+    fs.readdirSync("./src/api/routes").forEach((file) => {
+        if(!file.endsWith(".js")){
+            fs.readdirSync("./src/api/routes/" + file).forEach((nestedFile) => {
+                if(nestedFile.endsWith(".js")) require("@api/routes/" + file + "/" + nestedFile)(app);
+            });
+        }else{
+            require("@api/routes/" + file)(app);
+        }
+    });
 
     app.listen(client.config.api["PORT"], () => {
-        client.logger.log("Started API on port " + client.config.api["PORT"], "info");
-    });
-
-    app.get("/", async (req, res) => {
-        let json = {
-            status: 200,
-            message: null,
-            routes: []
-        }
-        app._router.stack.forEach(function(r){
-            if(!r || !r.route) return;
-            if(r.route.path === "*" || r.route.path === "/") return;
-
-            let type = r.route.methods.get ? "GET" : "POST";
-            json.routes.push(type + " " + req.get("host") + r.route.path);
-        });
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(json, null, 4));
-    });
-
-    app.get("*", async (req, res) => {
-        let json = {
-            status: 404,
-            message: "Requested route not found",
-            routes: []
-        }
-        app._router.stack.forEach(function(r){
-            if(!r || !r.route) return;
-            if(r.route.path === "*" || r.route.path === "/") return;
-
-            let type = r.route.methods.get ? "GET" : "POST";
-            json.routes.push(type + " " + req.get("host") + r.route.path);
-        });
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(json, null, 4));
+        client.logger.log("API is running on port " + client.config.api["PORT"], "info");
     });
 }
 
