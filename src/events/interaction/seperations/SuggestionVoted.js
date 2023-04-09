@@ -35,7 +35,7 @@ module.exports = class {
         data.member.suggestions = data.member.suggestions.filter(su => su.id !== suggestionMessage.id);
         data.member.suggestions.push({id: suggestionMessage.id, type: (type === "yes" ? 1 : 0)});
         data.member.markModified("suggestions");
-        await data.member.save();
+        await data.member.save().catch((e) => {});
 
         // EDIT THE EMBED FOOTER
         let newUpvotes = 0;
