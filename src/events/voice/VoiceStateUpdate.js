@@ -48,6 +48,9 @@ module.exports = class {
                             MuteMembers: true,
                             DeafenMembers: true,
                             MoveMembers: true
+                        }).catch((e) => {
+                            const logText = " **Setzen von Join2Create-Channel Permissions fehlgeschlagen**";
+                            return newMember.guild.logAction(logText, "guild", this.client.emotes.error, "error");
                         });
 
                         await newMember.member.voice.setChannel(tempChannel)
