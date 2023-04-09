@@ -8,10 +8,9 @@ function updatePresence(client){
         if(presenceIndicator === presences.length) presenceIndicator = 0;
         const presence = presences[presenceIndicator];
 
-        let message = presence["MESSAGE"];
-        message = message.replaceAll("{guilds}", client.guilds.cache.size);
-        const members = client.guilds.cache.map((g) => g.memberCount).reduce((partial_sum, a) => partial_sum + a, 0);
-        message = message.replaceAll("{users}", client.format(members));
+        const message = presence["MESSAGE"]
+            .replaceAll("{guilds}", client.guilds.cache.size)
+            .replaceAll("{users}", client.guilds.cache.map((g) => g.memberCount).reduce((partial_sum, a) => partial_sum + a, 0));
 
         client.user.setPresence({
             status: presence["STATUS"],
@@ -23,7 +22,6 @@ function updatePresence(client){
                 }
             ]
         });
-
         presenceIndicator++;
     }
 
