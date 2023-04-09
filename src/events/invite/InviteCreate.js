@@ -5,7 +5,7 @@ module.exports = class {
     }
 
     async dispatch(invite) {
-        if(!invite || !invite.guild) return;
+        if(!invite || !invite.guild || !invite.inviter) return;
         const { guild } = invite;
 
         const logText =
