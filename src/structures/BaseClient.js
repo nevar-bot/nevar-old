@@ -54,8 +54,7 @@ module.exports = class BaseClient extends Client {
         this.databaseCache.reminders = new Collection();
 
         this.format = function(integer){
-            const formatter = new Intl.NumberFormat("de-DE");
-            return formatter.format(integer);
+            return new Intl.NumberFormat("de-DE").format(integer);
         }
 
         this.utils = require("@helpers/Utils");

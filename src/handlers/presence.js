@@ -9,8 +9,8 @@ function updatePresence(client){
         const presence = presences[presenceIndicator];
 
         const message = presence["MESSAGE"]
-            .replaceAll("{guilds}", client.guilds.cache.size)
-            .replaceAll("{users}", client.guilds.cache.map((g) => g.memberCount).reduce((partial_sum, a) => partial_sum + a, 0));
+            .replaceAll("{guilds}", client.format(client.guilds.cache.size))
+            .replaceAll("{users}", client.format(client.guilds.cache.map((g) => g.memberCount).reduce((partial_sum, a) => partial_sum + a, 0)));
 
         client.user.setPresence({
             status: presence["STATUS"],
