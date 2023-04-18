@@ -45,7 +45,7 @@ class Rank extends BaseCommand {
             .renderEmojis(true)
 
             // Rank and rank
-            .setLevel(userData.level.level, "LEVEL")
+            .setLevel(userData.level.level || 0, "LEVEL")
             .setLevelColor('#5773c9')
             .setRank(userData.level.position, "RANG")
 
