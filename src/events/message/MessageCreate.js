@@ -55,13 +55,13 @@ module.exports = class {
                 }
             }
 
-            const helpCommand = (await this.client.application.commands.fetch()).find(command => command.name === "help") || "/help";
+            const helpCommand = (await this.client.application.commands.fetch()).find(command => command.name === "help");
             const text =
                 "**{0}**" +
                 "\n\n{1} Ich bin {2} und helfe dir bei der Verwaltung deines Servers." +
                 "\n{1} Eine Übersicht meiner Befehle erhältst du durch folgenden Befehl: {3}"
 
-            const helpEmbed = this.client.generateEmbed(text, "wave", "normal", greeting, this.client.emotes.arrow, this.client.user.username, helpCommand);
+            const helpEmbed = this.client.generateEmbed(text, "wave", "normal", greeting, this.client.emotes.arrow, this.client.user.username, (helpCommand ? "</" + helpCommand.name + ":" + helpCommand.id + ">" : "/help"));
             helpEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
             const inviteButton = this.client.createButton(null, "Einladen", "Link", null, false, this.client.getInvite());
