@@ -273,7 +273,7 @@ module.exports = class BaseClient extends Client {
             scopes: ["bot", "applications.commands"],
             permissions: [
                 "ViewAuditLog", "ManageRoles", "ManageChannels", "KickMembers", "BanMembers",
-                "ManageEmojisAndStickers", "ManageWebhooks", "ViewChannel", "SendMessages",
+                "ManageGuildExpressions", "ManageWebhooks", "ViewChannel", "SendMessages",
                 "ManageMessages", "AttachFiles", "EmbedLinks", "ReadMessageHistory", "UseExternalEmojis",
                 "AddReactions"
             ]

@@ -12,7 +12,7 @@ module.exports = {
     EmbedLinks: "Links einbetten",
     KickMembers: "Mitglieder kicken",
     ManageChannels: "Kanäle verwalten",
-    ManageEmojisAndStickers: "Emojis und Sticker verwalten",
+    ManageGuildExpressions: "Emojis, Sticker und Sounds verwalten",
     ManageEvents: "Events verwalten",
     ManageGuild: "Server verwalten",
     ManageMessages: "Nachrichten verwalten",
