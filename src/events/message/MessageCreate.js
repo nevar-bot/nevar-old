@@ -162,8 +162,8 @@ module.exports = class {
                     // level roles
                     if(data.guild.settings.levels.roles && data.guild.settings.levels.roles.length > 0){
                         for(let levelRole of data.guild.settings.levels.roles){
-                            const level = levelRole.split("|")[0];
-                            const roleId = levelRole.split("|")[1];
+                            const roleId = levelRole.split("|")[0];
+                            const level = levelRole.split("|")[1];
                             if(Number(level) === newLevel || Number(level) < newLevel){
                                 message.member.roles.add(roleId).catch((exception) => {
                                     const logText =
