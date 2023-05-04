@@ -26,7 +26,7 @@ class Credits extends BaseCommand {
 
     async showCredits(){
         const credits =
-            this.client.emotes.shine + " Ohne folgende Packages wäre " + this.client.user.username + " nicht möglich gewesen:\n\n" +
+            this.client.emotes.shine + " Ohne folgende Projekte wäre " + this.client.user.username + " nicht möglich gewesen:\n\n" +
             this.client.emotes.arrow + " [**axios**](https://npmjs.com/package/axios) - HTTP Client\n" +
             this.client.emotes.arrow + " [**body-parser**](https://npmjs.com/package/body-parser) - HTTP Client\n" +
             this.client.emotes.arrow + " [**canvacord**](https://npmjs.com/package/canvacord) - Bildmanipulation für Discord\n" +
