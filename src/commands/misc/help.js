@@ -215,11 +215,51 @@ class Help extends BaseCommand {
     }
 
     async showHelpForCommand(command){
-        // TODO
+        const categories = {
+            "administration": "Administration",
+            "fun": "Fun",
+            "minigames": "Minispiele",
+            "misc": "Sonstiges",
+            "moderation": "Moderation",
+            "owner": "Owner",
+            "staff": "Staff"
+        }
+        const clientCommand = this.client.commands.find((c) => c.help.name === command);
+        if(clientCommand){
+            let helpString =
+                this.client.emotes.text + " **" + clientCommand.help.description + "**\n\n" +
+                this.client.emotes.timeout + " **Cooldown:** " + clientCommand.conf.cooldown / 1000 + " Sekunde(n)\n" +
+                this.client.emotes.underage + " **NSFW:** " + (clientCommand.conf.nsfw ? "Ja" : "Nein") + "\n\n";
 
+            if(clientCommand.conf.memberPermissions.length > 0){
+                helpString += this.client.emotes.user + " **Benötigte Rechte (Nutzer):** \n" + clientCommand.conf.memberPermissions.map((p) => this.client.emotes.arrow + " " + this.client.permissions[p]).join("\n") + "\n\n";
+            }
 
-        const isNotSupportedEmbed = this.client.generateEmbed("Hilfe für einzelne Befehle wird derzeit nicht unterstützt.", "error", "error");
-        return this.interaction.followUp({ embeds: [isNotSupportedEmbed] });
+            if(clientCommand.conf.botPermissions.length > 0){
+                helpString += this.client.emotes.bot + " **Benötigte Rechte (Bot):** \n" + clientCommand.conf.botPermissions.map((p) => this.client.emotes.arrow + " " + this.client.permissions[p]).join("\n") + "\n\n";
+            }
+
+            if(clientCommand.conf.ownerOnly){
+                helpString += this.client.emotes.crown + " **Nur für " + this.client.user.username + "-Entwickler:** Ja\n\n";
+            }
+
+            if(clientCommand.conf.staffOnly){
+                helpString += this.client.emotes.users + " **Nur für " + this.client.user.username + "-Staffs:** Ja\n\n";
+            }
+
+            const helpEmbed = this.client.generateEmbed(helpString, null, "normal");
+
+            helpEmbed.setTitle(" Hilfe für den " + clientCommand.help.name.slice(0, 1).toUpperCase() + clientCommand.help.name.slice(1) + " Befehl (" + categories[clientCommand.help.category] + ")");
+            helpEmbed.setThumbnail(this.interaction.guild.iconURL({ dynamic: true, size: 4096 }));
+
+            return this.interaction.followUp({ embeds: [helpEmbed] });
+
+        }else{
+            const userData = await this.client.findOrCreateUser({ id: this.interaction.user.id });
+            await this.showHelp({
+                user: userData
+            });
+        }
     }
 }
 

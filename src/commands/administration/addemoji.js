@@ -8,8 +8,8 @@ class Addemoji extends BaseCommand {
             name: "addemoji",
             description: "Fügt einen neuen Emoji hinzu",
 
-            memberPermissions: ["ManageEmojisAndStickers"],
-            botPermissions: ["ManageEmojisAndStickers"],
+            memberPermissions: ["ManageGuildExpressions"],
+            botPermissions: ["ManageGuildExpressions"],
 
             cooldown: 5000,
             dirname: __dirname,

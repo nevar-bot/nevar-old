@@ -9,8 +9,8 @@ class Addsticker extends BaseCommand {
             name: "addsticker",
             description: "Fügt einen neuen Sticker hinzu",
 
-            memberPermissions: ["ManageEmojisAndStickers"],
-            botPermissions: ["ManageEmojisAndStickers"],
+            memberPermissions: ["ManageGuildExpressions"],
+            botPermissions: ["ManageGuildExpressions"],
 
             cooldown: 5000,
             dirname: __dirname,
