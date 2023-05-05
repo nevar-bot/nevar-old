@@ -34,7 +34,6 @@
     "body-parser": "^1.20.1",
     "canvacord": "^5.4.8",
     "cors": "^2.8.5",
-    "discord-gamecord": "^4.2.0",
     "discord-giveaways": "github:nevar-bot/discord-giveaways#feat/button-support",
     "discord-xp": "^1.1.16",
     "discord.js": "^14.10.2",

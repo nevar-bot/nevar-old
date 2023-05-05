@@ -31,7 +31,6 @@ class Credits extends BaseCommand {
             this.client.emotes.arrow + " [**body-parser**](https://npmjs.com/package/body-parser) - HTTP Client\n" +
             this.client.emotes.arrow + " [**canvacord**](https://npmjs.com/package/canvacord) - Bildmanipulation für Discord\n" +
             this.client.emotes.arrow + " [**cors**](https://npmjs.com/package/cors) - CORS-Konfiguration\n" +
-            this.client.emotes.arrow + " [**discord-gamecord**](https://npmjs.com/package/discord-gamecord) - Discord Minispiele\n" +
             this.client.emotes.arrow + " [**discord-giveaways**](https://npmjs.com/package/discord-giveaways) - Discord Gewinnspiele\n" +
             this.client.emotes.arrow + " [**discord-xp**](https://npmjs.com/package/discord-xp) - Discord Levelsystem \n" +
             this.client.emotes.arrow + " [**discord.js**](https://npmjs.com/package/discord.js) - Discord Client\n" +
