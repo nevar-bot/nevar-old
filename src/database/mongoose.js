@@ -3,7 +3,7 @@ const { log, success, error } = require("@helpers/Logger");
 
 module.exports = {
     async initializeMongoose(client){
-        log("Connecting to MongoDB...");
+        log("Establishing mongoose connection...");
 
         try {
             mongoose.set("strictQuery", false);
@@ -12,7 +12,7 @@ module.exports = {
             });
             success("Mongoose connection established");
         }catch(exc){
-            error("Mongoose failed to connect to database", exc);
+            error("Failed establishing mongoose connection", exc);
             process.exit(1);
         }
     }

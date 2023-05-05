@@ -44,8 +44,7 @@ class Credits extends BaseCommand {
             this.client.emotes.arrow + " [**mongoose**](https://npmjs.com/package/mongoose) - MongoDB Framework\n" +
             this.client.emotes.arrow + " [**node-emoji**](https://npmjs.com/package/node-emoji) - Umgang mit Emojis\n" +
             this.client.emotes.arrow + " [**node-schedule**](https://npmjs.com/package/node-schedule) - NodeJS Cronjobs\n" +
-            this.client.emotes.arrow + " [**pino**](https://npmjs.com/package/pino) - NodeJS Logger\n" +
-            this.client.emotes.arrow + " [**pino-pretty**](https://npmjs.com/package/pino-pretty) - Formatierer für Pino\n" +
+            this.client.emotes.arrow + " [**chalk**](https://npmjs.com/package/chalk) - Farbiges Logging\n" +
             this.client.emotes.arrow + " [**toml**](https://npmjs.com/package/toml) - TOML-Config\n" +
             this.client.emotes.arrow + " [**icons**](https://discord.gg/9AtkECMX2P) - Emojis für " + this.client.user.username;
 

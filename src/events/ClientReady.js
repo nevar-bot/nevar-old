@@ -16,8 +16,8 @@ module.exports = class {
         levels.setURL(config.general["MONGO_CONNECTION"]);
 
         // Initialize giveaways manager
-        client.logger.log("Initializing giveaway manager...");
-        client.giveawayManager._init().then((_) => client.logger.success("Giveaway manager initialized"));
+        client.logger.log("Initializing giveaways manager...");
+        await client.giveawayManager._init().then((_) => client.logger.success("Initialized giveaways manager"));
 
         //Update interactions every day at 00:00
         schedule.scheduleJob('0 0 * * *', async () => {
@@ -62,10 +62,10 @@ module.exports = class {
         client.logger.log("Loaded " + client.guilds.cache.size + " guilds", "info")
         client.logger.success("Logged in as " + client.user.tag);
 
-
-        // WARNING: ONLY FOR DEVELOPMENT PURPOSES
-        // REMOVE IN PRODUCTION
-        //await require('@handlers/registerInteractions').init(client);
-
+        // ONLY FOR DEVELOPMENT PURPOSES
+        // REGISTER INTERACTIONS, IF DEVELOPMENT MODE IS ENABLED
+        if(process.argv.slice(2)[0] === "--dev"){
+            await require('@handlers/registerInteractions').init(client);
+        }
     }
 };

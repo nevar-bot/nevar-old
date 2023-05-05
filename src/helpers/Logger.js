@@ -1,50 +1,39 @@
-const pino = require("pino");
-
-const pinoLogger = pino.default(
-    {
-        level: "debug",
-    },
-    pino.multistream([
-        {
-            level: "info",
-            stream: pino.transport({
-                target: "pino-pretty",
-                options: {
-                    colorize: true,
-                    translateTime: "dd.mm.yyyy HH:MM:ss",
-                    ignore: "pid,hostname",
-                    singleLine: false,
-                    hideObject: true,
-                    customColors: "info:blue,warn:yellow,error:red",
-                },
-            }),
-        }
-    ])
-);
+const chalk = require("chalk");
 
 module.exports = class Logger {
+
+    static getDate(){
+        return new Date(Date.now()).toLocaleString("de-DE", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+    }
+
     static success(content){
-        pinoLogger.info(content);
+        console.log("[" + Logger.getDate() + "] " + chalk.green("SUCCESS") + ": " + chalk.cyan(content));
     }
 
     static log(content){
-        pinoLogger.info(content);
+        console.log("[" + Logger.getDate() + "] " + chalk.blue("INFO") + ": " + chalk.cyan(content));
     }
 
     static warn(content){
-        pinoLogger.warn(content);
+        console.log("[" + Logger.getDate() + "] " + chalk.yellow("WARN") + ": " + chalk.cyan(content));
     }
 
     static error(content, ex){
         if(ex){
-            pinoLogger.error(ex, content + ":" + ex?.message);
+            console.log("[" + Logger.getDate() + "] " + chalk.red("ERROR") + ": " + chalk.cyan(content + ": " + ex?.message));
         }else{
-            pinoLogger.error(content);
+            console.log("[" + Logger.getDate() + "] " + chalk.red("ERROR") + ": " + chalk.cyan(content));
         }
-        // TODO: webhook logger
     }
 
     static debug(content){
-        pinoLogger.debug(content);
+        console.log("[" + Logger.getDate() + "] " + chalk.magenta("DEBUG") + ": " + chalk.cyan(content));
     }
 }

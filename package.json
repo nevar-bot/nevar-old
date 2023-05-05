@@ -27,12 +27,14 @@
     "email": "other@nevar.eu"
   },
   "scripts": {
-    "start": "node ."
+    "start": "node src/app",
+    "dev": "node src/app --dev"
   },
   "dependencies": {
     "axios": "^0.26.1",
     "body-parser": "^1.20.1",
     "canvacord": "^5.4.8",
+    "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "discord-giveaways": "github:nevar-bot/discord-giveaways#feat/button-support",
     "discord-xp": "^1.1.16",
@@ -47,8 +49,6 @@
     "mongoose": "^6.9.2",
     "node-emoji": "^1.11.0",
     "node-schedule": "^2.1.0",
-    "pino": "^8.8.0",
-    "pino-pretty": "^9.1.1",
     "toml": "^3.0.0"
   },
   "keywords": [

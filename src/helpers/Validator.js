@@ -1,6 +1,6 @@
 const fs = require("fs");
 const toml = require("toml");
-const { log, warn, error } = require("@helpers/Logger");
+const { log, warn, error, success } = require("@helpers/Logger");
 const { isBoolean } = require("util");
 module.exports = class Validator {
     static configValidator(){
@@ -66,5 +66,7 @@ module.exports = class Validator {
         if(!config.apikeys["DBL"]) warn("TOML: apikeys.DBL is empty. Posting stats to discordbotlist.com and receiving votes won't work");
         if(!config.apikeys["DBL_WEBHOOK_AUTH"]) warn("TOML: apikeys.DBL_WEBHOOK_AUTH is empty. Receiving votes from discordbotlist.com won't work");
         if(!config.apikeys["WEATHER"]) warn("TOML: apikeys.WEATHER is empty. Weather command won't work");
+
+        success("TOML: Validated config file");
     }
 }
