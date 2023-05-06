@@ -1,7 +1,7 @@
 {
   "name": "nevar",
   "description": "Nevar is a simple, lightweight, and fast discord bot built with discord.js",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "homepage": "https://nevar.eu",
   "main": "src/app.js",
   "license": "AGPL-3.0",
