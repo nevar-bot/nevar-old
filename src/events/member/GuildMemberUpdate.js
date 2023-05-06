@@ -6,7 +6,7 @@ module.exports = class {
     async dispatch(oldMember, newMember) {
         if(oldMember.pending && !newMember.pending) this.client.emit("guildMemberAdd", newMember);
 
-        if(!oldMember || !newMember || !newMember.guild) return;
+        if(!oldMember || !newMember || !newMember.guild || oldMember.partial) return;
         const { guild } = newMember;
         if(!guild.members.cache.find((m) => m.id === oldMember.id)) return;
         
