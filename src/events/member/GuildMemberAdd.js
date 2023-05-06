@@ -4,7 +4,7 @@ module.exports = class {
         this.client = client;
     }
     async dispatch(member){
-        if(!member || !member.id || !member.guild) return;
+        if(!member || !member.id || !member.guild || member.pending) return;
         const guild = member.guild;
 
         const guildData = await this.client.findOrCreateGuild({
