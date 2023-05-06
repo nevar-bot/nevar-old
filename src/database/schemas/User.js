@@ -2,13 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
     id: { type: String },
-    bet: {
-        type: Object,
-        default: {
-            points: 0,
-            list: []
-        }
-    },
     afk: {
         type: Object,
         default: {
