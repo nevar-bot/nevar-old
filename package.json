@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "node src/app",
-    "dev": "node src/app --dev"
+    "dev": "node src/app --dev",
+    "build": "node assets/install.js"
   },
   "dependencies": {
     "axios": "^0.26.1",
