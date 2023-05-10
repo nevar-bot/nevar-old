@@ -150,6 +150,10 @@ class Deletedata extends BaseCommand {
                     newGuilddata.markModified("blocked");
                     await newGuilddata.save();
                 }
+
+                const successEmbed = this.client.generateEmbed("Die Serverdaten wurden erfolgreich gelöscht.", "success", "success");
+                await button.update({ embeds: [successEmbed], components: [] });
+                return collector.stop();
             }
         });
     }
