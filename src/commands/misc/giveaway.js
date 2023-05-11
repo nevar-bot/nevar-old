@@ -133,7 +133,7 @@ class Giveaway extends BaseCommand {
                     this.client.emotes.arrow + "Um teilzunehmen, reagiere mit " + this.client.emotes.tada + "!",
                 winMessage: {
                     content:
-                        "Herzlichen Glückwunsch, {winners}! {this.winnerCount > 1 ? 'Ihr habt' : 'Du hast'} **{this.prize}** gewonnen!",
+                        this.client.emotes.tada + " Herzlichen Glückwunsch, {winners}! {this.winnerCount > 1 ? 'Ihr habt' : 'Du hast'} **{this.prize}** gewonnen!",
                     replyToGiveaway: true,
                 },
                 drawing:
