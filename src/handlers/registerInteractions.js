@@ -60,7 +60,7 @@ module.exports = {
                 client.logger.error('Error registering interactions: ' + exception);
                 console.log(exception);
                 res.callback = exception;
-                client.logException(exception, null, null, "await <Rest>.put(<Routes.applicationCommands>)");
+                client.alertException(exception, null, null, "await <Rest>.put(<Routes.applicationCommands>)");
             });
         return res;
     }

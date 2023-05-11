@@ -24,7 +24,7 @@ class Reload extends BaseCommand {
 
     async reloadCommand(cmd){
         if(!cmd){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Befehl angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Befehl angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -33,10 +33,10 @@ class Reload extends BaseCommand {
             await this.client.unloadCommand(command.conf.location, command.help.name);
             await this.client.loadCommand(command.conf.location, command.help.name);
 
-            const reloadEmbed = this.client.generateEmbed("Der Befehl wurde neugeladen.", "success", "success");
+            const reloadEmbed = this.client.createEmbed("Der Befehl wurde neugeladen.", "success", "success");
             return this.message.reply({ embeds: [reloadEmbed] });
         }else{
-            const invalidCommandEmbed = this.client.generateEmbed("Der Befehl existiert nicht.", "error", "error");
+            const invalidCommandEmbed = this.client.createEmbed("Der Befehl existiert nicht.", "error", "error");
             return this.message.reply({ embeds: [invalidCommandEmbed] });
         }
     }

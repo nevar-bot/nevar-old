@@ -19,7 +19,7 @@ module.exports = {
                         if(!channel) continue;
 
                         const member = await guild.members.fetch(memberData.id).catch((e) => {
-                            client.logException(e, guild.name, null, "<Guild>.members.fetch(\"" + memberData.id + "\"");
+                            client.alertException(e, guild.name, null, "<Guild>.members.fetch(\"" + memberData.id + "\"");
                         });
                         if(!member) continue;
 
@@ -31,7 +31,7 @@ module.exports = {
                             client.emotes.arrow + " Erstellt am: " + reminderStarted + "\n" +
                             client.emotes.arrow + " Erinnerung: " + reminder.reason;
 
-                        const remindEmbed = client.generateEmbed(text, "reminder", "normal");
+                        const remindEmbed = client.createEmbed(text, "reminder", "normal");
 
                         channel.send({content:member.toString(), embeds:[remindEmbed]});
 

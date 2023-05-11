@@ -4,6 +4,6 @@ module.exports = class {
     }
     async dispatch(e) {
         console.error(e);
-        await this.client.logException(e, null, null, null);
+        await this.client.alertException(e);
     }
 }

@@ -29,7 +29,7 @@ module.exports = class {
             .setStyle(TextInputStyle.Short)
             .setCustomId("reason");
 
-        const modalInputRow = this.client.createComponentsRow(reasonInput);
+        const modalInputRow = this.client.createMessageComponentsRow(reasonInput);
         reasonModal.addComponents(modalInputRow);
 
         // Show modal

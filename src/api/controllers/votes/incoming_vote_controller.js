@@ -24,11 +24,11 @@ async function post(req, res){
         const text =
             "**" + user.tag + "** hat gerade für uns gevotet!\n" +
             client.emotes.arrow + " Auf **[discordbotlist.com](https://discordbotlist.com/bots/" + client.user.id + "/upvote)** könnt ihr alle 12 Stunden für Nevar voten.";
-        const voteEmbed = client.generateEmbed(text, "shine", "normal");
+        const voteEmbed = client.createEmbed(text, "shine", "normal");
         voteEmbed.setThumbnail(user.displayAvatarURL());
 
-        const voteNowButton = client.createButton(null, "Jetzt voten", "Link", client.emotes.rocket, false, "https://discordbotlist.com/bots/" + client.user.id + "/upvote");
-        const buttonRow = client.createComponentsRow(voteNowButton);
+        const voteNowButton = client.createButton(null, "Jetzt voten", "Link", "rocket", false, "https://discordbotlist.com/bots/" + client.user.id + "/upvote");
+        const buttonRow = client.createMessageComponentsRow(voteNowButton);
 
         await client.channels.cache.get(client.config.channels["VOTE_ANNOUNCEMENT_ID"]).send({embeds: [voteEmbed], components: [buttonRow]}).catch((e) => {console.log("Couldn't send vote announcement: " + e)});
 

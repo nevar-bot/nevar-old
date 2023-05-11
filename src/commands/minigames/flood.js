@@ -91,14 +91,14 @@ class FloodGame {
         this.interaction.author = this.interaction.user;
         this.maxTurns = Math.floor((25 * (this.length * 2)) / 26);
 
-        const embed = this.options.client.generateEmbed("Züge: " + this.turns + "/" + this.maxTurns + "\n\n" + this.getBoardContent(), "arrow", "normal")
+        const embed = this.options.client.createEmbed("Züge: " + this.turns + "/" + this.maxTurns + "\n\n" + this.getBoardContent(), "arrow", "normal")
 
         const btn1 = this.options.client.createButton("flood_0", null, "Primary", squares[0]);
         const btn2 = this.options.client.createButton("flood_1", null, "Primary", squares[1]);
         const btn3 = this.options.client.createButton("flood_2", null, "Primary", squares[2]);
         const btn4 = this.options.client.createButton("flood_3", null, "Primary", squares[3]);
         const btn5 = this.options.client.createButton("flood_4", null, "Primary", squares[4]);
-        const row = this.options.client.createComponentsRow(btn1, btn2, btn3, btn4, btn5);
+        const row = this.options.client.createMessageComponentsRow(btn1, btn2, btn3, btn4, btn5);
 
         const msg = await this.sendMessage({ embeds: [embed], components: [row] });
         const collector = msg.createMessageComponentCollector({ filter: btn => btn.user.id === this.interaction.user.id });
@@ -110,7 +110,7 @@ class FloodGame {
             if (!update && update !== false) return collector.stop();
             if (update === false) return;
 
-            const embed = this.options.client.generateEmbed("Züge: " + this.turns + "/" + this.maxTurns + "\n\n" + this.getBoardContent(), "arrow", "normal")
+            const embed = this.options.client.createEmbed("Züge: " + this.turns + "/" + this.maxTurns + "\n\n" + this.getBoardContent(), "arrow", "normal")
             return await msg.edit({ embeds: [embed], components: [row] });
         })
 
@@ -122,7 +122,7 @@ class FloodGame {
     gameOver(msg, result) {
         const GameOverMessage = result ? this.options.winMessage : this.options.loseMessage;
 
-        const embed = this.options.client.generateEmbed("Spiel beendet\n" + this.options.client.emotes.arrow + " " + GameOverMessage.replace("{turns}", this.turns) + "\n\n" + this.getBoardContent(), "rocket", "normal");
+        const embed = this.options.client.createEmbed("Spiel beendet\n" + this.options.client.emotes.arrow + " " + GameOverMessage.replace("{turns}", this.turns) + "\n\n" + this.getBoardContent(), "rocket", "normal");
         return msg.edit({ embeds: [embed], components: this.disableButtons(msg.components) });
     }
 

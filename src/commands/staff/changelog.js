@@ -25,9 +25,9 @@ class Changelog extends BaseCommand {
     }
 
     async sendChangelog(){
-        const createButton = this.client.createButton("create", "Changelog erstellen", "Secondary", this.client.emotes.text, false, null);
-        const createEmbed = this.client.generateEmbed("Wenn du einen Changelog erstellen möchtest, drücke den Button", "arrow", "normal");
-        const buttonRow = this.client.createComponentsRow(createButton);
+        const createButton = this.client.createButton("create", "Changelog erstellen", "Secondary", "text");
+        const createEmbed = this.client.createEmbed("Wenn du einen Changelog erstellen möchtest, drücke den Button", "arrow", "normal");
+        const buttonRow = this.client.createMessageComponentsRow(createButton);
 
         const embedMessage = await this.message.reply({ embeds: [createEmbed], components: [buttonRow] });
 
@@ -97,13 +97,13 @@ class Changelog extends BaseCommand {
                         this.client.emotes.bug + " **GEFIXTE BUGS**\n" + this.client.emotes.arrow + " " + fixedFeatures.join("\n" + this.client.emotes.arrow + " ") + "\n\n\n\n" +
                         this.client.emotes.error + " **ENTFERNTE FUNKTIONEN**\n" + this.client.emotes.arrow + " " + removedFeatures.join("\n" + this.client.emotes.arrow + " ") + "\n\n\n\n";
 
-                    const changelogEmbed = this.client.generateEmbed("{0}", null, "normal", text);
+                    const changelogEmbed = this.client.createEmbed("{0}", null, "normal", text);
                     changelogEmbed.setThumbnail(this.client.user.displayAvatarURL());
                     changelogEmbed.setTitle("Changelog vom " + date);
                     this.message.channel.send({ embeds: [changelogEmbed] });
 
                     // Delete messages and close modal
-                    const sentEmbed = await this.client.generateEmbed("Der Changelog wurde erstellt und gesendet", "success", "success");
+                    const sentEmbed = await this.client.createEmbed("Der Changelog wurde erstellt und gesendet", "success", "success");
                     await int.update({ embeds: [sentEmbed], components: [] });
                     await this.message.delete().catch(() => {});
                 })

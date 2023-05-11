@@ -104,7 +104,7 @@ class Welcome extends BaseCommand {
     async setStatus(status, data){
         if(data.guild.settings.welcome.enabled === JSON.parse(status)){
             const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-            const isAlreadyEmbed = this.client.generateEmbed("Die Willkommensnachricht ist bereits {0}.", "error", "error", string);
+            const isAlreadyEmbed = this.client.createEmbed("Die Willkommensnachricht ist bereits {0}.", "error", "error", string);
             return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
         }
 
@@ -113,25 +113,25 @@ class Welcome extends BaseCommand {
         await data.guild.save();
 
         const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-        const successEmbed = this.client.generateEmbed("Die Willkommensnachricht wurde {0}.", "success", "success", string);
+        const successEmbed = this.client.createEmbed("Die Willkommensnachricht wurde {0}.", "success", "success", string);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async sendPreview(data){
         if(!data.guild.settings.welcome.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
         if(!data.guild.settings.welcome.channel || !this.client.channels.cache.get(data.guild.settings.welcome.channel)){
-            const noChannelEmbed = this.client.generateEmbed("Es wurde kein Channel für die Willkommensnachricht festgelegt.", "error", "error");
+            const noChannelEmbed = this.client.createEmbed("Es wurde kein Channel für die Willkommensnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noChannelEmbed] });
         }
         if(!data.guild.settings.welcome.message){
-            const noMessageEmbed = this.client.generateEmbed("Es wurde keine Nachricht für die Willkommensnachricht festgelegt.", "error", "error");
+            const noMessageEmbed = this.client.createEmbed("Es wurde keine Nachricht für die Willkommensnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noMessageEmbed] });
         }
         if(!data.guild.settings.welcome.type){
-            const noTypeEmbed = this.client.generateEmbed("Es wurde kein Typ für die Willkommensnachricht festgelegt.", "error", "error");
+            const noTypeEmbed = this.client.createEmbed("Es wurde kein Typ für die Willkommensnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noTypeEmbed] });
         }
 
@@ -153,20 +153,20 @@ class Welcome extends BaseCommand {
         const message = parseMessage(data.guild.settings.welcome.message);
 
         if(data.guild.settings.welcome.type === "embed"){
-            const previewEmbed = this.client.generateEmbed("{0}", null, "normal", message);
+            const previewEmbed = this.client.createEmbed("{0}", null, "normal", message);
             previewEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
             await channel.send({ embeds: [previewEmbed] }).catch(() => {});
         }else if(data.guild.settings.welcome.type === "text"){
             await channel.send({ content: message }).catch(() => {});
         }
 
-        const testExecutedEmbed = this.client.generateEmbed("Die Willkommensnachricht wurde getestet", "success", "success");
+        const testExecutedEmbed = this.client.createEmbed("Die Willkommensnachricht wurde getestet", "success", "success");
         return this.interaction.followUp({ embeds: [testExecutedEmbed] });
     }
 
     async setChannel(channel, data){
         if(!data.guild.settings.welcome.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
@@ -174,19 +174,19 @@ class Welcome extends BaseCommand {
         data.guild.markModified("settings.welcome.channel");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Willkommensnachricht wird ab jetzt in {0} gesendet.", "success", "success", channel.toString());
+        const successEmbed = this.client.createEmbed("Die Willkommensnachricht wird ab jetzt in {0} gesendet.", "success", "success", channel.toString());
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setType(type, data){
         if(!data.guild.settings.welcome.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
         if(data.guild.settings.welcome.type === type){
             const string = type === "embed" ? "Embed" : "Textnachricht";
-            const isAlreadyEmbed = this.client.generateEmbed("Die Willkommensnachricht wird bereits als {0} gesendet.", "error", "error", string);
+            const isAlreadyEmbed = this.client.createEmbed("Die Willkommensnachricht wird bereits als {0} gesendet.", "error", "error", string);
             return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
         }
 
@@ -195,13 +195,13 @@ class Welcome extends BaseCommand {
         await data.guild.save();
 
         const string = type === "embed" ? "Embed" : "Textnachricht";
-        const successEmbed = this.client.generateEmbed("Die Willkommensnachricht wird ab jetzt als {0} gesendet.", "success", "success", string);
+        const successEmbed = this.client.createEmbed("Die Willkommensnachricht wird ab jetzt als {0} gesendet.", "success", "success", string);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setMessage(message, data){
         if(!data.guild.settings.welcome.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
@@ -209,7 +209,7 @@ class Welcome extends BaseCommand {
         data.guild.markModified("settings.welcome.message");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Willkommensnachricht wurde geändert.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Willkommensnachricht wurde geändert.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

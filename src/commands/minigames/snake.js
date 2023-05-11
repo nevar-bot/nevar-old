@@ -135,21 +135,21 @@ class SnakeGame {
         this.updateFoodLoc();
 
 
-        const snakeEmbed = this.client.generateEmbed(" Punkte: " + this.score + "\n\n" + this.getBoardContent(), "arrow", "normal");
+        const snakeEmbed = this.client.createEmbed(" Punkte: " + this.score + "\n\n" + this.getBoardContent(), "arrow", "normal");
         snakeEmbed.setTitle("Snake");
         snakeEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
-        const up = this.client.createButton("snake_up", null, "Primary", this.client.emotes.arrows.up, false, null);
-        const down = this.client.createButton("snake_down", null, "Primary", this.client.emotes.arrows.down, false, null);
-        const left = this.client.createButton("snake_left", null, "Primary", this.client.emotes.arrows.left, false, null);
-        const right = this.client.createButton("snake_right", null, "Primary", this.client.emotes.arrows.right, false, null);
-        const stop = this.client.createButton("snake_stop", "Stop", "Danger", null, false, null);
+        const up = this.client.createButton("snake_up", null, "Primary", this.client.emotes.arrows.up);
+        const down = this.client.createButton("snake_down", null, "Primary", this.client.emotes.arrows.down);
+        const left = this.client.createButton("snake_left", null, "Primary", this.client.emotes.arrows.left);
+        const right = this.client.createButton("snake_right", null, "Primary", this.client.emotes.arrows.right);
+        const stop = this.client.createButton("snake_stop", "Stop", "Danger");
 
-        const dis1 = this.client.createButton("dis1", "\u200b", "Secondary", null, true, null);
-        const dis2 = this.client.createButton("dis2", "\u200b", "Secondary", null, true, null);
+        const dis1 = this.client.createButton("dis1", "\u200b", "Secondary", null, true);
+        const dis2 = this.client.createButton("dis2", "\u200b", "Secondary", null, true);
 
-        const row1 = this.client.createComponentsRow(dis1, up, dis2, stop);
-        const row2 = this.client.createComponentsRow(left, down, right);
+        const row1 = this.client.createMessageComponentsRow(dis1, up, dis2, stop);
+        const row2 = this.client.createMessageComponentsRow(left, down, right);
 
         const msg = await this.sendMessage({ embeds: [snakeEmbed], components: [row1, row2] });
         return this.handleButtons(msg);
@@ -163,7 +163,7 @@ class SnakeGame {
             this.updateFoodLoc();
         }
 
-        const snakeEmbed = this.client.generateEmbed(" Punkte: " + this.score + "\n\n" + this.getBoardContent(), "arrow", "normal");
+        const snakeEmbed = this.client.createEmbed(" Punkte: " + this.score + "\n\n" + this.getBoardContent(), "arrow", "normal");
         snakeEmbed.setTitle("Snake");
         snakeEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
@@ -181,7 +181,7 @@ class SnakeGame {
     }
 
     gameOver(msg) {
-        const gameOverEmbed = this.client.generateEmbed("Das Spiel ist vorbei, du hast " + this.score + " Punkte erreicht.\n\n" + this.getBoardContent(true), "arrow", "normal");
+        const gameOverEmbed = this.client.createEmbed("Das Spiel ist vorbei, du hast " + this.score + " Punkte erreicht.\n\n" + this.getBoardContent(true), "arrow", "normal");
         gameOverEmbed.setTitle("Snake");
         gameOverEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 

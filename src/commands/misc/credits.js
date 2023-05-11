@@ -48,7 +48,7 @@ class Credits extends BaseCommand {
             this.client.emotes.arrow + " [**toml**](https://npmjs.com/package/toml) - TOML-Config\n" +
             this.client.emotes.arrow + " [**icons**](https://discord.gg/9AtkECMX2P) - Emojis für " + this.client.user.username;
 
-        const creditsEmbed = this.client.generateEmbed(credits, null, "normal");
+        const creditsEmbed = this.client.createEmbed(credits, null, "normal");
         creditsEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true, size: 512 }));
 
         return this.interaction.followUp({ embeds: [creditsEmbed] });

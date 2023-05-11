@@ -56,7 +56,7 @@ class Addsticker extends BaseCommand {
         const sticker = { file: undefined, name: undefined, tags: undefined, description: undefined, reason: "/addsticker Befehl" };
 
         if(!stringIsUrl(url) || !urlIsImage(url) || !stringIsEmoji(tags) || !nodeEmoji.find(tags)){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Link zu einem Bild und einen Standard-Emoji angeben. Bitte beachte, dass derzeit nicht alle Emojis unterstützt sind.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Link zu einem Bild und einen Standard-Emoji angeben. Bitte beachte, dass derzeit nicht alle Emojis unterstützt sind.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -67,12 +67,12 @@ class Addsticker extends BaseCommand {
 
         try {
             await this.interaction.guild.stickers.create(sticker);
-            const successEmbed = this.client.generateEmbed("Ich habe den Sticker {0} für dich erstellt.", "success", "success", name);
+            const successEmbed = this.client.createEmbed("Ich habe den Sticker {0} für dich erstellt.", "success", "success", name);
             successEmbed.setThumbnail(url);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(e){
             // Error
-            const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }

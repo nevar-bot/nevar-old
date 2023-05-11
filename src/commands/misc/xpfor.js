@@ -58,7 +58,7 @@ class Xpfor extends BaseCommand {
             this.client.emotes.arrow + " Auf diesem Server werden " + minXp + " bis " + maxXp + " XP pro Nachricht vergeben, der Durchschnitt liegt bei " + averageXp + " XP pro Nachricht.\n" +
             this.client.emotes.arrow + " Bei einem Timeout von 15 Sekunden, entspricht dies etwa **" + neededMessages + " Nachrichten**, und einem Zeitaufwand von **" + neededTime + "**.";
 
-        const xpForEmbed = this.client.generateEmbed("{0}", "arrow", "normal", text);
+        const xpForEmbed = this.client.createEmbed("{0}", "arrow", "normal", text);
         return this.interaction.followUp({ embeds: [xpForEmbed] })
     }
 }

@@ -71,7 +71,7 @@ class Join2Create extends BaseCommand {
         data.guild.markModified("settings.joinToCreate");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Join2Create wurde eingerichtet.", "success", "success");
+        const successEmbed = this.client.createEmbed("Join2Create wurde eingerichtet.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }

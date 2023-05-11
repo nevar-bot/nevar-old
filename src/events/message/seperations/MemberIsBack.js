@@ -20,7 +20,7 @@ module.exports = class {
             "Willkommen zurück!\n\n" +
             this.client.emotes.arrow + " Du warst **" + afkSinceString + "** weg: " + (afkReason || "Kein Grund angegeben");
 
-        const welcomeBackEmbed = this.client.generateEmbed("{0}", "reminder", "normal", text);
+        const welcomeBackEmbed = this.client.createEmbed("{0}", "reminder", "normal", text);
         return message.reply({ embeds: [welcomeBackEmbed] }).catch(() => {});
     }
 }

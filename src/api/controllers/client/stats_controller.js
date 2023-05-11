@@ -13,7 +13,7 @@ async function get(req, res){
             user_count: client.guilds.cache.reduce((sum, guild) => sum + (guild.available ? guild.memberCount : 0), 0),
             channel_count: client.channels.cache.size,
             support_url: client.config.support["INVITE"],
-            invite_url: client.getInvite(),
+            invite_url: client.createInvite(),
         }
     }
     res.setHeader('Content-Type', 'application/json');

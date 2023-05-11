@@ -48,44 +48,44 @@ class Mute extends BaseCommand {
     async mute(member, reason, duration, data){
 
         if(!data.guild.settings.muterole || !this.interaction.guild.roles.cache.get(data.guild.settings.muterole)){
-            const noMuteRoleEmbed = this.client.generateEmbed("Es ist keine Mute-Rolle eingestellt!", "error", "error");
+            const noMuteRoleEmbed = this.client.createEmbed("Es ist keine Mute-Rolle eingestellt!", "error", "error");
             return this.interaction.followUp({ embeds: [noMuteRoleEmbed] });
         }
 
         member = await this.interaction.guild.resolveMember(member.id);
         if(!member){
-            const noMemberEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const noMemberEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [noMemberEmbed] });
         }
 
         if(member.user.id === this.interaction.user.id){
-            const selfEmbed = this.client.generateEmbed("Du kannst dich nicht selbst muten.", "error", "error");
+            const selfEmbed = this.client.createEmbed("Du kannst dich nicht selbst muten.", "error", "error");
             return this.interaction.followUp({ embeds: [selfEmbed] });
         }
 
         if(member.user.id === this.client.user.id){
-            const meEmbed = this.client.generateEmbed("Ich kann mich nicht selbst muten.", "error", "error");
+            const meEmbed = this.client.createEmbed("Ich kann mich nicht selbst muten.", "error", "error");
             return this.interaction.followUp({ embeds: [meEmbed] });
         }
 
         if(member.user.bot){
-            const botEmbed = this.client.generateEmbed("Du kannst keine Bots muten.", "error", "error");
+            const botEmbed = this.client.createEmbed("Du kannst keine Bots muten.", "error", "error");
             return this.interaction.followUp({ embeds: [botEmbed] });
         }
 
         if(member.roles.highest.position >= this.interaction.member.roles.highest.position){
-            const higherRoleEmbed = this.client.generateEmbed("Du kannst keine Mitglieder muten, die eine höhere Rolle haben als du.", "error", "error");
+            const higherRoleEmbed = this.client.createEmbed("Du kannst keine Mitglieder muten, die eine höhere Rolle haben als du.", "error", "error");
             return this.interaction.followUp({ embeds: [higherRoleEmbed] });
         }
 
         const muteRole = this.interaction.guild.roles.cache.get(data.guild.settings.muterole);
         if([...muteRole.members].find((mutedUser) => mutedUser[0] === member.user.id)){
-            const alreadyMutedEmbed = this.client.generateEmbed("{0} ist bereits gemutet.", "error", "error", member.user.tag);
+            const alreadyMutedEmbed = this.client.createEmbed("{0} ist bereits gemutet.", "error", "error", member.user.tag);
             return this.interaction.followUp({ embeds: [alreadyMutedEmbed] });
         }
 
         if(duration && !ms(duration)){
-            const invalidDurationEmbed = this.client.generateEmbed("Du hast eine ungültige Dauer angegeben.", "error", "error");
+            const invalidDurationEmbed = this.client.createEmbed("Du hast eine ungültige Dauer angegeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidDurationEmbed] });
         }
 
@@ -104,10 +104,10 @@ class Mute extends BaseCommand {
             unmuteDate = "/";
         }
 
-        const areYouSureEmbed = this.client.generateEmbed("Bist du dir sicher, dass du {0} muten möchtest?", "arrow", "warning", member.user.tag);
-        const buttonYes = this.client.createButton("confirm", "Ja", "Secondary", this.client.emotes.success);
-        const buttonNo = this.client.createButton("decline", "Nein", "Secondary", this.client.emotes.error);
-        const buttonRow = this.client.createComponentsRow(buttonYes, buttonNo);
+        const areYouSureEmbed = this.client.createEmbed("Bist du dir sicher, dass du {0} muten möchtest?", "arrow", "warning", member.user.tag);
+        const buttonYes = this.client.createButton("confirm", "Ja", "Secondary", "success");
+        const buttonNo = this.client.createButton("decline", "Nein", "Secondary", "error");
+        const buttonRow = this.client.createMessageComponentsRow(buttonYes, buttonNo);
 
         const confirmationAskMessage = await this.interaction.followUp({ embeds: [areYouSureEmbed], components: [buttonRow] });
 
@@ -141,7 +141,7 @@ class Mute extends BaseCommand {
                                 this.client.emotes.arrow + " Dauer: " + relativeTime + "\n" +
                                 this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
                                 this.client.emotes.arrow + " Unmute am: " + unmuteDate;
-                            const privateMuteEmbed = this.client.generateEmbed(privateText, "timeout", "error", this.interaction.guild.name);
+                            const privateMuteEmbed = this.client.createEmbed(privateText, "timeout", "error", this.interaction.guild.name);
                             await mute.victim.send({ embeds: [privateMuteEmbed] }).catch(() => {});
 
                             const logText =
@@ -157,17 +157,17 @@ class Mute extends BaseCommand {
                                 this.client.emotes.arrow + " Dauer: " + relativeTime + "\n" +
                                 this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
                                 this.client.emotes.arrow + " Unmute am: " + unmuteDate;
-                            const publicMuteEmbed = this.client.generateEmbed(publicText, "timeout", "error", mute.victim.user.tag);
+                            const publicMuteEmbed = this.client.createEmbed(publicText, "timeout", "error", mute.victim.user.tag);
                             publicMuteEmbed.setImage("https://c.tenor.com/VphNodL96w8AAAAC/mute-discord-mute.gif");
                             await clicked.update({ embeds: [publicMuteEmbed], components: [] });
                         })
                         .catch(async () => {
-                            const cantMuteEmbed = this.client.generateEmbed("Ich konnte {0} nicht muten.", "error", "error", mute.victim.user.tag);
+                            const cantMuteEmbed = this.client.createEmbed("Ich konnte {0} nicht muten.", "error", "error", mute.victim.user.tag);
                             await clicked.update({ embeds: [cantMuteEmbed], components: [] });
                         });
                     break;
                 case "decline":
-                    const declineEmbed = this.client.generateEmbed("{0} wurde nicht gemutet.", "error", "error", mute.victim.user.tag);
+                    const declineEmbed = this.client.createEmbed("{0} wurde nicht gemutet.", "error", "error", mute.victim.user.tag);
                     await clicked.update({ embeds: [declineEmbed], components: [] });
                     break;
             }

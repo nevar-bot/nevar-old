@@ -110,7 +110,7 @@ class HangmanGame {
             this.getBoardContent() + "\n" +
             this.client.emotes.arrow + " **Wort (" + this.word.length + " Buchstaben)**\n" +
             this.getWordEmojis();
-        const hangmanEmbed = this.client.generateEmbed(description, null, "normal");
+        const hangmanEmbed = this.client.createEmbed(description, null, "normal");
         hangmanEmbed.setTitle("Hangman");
         hangmanEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }))
 
@@ -142,7 +142,7 @@ class HangmanGame {
                 this.client.emotes.arrow + " **Wort (" + this.word.length + " Buchstaben)**\n" +
                 this.getWordEmojis();
 
-            const hangmanEmbed = this.client.generateEmbed(description, null, "normal");
+            const hangmanEmbed = this.client.createEmbed(description, null, "normal");
             hangmanEmbed.setTitle("Hangman");
             hangmanEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }))
 
@@ -166,7 +166,7 @@ class HangmanGame {
             this.getWordEmojis();
 
 
-        const gameOverEmbed = this.client.generateEmbed(description, null, "normal");
+        const gameOverEmbed = this.client.createEmbed(description, null, "normal");
         gameOverEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
         gameOverEmbed.setTitle("Hangman");
 
@@ -200,10 +200,10 @@ class HangmanGame {
         }
 
         const row4 = new ActionRowBuilder();
-        const stop = this.client.createButton("hangman_stop", "Stop", "Danger", null, false, null);
-        const pageBtn = this.client.createButton(pageID, null, "Secondary", this.buttonPage ? this.client.emotes.arrows.left : this.client.emotes.arrows.right, false, null);
-        const letterY = this.client.createButton("hangman_Y", "Y", "Primary", null, this.guessed.includes("Y"), null);
-        const letterZ = this.client.createButton("hangman_Z", "Z", "Primary", null, this.guessed.includes("Z"), null);
+        const stop = this.client.createButton("hangman_stop", "Stop", "Danger");
+        const pageBtn = this.client.createButton(pageID, null, "Secondary", this.buttonPage ? this.client.emotes.arrows.left : this.client.emotes.arrows.right);
+        const letterY = this.client.createButton("hangman_Y", "Y", "Primary", null, this.guessed.includes("Y"));
+        const letterZ = this.client.createButton("hangman_Z", "Z", "Primary", null, this.guessed.includes("Z"));
         row4.addComponents(pageBtn, stop);
         if(this.buttonPage) row4.addComponents(letterY, letterZ);
 

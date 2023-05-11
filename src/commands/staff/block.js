@@ -34,7 +34,7 @@ class Block extends BaseCommand {
                 await this.listBlocked(args);
                 break;
             default:
-                const invalidOptionsEmbed = this.client.generateEmbed("Du musst zwischen add, remove und list wählen.", "error", "error");
+                const invalidOptionsEmbed = this.client.createEmbed("Du musst zwischen add, remove und list wählen.", "error", "error");
                 await message.reply({ embeds: [invalidOptionsEmbed] });
                 break;
 
@@ -54,31 +54,31 @@ class Block extends BaseCommand {
 
         // no target found
         if(!target){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst die ID eines Servers oder Nutzers angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst die ID eines Servers oder Nutzers angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         // target is client
         if(target.id === this.client.user.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du kannst mich nicht blockieren.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst mich nicht blockieren.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         // target is message author
         if(target.id === this.message.author.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du kannst dich nicht selbst blockieren.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst dich nicht selbst blockieren.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         // target is support server
         if(target.id === this.client.config.support["ID"]){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du kannst den Support-Server nicht blockieren.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst den Support-Server nicht blockieren.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         // target is bot owner
         if(this.client.config.general["OWNER_IDS"].includes(target.id)){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du kannst den Bot-Eigentümer nicht blockieren.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst den Bot-Eigentümer nicht blockieren.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -87,7 +87,7 @@ class Block extends BaseCommand {
 
         // target is already blocked
         if(targetData.blocked.state){
-            const invalidOptionsEmbed = this.client.generateEmbed("Dieser Nutzer oder Server ist bereits blockiert.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Dieser Nutzer oder Server ist bereits blockiert.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -103,7 +103,7 @@ class Block extends BaseCommand {
         await targetData.save();
 
         const string = type === "user" ? "Nutzer " + target.tag : "Server " + target.name;
-        const successEmbed = this.client.generateEmbed("Der " + string + " wurde blockiert.", "success", "success");
+        const successEmbed = this.client.createEmbed("Der " + string + " wurde blockiert.", "success", "success");
         return this.message.reply({ embeds: [successEmbed] });
     }
 
@@ -113,7 +113,7 @@ class Block extends BaseCommand {
         const id = args.shift();
 
         if(!id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst die ID eines Servers oder Nutzers angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst die ID eines Servers oder Nutzers angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -122,13 +122,13 @@ class Block extends BaseCommand {
 
         // no target found
         if(!targetData){
-            const noTargetEmbed = this.client.generateEmbed("Es wurde kein Nutzer oder Server mit dieser ID gefunden.", "error", "error");
+            const noTargetEmbed = this.client.createEmbed("Es wurde kein Nutzer oder Server mit dieser ID gefunden.", "error", "error");
             return this.message.reply({ embeds: [noTargetEmbed] });
         }
 
         // target is not blocked
         if(!targetData.blocked.state){
-            const invalidOptionsEmbed = this.client.generateEmbed("Dieser Nutzer oder Server ist nicht blockiert.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Dieser Nutzer oder Server ist nicht blockiert.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -145,7 +145,7 @@ class Block extends BaseCommand {
         targetData.markModified("blocked");
         await targetData.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde entblockt.", "success", "success", name);
+        const successEmbed = this.client.createEmbed("{0} wurde entblockt.", "success", "success", name);
         return this.message.reply({ embeds: [successEmbed] });
     }
 

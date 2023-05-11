@@ -52,7 +52,7 @@ class Autorole extends BaseCommand {
                 await this.showList(data);
                 break;
             default:
-                const unexpectedErrorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
+                const unexpectedErrorEmbed = this.client.createEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
                 return this.interaction.followUp({ embeds: [unexpectedErrorEmbed] });
         }
     }
@@ -60,31 +60,31 @@ class Autorole extends BaseCommand {
     async addAutorole(role, data) {
         // Invalid options
         if(!role || !role.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is @everyone
         if(role.id === this.interaction.guild.roles.everyone.id){
-            const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht als eine Autorolle hinzugefügt werden.", "error", "error");
+            const everyoneEmbed = this.client.createEmbed("Die @everyone Rolle kann nicht als eine Autorolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [everyoneEmbed] });
         }
 
         // Role is managed by an integration
         if(role.managed){
-            const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Autorolle hinzugefügt werden.", "error", "error");
+            const roleIsManagedEmbed = this.client.createEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Autorolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
         }
 
         // Role is higher than the bot's highest role
         if(this.interaction.guild.members.me.roles.highest.position <= role.position){
-            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Autorolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
+            const roleIsTooHighEmbed = this.client.createEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Autorolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
             return this.interaction.followUp({ embeds: [roleIsTooHighEmbed] });
         }
 
         // Role is already an autorole
         if(data.guild.settings.welcome.autoroles.includes(role.id)){
-            const isAlreadyAutoroleEmbed = this.client.generateEmbed("{0} ist bereits eine Autorolle.", "error", "error", role);
+            const isAlreadyAutoroleEmbed = this.client.createEmbed("{0} ist bereits eine Autorolle.", "error", "error", role);
             return this.interaction.followUp({ embeds: [isAlreadyAutoroleEmbed] });
         }
 
@@ -93,20 +93,20 @@ class Autorole extends BaseCommand {
         data.guild.markModified("settings.welcome");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Autorolle hinzugefügt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Autorolle hinzugefügt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async removeAutorole(role, data){
         // Invalid options
         if(!role || !role.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is not an autorole
         if(!data.guild.settings.welcome.autoroles.includes(role.id)){
-            const isNoAutoroleEmbed = this.client.generateEmbed("{0} ist keine Autorolle.", "error", "error", role);
+            const isNoAutoroleEmbed = this.client.createEmbed("{0} ist keine Autorolle.", "error", "error", role);
             return this.interaction.followUp({ embeds: [isNoAutoroleEmbed] });
         }
 
@@ -115,7 +115,7 @@ class Autorole extends BaseCommand {
         data.guild.markModified("settings.welcome");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Autorolle entfernt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Autorolle entfernt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

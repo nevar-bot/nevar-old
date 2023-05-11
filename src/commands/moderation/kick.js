@@ -38,19 +38,19 @@ class Kick extends BaseCommand {
 
     async kick(member, reason) {
         if(member.user.id === this.interaction.member.user.id){
-            const cantKickYourselfEmbed = this.client.generateEmbed("Du kannst dich nicht selber kicken.", "error", "error");
+            const cantKickYourselfEmbed = this.client.createEmbed("Du kannst dich nicht selber kicken.", "error", "error");
             return this.interaction.followUp({ embeds: [cantKickYourselfEmbed] });
         }
         if(member.user.id === this.client.user.id){
-            const cantKickBotEmbed = this.client.generateEmbed("Ich kann mich nicht selber kicken.", "error", "error");
+            const cantKickBotEmbed = this.client.createEmbed("Ich kann mich nicht selber kicken.", "error", "error");
             return this.interaction.followUp({ embeds: [cantKickBotEmbed] });
         }
         if(!member.kickable){
-            const cantKickEmbed = this.client.generateEmbed("Ich kann {0} nicht kicken.", "error", "error", member.user.tag);
+            const cantKickEmbed = this.client.createEmbed("Ich kann {0} nicht kicken.", "error", "error", member.user.tag);
             return this.interaction.followUp({ embeds: [cantKickEmbed] });
         }
         if(member.roles.highest.position >= this.interaction.member.roles.highest.position){
-            const higherRoleEmbed = this.client.generateEmbed("Du kannst keine Mitglieder kicken, die eine höhere Rolle haben als du.", "error", "error");
+            const higherRoleEmbed = this.client.createEmbed("Du kannst keine Mitglieder kicken, die eine höhere Rolle haben als du.", "error", "error");
             return this.interaction.followUp({ embeds: [higherRoleEmbed] });
         }
         if(!reason) reason = "Kein Grund angegeben";
@@ -61,7 +61,7 @@ class Kick extends BaseCommand {
                     " Du wurdest von " + this.interaction.guild.name + " gekickt.\n\n" +
                     this.client.emotes.arrow + " Grund: " + reason + "\n" +
                     this.client.emotes.arrow + " Moderator: " + this.interaction.member.user.tag;
-                const privateEmbed = this.client.generateEmbed(privateText, "leave", "error");
+                const privateEmbed = this.client.createEmbed(privateText, "leave", "error");
                 await member.send({ embeds: [privateEmbed] }).catch(() => {});
 
                 const logText =
@@ -74,11 +74,11 @@ class Kick extends BaseCommand {
                     " " + member.user.tag + " wurde gekickt.\n\n" +
                     this.client.emotes.arrow + " Grund: " + reason + "\n" +
                     this.client.emotes.arrow + " Moderator: " + this.interaction.member.user.tag;
-                const publicEmbed = this.client.generateEmbed(publicText, "leave", "error");
+                const publicEmbed = this.client.createEmbed(publicText, "leave", "error");
                 return this.interaction.followUp({ embeds: [publicEmbed] });
             })
             .catch(async () => {
-                const errorEmbed = this.client.generateEmbed("Ich konnte {0} nicht kicken.", "error", "error", member.user.tag);
+                const errorEmbed = this.client.createEmbed("Ich konnte {0} nicht kicken.", "error", "error", member.user.tag);
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             });
     }

@@ -11,7 +11,8 @@ configValidator();
 const client = new BaseClient();
 
 process.on("unhandledRejection", (e) => {
-    return client.logException(e, null, null, null);
+    console.error(e);
+    return client.alertException(e);
 });
 
 (async () => {

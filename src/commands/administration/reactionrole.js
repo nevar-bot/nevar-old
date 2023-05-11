@@ -51,25 +51,25 @@ class Reactionrole extends BaseCommand {
     async addReactionRole(channel, id, role, emote, data){
         // Role is @everyone
         if(role.id === this.interaction.guild.roles.everyone.id){
-            const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht als eine Reactionrole hinzugefügt werden.", "error", "error");
+            const everyoneEmbed = this.client.createEmbed("Die @everyone Rolle kann nicht als eine Reactionrole hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [everyoneEmbed] });
         }
 
         // Role is managed by an integration
         if(role.managed){
-            const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Reactionrole hinzugefügt werden.", "error", "error");
+            const roleIsManagedEmbed = this.client.createEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Reactionrole hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
         }
 
         // Role is higher than the bot's highest role
         if(this.interaction.guild.members.me.roles.highest.position <= role.position){
-            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Reactionrole hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
+            const roleIsTooHighEmbed = this.client.createEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Reactionrole hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
             return this.interaction.followUp({ embeds: [roleIsTooHighEmbed] });
         }
 
         // Invalid emoji
         if(!stringIsEmoji(emote) && !stringIsCustomEmoji(emote)){
-            const invalidEmojiEmbed = this.client.generateEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
+            const invalidEmojiEmbed = this.client.createEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidEmojiEmbed] });
         }
 
@@ -78,7 +78,7 @@ class Reactionrole extends BaseCommand {
         if(stringIsCustomEmoji(emote)) emote = emote.replace(/<a?:\w+:(\d+)>/g, "$1");
         // Emoji not available
         if(stringIsCustomEmoji(originEmote) && !this.client.emojis.cache.find((e) => e.id === emote)){
-            const unusableEmojiEmbed = this.client.generateEmbed("Der Emoji muss auf einem Server wo ich bin verfügbar sein.", "error", "error");
+            const unusableEmojiEmbed = this.client.createEmbed("Der Emoji muss auf einem Server wo ich bin verfügbar sein.", "error", "error");
             return this.interaction.followUp({ embeds: [unusableEmojiEmbed] });
         }
 
@@ -86,7 +86,7 @@ class Reactionrole extends BaseCommand {
         const message = await channel.messages.fetch(id).catch(() => {});
         // Message not found
         if(!message){
-            const messageNotFoundEmbed = this.client.generateEmbed("Die Nachricht konnte nicht gefunden werden.", "error", "error");
+            const messageNotFoundEmbed = this.client.createEmbed("Die Nachricht konnte nicht gefunden werden.", "error", "error");
             return this.interaction.followUp({ embeds: [messageNotFoundEmbed] });
         }
 
@@ -108,11 +108,11 @@ class Reactionrole extends BaseCommand {
         await data.guild.save();
 
         await message.react(emote).catch(() => {
-            const reactionFailedEmbed = this.client.generateEmbed("Ich konnte nicht auf die Nachricht reagieren.", "error", "error");
+            const reactionFailedEmbed = this.client.createEmbed("Ich konnte nicht auf die Nachricht reagieren.", "error", "error");
             return this.interaction.followUp({ embeds: [reactionFailedEmbed] });
         });
 
-        const successEmbed = this.client.generateEmbed("Die Reactionrole wurde hinzugefügt.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Reactionrole wurde hinzugefügt.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }

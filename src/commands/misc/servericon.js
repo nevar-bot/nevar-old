@@ -32,7 +32,7 @@ class Servericon extends BaseCommand {
         const x1024 = this.interaction.guild.iconURL({ extension: "png", size: 1024 });
         const x2048 = this.interaction.guild.iconURL({ extension: "png", size: 2048 });
 
-        const avatarEmbed = this.client.generateEmbed("Links: [x64]({0}) • [x128]({1}) • [x256]({2}) • [x512]({3}) • [x1024]({4}) • [x2048]({5})", null, "normal", x64, x128, x256, x512, x1024, x2048);
+        const avatarEmbed = this.client.createEmbed("Links: [x64]({0}) • [x128]({1}) • [x256]({2}) • [x512]({3}) • [x1024]({4}) • [x2048]({5})", null, "normal", x64, x128, x256, x512, x1024, x2048);
         avatarEmbed.setTitle("Icon von " + this.interaction.guild.name);
         avatarEmbed.setImage(x256);
 

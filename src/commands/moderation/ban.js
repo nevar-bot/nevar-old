@@ -48,32 +48,32 @@ class Ban extends BaseCommand {
     async ban(member, reason, duration, data){
         member = await this.interaction.guild.resolveMember(member.id);
         if(!member){
-            const noMemberEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const noMemberEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [noMemberEmbed] });
         }
 
         if(member.user.id === this.interaction.user.id){
-            const selfEmbed = this.client.generateEmbed("Du kannst dich nicht selbst bannen.", "error", "error");
+            const selfEmbed = this.client.createEmbed("Du kannst dich nicht selbst bannen.", "error", "error");
             return this.interaction.followUp({ embeds: [selfEmbed] });
         }
 
         if(member.user.id === this.client.user.id){
-            const meEmbed = this.client.generateEmbed("Ich kann mich nicht selbst bannen.", "error", "error");
+            const meEmbed = this.client.createEmbed("Ich kann mich nicht selbst bannen.", "error", "error");
             return this.interaction.followUp({ embeds: [meEmbed] });
         }
 
         if(member.roles.highest.position >= this.interaction.member.roles.highest.position){
-            const higherRoleEmbed = this.client.generateEmbed("Du kannst keine Mitglieder bannen, die eine höhere Rolle haben als du.", "error", "error");
+            const higherRoleEmbed = this.client.createEmbed("Du kannst keine Mitglieder bannen, die eine höhere Rolle haben als du.", "error", "error");
             return this.interaction.followUp({ embeds: [higherRoleEmbed] });
         }
 
         if(!member.bannable){
-            const cantBanEmbed = this.client.generateEmbed("Ich kann dieses Mitglied nicht bannen.", "error", "error");
+            const cantBanEmbed = this.client.createEmbed("Ich kann dieses Mitglied nicht bannen.", "error", "error");
             return this.interaction.followUp({ embeds: [cantBanEmbed] });
         }
 
         if(duration && !ms(duration)){
-            const invalidDurationEmbed = this.client.generateEmbed("Du hast eine ungültige Dauer angegeben.", "error", "error");
+            const invalidDurationEmbed = this.client.createEmbed("Du hast eine ungültige Dauer angegeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidDurationEmbed] });
         }
 
@@ -92,10 +92,10 @@ class Ban extends BaseCommand {
             unbanDate = "/";
         }
 
-        const areYouSureEmbed = this.client.generateEmbed("Bist du dir sicher, dass du {0} bannen möchtest?", "arrow", "warning", member.user.tag);
-        const buttonYes = this.client.createButton("confirm", "Ja", "Secondary", this.client.emotes.success);
-        const buttonNo = this.client.createButton("decline", "Nein", "Secondary", this.client.emotes.error);
-        const buttonRow = this.client.createComponentsRow(buttonYes, buttonNo);
+        const areYouSureEmbed = this.client.createEmbed("Bist du dir sicher, dass du {0} bannen möchtest?", "arrow", "warning", member.user.tag);
+        const buttonYes = this.client.createButton("confirm", "Ja", "Secondary", "success");
+        const buttonNo = this.client.createButton("decline", "Nein", "Secondary", "error");
+        const buttonRow = this.client.createMessageComponentsRow(buttonYes, buttonNo);
 
         const confirmationAskMessage = await this.interaction.followUp({ embeds: [areYouSureEmbed], components: [buttonRow] });
 
@@ -111,7 +111,7 @@ class Ban extends BaseCommand {
                         this.client.emotes.arrow + " Dauer: " + relativeTime + "\n" +
                         this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
                         this.client.emotes.arrow + " Unban am: " + unbanDate;
-                    const privateBanEmbed = this.client.generateEmbed(privateText, "timeout", "error", this.interaction.guild.name);
+                    const privateBanEmbed = this.client.createEmbed(privateText, "timeout", "error", this.interaction.guild.name);
                     const privateMessage = await ban.victim.send({ embeds: [privateBanEmbed] }).catch(() => {});
                     try {
                         await ban.victim.ban({ reason: "BAN - Dauer: " + relativeTime + " | Grund: " + ban.reason + " | Moderator: " + this.interaction.user.tag + " | Unban am: " + unbanDate });
@@ -138,18 +138,18 @@ class Ban extends BaseCommand {
                             this.client.emotes.arrow + " Dauer: " + relativeTime + "\n" +
                             this.client.emotes.arrow + " Moderator: " + this.interaction.user.tag + "\n" +
                             this.client.emotes.arrow + " Unban am: " + unbanDate;
-                        const publicBanEmbed = this.client.generateEmbed(publicText, "timeout", "error", ban.victim.user.tag);
+                        const publicBanEmbed = this.client.createEmbed(publicText, "timeout", "error", ban.victim.user.tag);
                         publicBanEmbed.setImage("https://media4.giphy.com/media/H99r2HtnYs492/giphy.gif");
                         await clicked.update({ embeds: [publicBanEmbed], components: [] });
                     }catch(exc) {
                         console.log(exc);
                         privateMessage.delete().catch(() => {});
-                        const cantBanEmbed = this.client.generateEmbed("Ich konnte {0} nicht bannen.", "error", "error", ban.victim.user.tag);
+                        const cantBanEmbed = this.client.createEmbed("Ich konnte {0} nicht bannen.", "error", "error", ban.victim.user.tag);
                         await clicked.update({embeds: [cantBanEmbed], components: []});
                     }
                     break;
                 case "decline":
-                    const declineEmbed = this.client.generateEmbed("{0} wurde nicht gebannt.", "error", "error", ban.victim.user.tag);
+                    const declineEmbed = this.client.createEmbed("{0} wurde nicht gebannt.", "error", "error", ban.victim.user.tag);
                     await clicked.update({ embeds: [declineEmbed], components: [] });
                     break;
             }

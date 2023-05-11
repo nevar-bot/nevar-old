@@ -19,15 +19,15 @@ module.exports = class {
             this.client.emotes.arrow + " Bei Fragen oder Problemen stehen wir jederzeit gerne zur Verfügung";
 
         const helpCommand = (await this.client.application.commands.fetch()).find((cmd) => cmd.name === "help")?.id;
-        const welcomeEmbed = this.client.generateEmbed(text, "shine", "normal", (helpCommand ? "</help:" + helpCommand + ">" : "/help"));
+        const welcomeEmbed = this.client.createEmbed(text, "shine", "normal", (helpCommand ? "</help:" + helpCommand + ">" : "/help"));
 
-        const inviteButton = this.client.createButton(null, "Einladen", "Link", this.client.emotes.growth_up, false, this.client.getInvite());
-        const supportButton = this.client.createButton(null, "Support", "Link", this.client.emotes.discord, false, this.client.config.support["INVITE"]);
-        const websiteButton = this.client.createButton(null, "Website", "Link", this.client.emotes.globe, true, this.client.config.general["WEBSITE"]);
-        const voteButton = this.client.createButton(null, "Voten", "Link", this.client.emotes.heart, false, "https://discordbotlist.com/bots/" + this.client.user.id + "/upvote");
-        const donateButton = this.client.createButton(null, "Unterstützen", "Link", this.client.emotes.gift, false, "https://prohosting24.de/cp/donate/nevar");
+        const inviteButton = this.client.createButton(null, "Einladen", "Link", "growth_up", false, this.client.createInvite());
+        const supportButton = this.client.createButton(null, "Support", "Link", "discord", false, this.client.config.support["INVITE"]);
+        const websiteButton = this.client.createButton(null, "Website", "Link", "globe", true, this.client.config.general["WEBSITE"]);
+        const voteButton = this.client.createButton(null, "Voten", "Link", "heart", false, "https://discordbotlist.com/bots/" + this.client.user.id + "/upvote");
+        const donateButton = this.client.createButton(null, "Unterstützen", "Link", "gift", false, "https://prohosting24.de/cp/donate/nevar");
 
-        const buttonRow = this.client.createComponentsRow(inviteButton, supportButton, websiteButton, voteButton, donateButton);
+        const buttonRow = this.client.createMessageComponentsRow(inviteButton, supportButton, websiteButton, voteButton, donateButton);
         await firstChannel.send({ embeds: [welcomeEmbed], components: [buttonRow] }).catch(() => {});
         await firstChannel.send({content: this.client.config.support["INVITE"]}).catch(() => {});
 
@@ -54,7 +54,7 @@ module.exports = class {
             this.client.emotes.calendar + " Erstellt am: **" + createdAt + "**\n" +
             this.client.emotes.reminder + " Erstellt vor **" + createdDiff + "**";
 
-        const supportServerEmbed = this.client.generateEmbed(supportText, "discord", "success", );
+        const supportServerEmbed = this.client.createEmbed(supportText, "discord", "success", );
         supportServerEmbed.setTitle(this.client.emotes.shine + " " + this.client.user.username + " wurde einem Server hinzugefügt");
         supportServerEmbed.setThumbnail(guild.iconURL({dynamic: true, size: 512}));
 

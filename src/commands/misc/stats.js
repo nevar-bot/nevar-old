@@ -74,7 +74,7 @@ class Stats extends BaseCommand {
             this.client.emotes.discordjs + " Discord.js-Version: **" + djsV + "**\n" +
             this.client.emotes.javascript + " NodeJS-Version: **" + nodeVer + "**";
 
-        const statsEmbed = this.client.generateEmbed(text, null, "normal");
+        const statsEmbed = this.client.createEmbed(text, null, "normal");
         statsEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
         statsEmbed.setTitle("Statistiken zu " + this.client.user.username);
 

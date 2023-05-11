@@ -39,13 +39,13 @@ class RemoveWarn extends BaseCommand {
     async removeWarn(user, num){
         const member = await this.interaction.guild.resolveMember(user.id);
         if(!member){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
         const targetData = await this.client.findOrCreateMember({ id: member.user.id, guildID: this.interaction.guild.id });
 
         if(!targetData.warnings.list[num -1]){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine gültige Nummer angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine gültige Nummer angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -60,7 +60,7 @@ class RemoveWarn extends BaseCommand {
         await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.delete, "normal", member.user.displayAvatarURL({ dynamic: true }));
 
 
-        const successEmbed = this.client.generateEmbed("Die {0}. Verwarnung von {1} wurde entfernt.", "success", "success", num, member.user.tag);
+        const successEmbed = this.client.createEmbed("Die {0}. Verwarnung von {1} wurde entfernt.", "success", "success", num, member.user.tag);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }

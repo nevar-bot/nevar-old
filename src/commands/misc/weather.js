@@ -33,11 +33,11 @@ class Weather extends BaseCommand {
 
     async showWeather(city){
         if(!this.client.config.apikeys["WEATHER"] || this.client.config.apikeys["WEATHER"] === ""){
-            const noApiKeyEmbed = this.client.generateEmbed("Da in der Bot-Config der nötige Openweathermap-API-Key nicht hinterlegt wurde, kann der Weather-Befehl nicht genutzt werden.", "error", "error");
+            const noApiKeyEmbed = this.client.createEmbed("Da in der Bot-Config der nötige Openweathermap-API-Key nicht hinterlegt wurde, kann der Weather-Befehl nicht genutzt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [noApiKeyEmbed] });
         }
         if(!city){
-            const noCityEmbed = this.client.generateEmbed("Bitte gib einen Ort oder eine Stadt an.", "error", "error");
+            const noCityEmbed = this.client.createEmbed("Bitte gib einen Ort oder eine Stadt an.", "error", "error");
             return this.interaction.followUp({ embeds: [noCityEmbed] });
         }
 
@@ -69,12 +69,12 @@ class Weather extends BaseCommand {
                 this.client.emotes.shine + " Sonnenaufgang: " + weather.sunrise + "\n" +
                 this.client.emotes.shine2 + " Sonnenuntergang: " + weather.sunset;
 
-            const weatherEmbed = this.client.generateEmbed(text, "bright", "normal");
+            const weatherEmbed = this.client.createEmbed(text, "bright", "normal");
             weatherEmbed.setTitle(weatherInformation.name + ": " + weather.description);
 
             return this.interaction.followUp({ embeds: [weatherEmbed] });
         }else{
-            const errorEmbed = this.client.generateEmbed("Es konnte kein Ort mit dem Namen \"" + city + "\" gefunden werden.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Es konnte kein Ort mit dem Namen \"" + city + "\" gefunden werden.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 

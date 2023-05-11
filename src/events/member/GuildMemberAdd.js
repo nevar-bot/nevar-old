@@ -72,7 +72,7 @@ module.exports = class {
             if(!welcomeChannel) return;
 
             if(guildData.settings.welcome.type === "embed"){
-                const welcomeEmbed = this.client.generateEmbed("{0}", null, "normal", welcomeMessage);
+                const welcomeEmbed = this.client.createEmbed("{0}", null, "normal", welcomeMessage);
                 welcomeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
                 return welcomeChannel.send({ embeds: [welcomeEmbed] }).catch((e) => {
                     const desc =

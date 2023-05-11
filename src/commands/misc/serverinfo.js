@@ -52,7 +52,7 @@ class Serverinfo extends BaseCommand {
             this.client.emotes.calendar + " Erstellt am: **" + createdAt + "**\n" +
             this.client.emotes.reminder + " Erstellt vor: **" + createdAgo + "**";
 
-        const serverInfoEmbed = this.client.generateEmbed("{0}", "discord", "normal", text);
+        const serverInfoEmbed = this.client.createEmbed("{0}", "discord", "normal", text);
 
         serverInfoEmbed.setTitle(this.client.emotes.shine + " Informationen zu " + this.interaction.guild.name);
         serverInfoEmbed.setThumbnail(this.interaction.guild.iconURL({dynamic: true}));

@@ -36,13 +36,13 @@ class Unban extends BaseCommand {
         user = await this.client.resolveUser(user);
         console.log(user);
         if(!user || !user.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine ID angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine ID angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         const guildBans = await this.interaction.guild.bans.fetch();
         if(!guildBans.some((u) => u.user.id === user.id)){
-            const isNotBannedEmbed = this.client.generateEmbed("{0} ist nicht gebannt.", "error", "error", user.tag);
+            const isNotBannedEmbed = this.client.createEmbed("{0} ist nicht gebannt.", "error", "error", user.tag);
             return this.interaction.followUp({ embeds: [isNotBannedEmbed] });
         }
 
@@ -64,10 +64,10 @@ class Unban extends BaseCommand {
             await memberData.save();
             this.client.databaseCache.bannedUsers.delete(memberData.id + memberData.guildID);
 
-            const successEmbed = this.client.generateEmbed("{0} wurde entbannt.", "success", "success", user.tag);
+            const successEmbed = this.client.createEmbed("{0} wurde entbannt.", "success", "success", user.tag);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(e){
-            const errorEmbed = this.client.generateEmbed("Ich konnte {0} nicht entbannen.", "error", "error", user.tag);
+            const errorEmbed = this.client.createEmbed("Ich konnte {0} nicht entbannen.", "error", "error", user.tag);
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }

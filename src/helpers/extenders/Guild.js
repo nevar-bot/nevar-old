@@ -68,13 +68,13 @@ Guild.prototype.resolveMember = async function (query, exact = false) {
     if (patternMatch) {
         const id = patternMatch[1];
         const fetched = await this.members.fetch({ user: id }).catch((e) => {
-            client.logException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
+            client.alertException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
         });
         if (fetched) return fetched;
     }
 
     await this.members.fetch({ query }).catch((e) => {
-        client.logException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
+        client.alertException(e, this.name, null, "<Guild||Prototype>.resolveMember(\"" + query + "\", " + exact + ")")
     });
 
     const matchingTags = this.members.cache.filter((mem) => mem.user.tag === query);
@@ -108,7 +108,7 @@ Guild.prototype.logAction = async function(log, logType, emoji, embedType, thumb
     if(!guildData.settings?.logs?.channels[logType]) return;
     const logChannel = this.channels.cache.get(guildData.settings?.logs?.channels[logType]);
     if(!logChannel) return;
-    const logEmbed = client.generateEmbed(emoji + " " + log, null, embedType);
+    const logEmbed = client.createEmbed(emoji + " " + log, null, embedType);
     logEmbed.setThumbnail(thumbnail)
     return logChannel.send({ embeds: [logEmbed]}).catch((e) => {});
 }

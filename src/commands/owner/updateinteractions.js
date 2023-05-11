@@ -27,10 +27,10 @@ class Updateinteractions extends BaseCommand {
     async updateInteractions(){
         const res = await interactionHandler.init(this.client);
         if(res.state){
-            const successEmbed = this.client.generateEmbed("Die Slash-Commands und Kontext-Menüs wurden aktualisiert.", "success", "success");
+            const successEmbed = this.client.createEmbed("Die Slash-Commands und Kontext-Menüs wurden aktualisiert.", "success", "success");
             return this.message.reply({ embeds:[successEmbed] });
         }else{
-            const errorEmbed = this.client.generateEmbed("Beim Aktualisieren der Slash-Commands und Kontext-Menüs ist ein Fehler aufgetreten.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Beim Aktualisieren der Slash-Commands und Kontext-Menüs ist ein Fehler aufgetreten.", "error", "error");
             return this.message.reply({ embeds:[errorEmbed] });
         }
     }

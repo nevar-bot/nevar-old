@@ -33,13 +33,13 @@ class Unmute extends BaseCommand {
     async unmute(user, data){
         const member = await this.interaction.guild.resolveMember(user.id);
         if(!member){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         const memberData = await this.client.findOrCreateMember({ id: user.id, guildID: this.interaction.guild.id });
         if(!memberData.muted.state){
-            const isNotMutedEmbed = this.client.generateEmbed("{0} ist nicht gemutet.", "error", "error", user.tag);
+            const isNotMutedEmbed = this.client.createEmbed("{0} ist nicht gemutet.", "error", "error", user.tag);
             return this.interaction.followUp({ embeds: [isNotMutedEmbed] });
         }
 
@@ -65,7 +65,7 @@ class Unmute extends BaseCommand {
         await this.interaction.guild.logAction(logText, "moderation", this.client.emotes.timeout, "normal", member.user.displayAvatarURL({ dynamic: true }));
 
 
-        const successEmbed = this.client.generateEmbed("{0} wurde entmutet.", "success", "success", user.tag);
+        const successEmbed = this.client.createEmbed("{0} wurde entmutet.", "success", "success", user.tag);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }

@@ -34,7 +34,7 @@ class Warnlist extends BaseCommand {
     async listWarnings(user) {
         const member = await this.interaction.guild.resolveMember(user.id);
         if(!member){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 

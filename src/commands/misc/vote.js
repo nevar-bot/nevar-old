@@ -27,10 +27,10 @@ class Vote extends BaseCommand {
 
     async sendVote(){
 
-        const voteButton = this.client.createButton(null, "Voten", "Link", this.client.emotes.heart, false, "https://discordbotlist.com/bots/" + this.client.user.id + "/upvote");
-        const buttonRow = this.client.createComponentsRow( voteButton);
+        const voteButton = this.client.createButton(null, "Voten", "Link", "heart", false, "https://discordbotlist.com/bots/" + this.client.user.id + "/upvote");
+        const buttonRow = this.client.createMessageComponentsRow( voteButton);
 
-        const linksEmbed = this.client.generateEmbed("Du möchtest Nevar kostenfrei unterstützen? Drücke unten auf den Knopf führe paar Schritte durch und schon hast du uns ein bisschen geholfen. :)", "arrow", "normal");
+        const linksEmbed = this.client.createEmbed("Du möchtest Nevar kostenfrei unterstützen? Drücke unten auf den Knopf führe paar Schritte durch und schon hast du uns ein bisschen geholfen. :)", "arrow", "normal");
 
         return this.interaction.followUp({ embeds: [linksEmbed], components: [buttonRow] });
     }

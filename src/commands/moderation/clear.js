@@ -55,7 +55,7 @@ class Clear extends BaseCommand {
         this.interaction.channel.bulkDelete(messages, true).catch(() => {});
 
         const string = user ? "von " + user.tag : "";
-        const deletedEmbed = this.client.generateEmbed("Ich habe {0} Nachrichten {1} gelöscht.", "success", "success", messages.length, string);
+        const deletedEmbed = this.client.createEmbed("Ich habe {0} Nachrichten {1} gelöscht.", "success", "success", messages.length, string);
         const embedSent = await this.interaction.followUp({ embeds: [deletedEmbed] });
 
         const logText =

@@ -95,7 +95,7 @@ class Setlog extends BaseCommand {
         data.guild.markModified("settings.logs");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Log-Channel wurden gesetzt.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Log-Channel wurden gesetzt.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 }

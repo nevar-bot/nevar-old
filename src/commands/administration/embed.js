@@ -68,10 +68,10 @@ class Embed extends BaseCommand {
     async dispatch(interaction, data) {
         this.interaction = interaction;
 
-        await this.generateEmbed();
+        await this.createEmbed();
     }
 
-    async generateEmbed(){
+    async createEmbed(){
         const author = this.interaction.options.getString("autor");
         const authorIcon = this.interaction.options.getAttachment("icon");
         const title = this.interaction.options.getString("titel");
@@ -83,27 +83,27 @@ class Embed extends BaseCommand {
         const color = this.interaction.options.getString("farbe") || this.client.config.embeds["DEFAULT_COLOR"];
 
         if(color && !this.client.utils.stringIsHexColor(color)){
-            const errorEmbed = this.client.generateEmbed("Du musst eine Farbe im Hex-Format angeben.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Du musst eine Farbe im Hex-Format angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(authorIcon && !authorIcon.contentType.startsWith("image/")){
-            const errorEmbed = this.client.generateEmbed("Das Autor-Icon muss ein Bild sein.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Autor-Icon muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(thumbnail && !thumbnail.contentType.startsWith("image/")){
-            const errorEmbed = this.client.generateEmbed("Das Thumbnail muss ein Bild sein.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Thumbnail muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(image && !image.contentType.startsWith("image/")){
-            const errorEmbed = this.client.generateEmbed("Das Embed-Bild muss ein Bild sein.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Embed-Bild muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(footerIcon && !footerIcon.contentType.startsWith("image/")){
-            const errorEmbed = this.client.generateEmbed("Das Footer-Icon muss ein Bild sein.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Footer-Icon muss ein Bild sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
@@ -124,14 +124,14 @@ class Embed extends BaseCommand {
 
         if(webhook){
             webhook.send({ embeds: [embed] }).catch(() => {
-                const errorEmbed = this.client.generateEmbed("Beim Senden des Embeds ist ein Fehler aufgetreten.", "error", "error");
+                const errorEmbed = this.client.createEmbed("Beim Senden des Embeds ist ein Fehler aufgetreten.", "error", "error");
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             });
             webhook.delete().catch(() => {});
-            const successEmbed = this.client.generateEmbed("Das Embed wurde erstellt und gesendet.", "success", "success");
+            const successEmbed = this.client.createEmbed("Das Embed wurde erstellt und gesendet.", "success", "success");
             return this.interaction.followUp({ embeds: [successEmbed] });
         }else{
-            const errorEmbed = this.client.generateEmbed("Beim Erstellen des Webhooks ist ein Fehler aufgetreten.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Beim Erstellen des Webhooks ist ein Fehler aufgetreten.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }

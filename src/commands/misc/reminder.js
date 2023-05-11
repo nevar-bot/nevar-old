@@ -61,7 +61,7 @@ class Reminder extends BaseCommand {
 
     async addReminder(name, dauer, data){
         if(!name || !dauer || !ms(dauer)){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Namen und eine Dauer angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Namen und eine Dauer angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -77,18 +77,18 @@ class Reminder extends BaseCommand {
         await data.member.save();
         this.client.databaseCache.reminders.set(this.interaction.member.user.id + this.interaction.guild.id, data.member);
 
-        const successEmbed = this.client.generateEmbed("In {0} werde ich dich erinnern.", "success", "success", ms(ms(dauer)));
+        const successEmbed = this.client.createEmbed("In {0} werde ich dich erinnern.", "success", "success", ms(ms(dauer)));
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async deleteReminder(name, data){
         if(!name){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Namen angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Namen angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
         const reminder = data.member.reminders.find(r => r.reason === name);
         if(!reminder){
-            const invalidOptionsEmbed = this.client.generateEmbed("Mit dem Namen hab ich keine Erinnerung gefunden.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Mit dem Namen hab ich keine Erinnerung gefunden.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -96,7 +96,7 @@ class Reminder extends BaseCommand {
         data.member.markModified("reminders");
         await data.member.save();
 
-        const successEmbed = this.client.generateEmbed("Die Erinnerung wurde gelöscht.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Erinnerung wurde gelöscht.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

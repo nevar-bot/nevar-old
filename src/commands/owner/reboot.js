@@ -23,7 +23,7 @@ class Reboot extends BaseCommand {
     }
 
     async reboot(){
-        const rebootEmbed = this.client.generateEmbed("Der Bot wird neu gestartet...", "warning", "warning", );
+        const rebootEmbed = this.client.createEmbed("Der Bot wird neu gestartet...", "warning", "warning", );
         await this.message.reply({ embeds: [rebootEmbed] });
         process.exit(1);
     }

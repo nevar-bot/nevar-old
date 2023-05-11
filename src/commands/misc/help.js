@@ -64,7 +64,7 @@ class Help extends BaseCommand {
         // Create the link section of the embed
         const links =
             this.client.emotes.discord + "**[SUPPORT](" + this.client.config.support["INVITE"] + ")** | " +
-            this.client.emotes.growth_up + "**[EINLADEN](" + this.client.getInvite() + ")** |" +
+            this.client.emotes.growth_up + "**[EINLADEN](" + this.client.createInvite() + ")** |" +
             this.client.emotes.globe + "**[WEBSITE](" + this.client.config.general["WEBSITE"] + ")** | " +
             this.client.emotes.gift + " **[UNTERSTÜTZEN](https://prohosting24.de/cp/donate/nevar)**";
 
@@ -78,7 +78,7 @@ class Help extends BaseCommand {
         const news = this.client.emotes.new + " **Neues vom " + newsDate + ":**\n" + newsJson.text
 
         // Create the embed
-        const helpEmbed = this.client.generateEmbed("{0}\n\n{1}\n\n{2}", null, "normal", links, description, news);
+        const helpEmbed = this.client.createEmbed("{0}\n\n{1}\n\n{2}", null, "normal", links, description, news);
 
         // Create the category select menu
         const categoryStringSelectMenu = new StringSelectMenuBuilder()
@@ -141,9 +141,9 @@ class Help extends BaseCommand {
             const forwardId = this.interaction.user.id + "_forward";
             const homeId = this.interaction.user.id + "_home";
 
-            const backButton = this.client.createButton(backId, "Zurück", "Secondary", this.client.emotes.arrows.left, false, null);
-            const forwardButton = this.client.createButton(forwardId, "Weiter", "Secondary", this.client.emotes.arrows.right, false, null);
-            const homeButton = this.client.createButton(homeId, "Zur Startseite", "Primary", this.client.emotes.discover, false, null);
+            const backButton = this.client.createButton(backId, "Zurück", "Secondary", this.client.emotes.arrows.left);
+            const forwardButton = this.client.createButton(forwardId, "Weiter", "Secondary", this.client.emotes.arrows.right);
+            const homeButton = this.client.createButton(homeId, "Zur Startseite", "Primary", "discover");
 
             const generateEmbed = async (start) => {
                 let current = formattedCommands.slice(start, start +5);
@@ -155,7 +155,7 @@ class Help extends BaseCommand {
                 if(pages.total === 0) pages.total = 1;
 
                 const text = current.map(item => "\n" + item).join("");
-                const paginatedEmbed = this.client.generateEmbed(text, null, "normal");
+                const paginatedEmbed = this.client.createEmbed(text, null, "normal");
                 paginatedEmbed.setTitle(categories[category] + " ● Seite " + pages.current + " von " + pages.total);
                 paginatedEmbed.setThumbnail(this.interaction.guild.iconURL({ dynamic: true, size: 4096 }));
                 return paginatedEmbed;
@@ -247,7 +247,7 @@ class Help extends BaseCommand {
                 helpString += this.client.emotes.users + " **Nur für " + this.client.user.username + "-Staffs:** Ja\n\n";
             }
 
-            const helpEmbed = this.client.generateEmbed(helpString, null, "normal");
+            const helpEmbed = this.client.createEmbed(helpString, null, "normal");
 
             helpEmbed.setTitle(" Hilfe für den " + clientCommand.help.name.slice(0, 1).toUpperCase() + clientCommand.help.name.slice(1) + " Befehl (" + categories[clientCommand.help.category] + ")");
             helpEmbed.setThumbnail(this.interaction.guild.iconURL({ dynamic: true, size: 4096 }));

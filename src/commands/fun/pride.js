@@ -35,7 +35,7 @@ class Pride extends BaseCommand {
 
     async getPrideAvatar(user){
         const prideUrl = "https://some-random-api.ml/canvas/gay?avatar=" + user.displayAvatarURL({ dynamic: true, size: 4096, extension: "png" });
-        const prideAvatarEmbed = this.client.generateEmbed("", "", "normal");
+        const prideAvatarEmbed = this.client.createEmbed("", "", "normal");
         prideAvatarEmbed.setTitle("Pride-Avatar von " + user.tag);
         prideAvatarEmbed.setImage(prideUrl);
         return this.interaction.followUp({ embeds: [prideAvatarEmbed] });

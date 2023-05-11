@@ -60,7 +60,7 @@ class Autoreact extends BaseCommand {
                 await this.showList(data);
                 break;
             default:
-                const unexpectedErrorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
+                const unexpectedErrorEmbed = this.client.createEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
                 return this.interaction.followUp({embeds: [unexpectedErrorEmbed]});
         }
     }
@@ -68,13 +68,13 @@ class Autoreact extends BaseCommand {
     async addAutoReact(data, channel, emote){
         // Missing arguments
         if(!channel || !channel.id || !emote){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Channel- und eine Emojiangabe machen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Channel- und eine Emojiangabe machen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Invalid emoji
         if(!stringIsEmoji(emote) && !stringIsCustomEmoji(emote)){
-            const invalidEmojiEmbed = this.client.generateEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
+            const invalidEmojiEmbed = this.client.createEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidEmojiEmbed] });
         }
 
@@ -83,13 +83,13 @@ class Autoreact extends BaseCommand {
         if(stringIsCustomEmoji(emote)) emote = emote.replace(/<a?:\w+:(\d+)>/g, "$1");
         // Emoji not available
         if(stringIsCustomEmoji(originEmote) && !this.client.emojis.cache.find((e) => e.id === emote)){
-            const unusableEmojiEmbed = this.client.generateEmbed("Der Emoji muss auf einem Server wo ich bin verfügbar sein.", "error", "error");
+            const unusableEmojiEmbed = this.client.createEmbed("Der Emoji muss auf einem Server wo ich bin verfügbar sein.", "error", "error");
             return this.interaction.followUp({ embeds: [unusableEmojiEmbed] });
         }
 
         // Emoji is already added to this channel
         if(data.guild.settings.autoreact.find(r => r.split("|")[0] === channel.id && r.split("|")[1] === emote)){
-            const alreadyAddedEmbed = this.client.generateEmbed("Dieser Emoji ist in {0} bereits zum Autoreact hinzugefügt.", "error", "error", channel);
+            const alreadyAddedEmbed = this.client.createEmbed("Dieser Emoji ist in {0} bereits zum Autoreact hinzugefügt.", "error", "error", channel);
             return this.interaction.followUp({ embeds: [alreadyAddedEmbed] });
         }
 
@@ -98,20 +98,20 @@ class Autoreact extends BaseCommand {
         data.guild.markModified("settings.autoreact");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Ich habe {0} in {1} zum Autoreact hinzugefügt.", "success", "success", originEmote, channel);
+        const successEmbed = this.client.createEmbed("Ich habe {0} in {1} zum Autoreact hinzugefügt.", "success", "success", originEmote, channel);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async removeAutoReact(data, channel, emote){
         // Missing arguments
         if(!channel || !channel.id || !emote){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Channel- und eine Emojiangabe machen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Channel- und eine Emojiangabe machen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Invalid emoji
         if(!stringIsEmoji(emote) && !stringIsCustomEmoji(emote)){
-            const invalidEmojiEmbed = this.client.generateEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
+            const invalidEmojiEmbed = this.client.createEmbed("Du musst einen gültigen Emoji angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidEmojiEmbed] });
         }
 
@@ -121,7 +121,7 @@ class Autoreact extends BaseCommand {
 
         // Emoji is not added to this channel
         if(!data.guild.settings.autoreact.find(r => r.split("|")[0] === channel.id && r.split("|")[1] === emote)){
-            const alreadyAddedEmbed = this.client.generateEmbed("Dieser Emoji ist in {0} nicht zum Autoreact hinzugefügt.", "error", "error", channel);
+            const alreadyAddedEmbed = this.client.createEmbed("Dieser Emoji ist in {0} nicht zum Autoreact hinzugefügt.", "error", "error", channel);
             return this.interaction.followUp({ embeds: [alreadyAddedEmbed] });
         }
 
@@ -130,7 +130,7 @@ class Autoreact extends BaseCommand {
         data.guild.markModified("settings.autoreact");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Ich habe {0} in {1} vom Autoreact entfernt.", "success", "success", originEmote, channel);
+        const successEmbed = this.client.createEmbed("Ich habe {0} in {1} vom Autoreact entfernt.", "success", "success", originEmote, channel);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

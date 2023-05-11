@@ -15,7 +15,7 @@ module.exports = class {
         if(!logChannel) return;
 
         const owner = await this.client.users.fetch(guild.ownerId).catch((e) => {
-            this.client.logException(e, guild.name, null, "<Client>.users.fetch(\"" + guild.ownerId + "\"");
+            this.client.alertException(e, guild.name, null, "<Client>.users.fetch(\"" + guild.ownerId + "\"");
         });
         const id = guild.id;
         const name = guild.name;
@@ -31,7 +31,7 @@ module.exports = class {
             this.client.emotes.calendar + " Erstellt am: **" + created + "**\n" +
             this.client.emotes.reminder + " Erstellt vor: **" + createdDiff + "**";
 
-        const supportServerEmbed = this.client.generateEmbed(text, "discord", "error");
+        const supportServerEmbed = this.client.createEmbed(text, "discord", "error");
         supportServerEmbed.setTitle(this.client.emotes.shine + " " + this.client.user.username + " wurde von einem Server entfernt");
         supportServerEmbed.setThumbnail(guild.iconURL({ dynamic: true }));
 

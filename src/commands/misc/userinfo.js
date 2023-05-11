@@ -93,7 +93,7 @@ class Userinfo extends BaseCommand {
             this.client.emotes.shine + " Badges: **\n" + badges.join("\n") + "**";
 
 
-        const searchServerEmbed = this.client.generateEmbed(text, null, "normal");
+        const searchServerEmbed = this.client.createEmbed(text, null, "normal");
         searchServerEmbed.setTitle(this.client.emotes.information + " Informationen zu " + member.user.username);
         searchServerEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true }));
 

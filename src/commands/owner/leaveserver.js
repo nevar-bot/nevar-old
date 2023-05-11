@@ -26,25 +26,25 @@ class Leaveserver extends BaseCommand {
 
     async leaveServer(guildID){
         if(!guildID){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Server-ID angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Server-ID angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         const guild = this.client.guilds.cache.get(guildID);
 
         if(!guild){
-            const invalidOptionsEmbed = this.client.generateEmbed("Der Server konnte nicht gefunden werden.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Der Server konnte nicht gefunden werden.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         if(guild.id === this.client.config.support["ID"]){
-            const invalidOptionsEmbed = this.client.generateEmbed("Ich kann den Support-Server nicht verlassen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Ich kann den Support-Server nicht verlassen.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         await guild.leave();
 
-        const successEmbed = this.client.generateEmbed("Ich habe {0} verlassen.", "success", "success", guild.name);
+        const successEmbed = this.client.createEmbed("Ich habe {0} verlassen.", "success", "success", guild.name);
         return this.message.reply({ embeds: [successEmbed] });
 
     }

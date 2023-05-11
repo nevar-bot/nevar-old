@@ -37,7 +37,7 @@ module.exports = class {
             }
 
             if(guildData.settings.farewell.type === "embed"){
-                const goodbyeEmbed = this.client.generateEmbed("{0}", null, "normal", goodbyeMessage);
+                const goodbyeEmbed = this.client.createEmbed("{0}", null, "normal", goodbyeMessage);
                 goodbyeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
                 return goodbyeChannel.send({ embeds: [goodbyeEmbed] }).catch((e) => {
                     const desc =

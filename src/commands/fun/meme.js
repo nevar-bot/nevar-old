@@ -35,11 +35,11 @@ class Meme extends BaseCommand {
         memes = [...this.client.utils.shuffleArray(memes)];
 
         const reloadId = member.user.id + "_reload";
-        const reloadButton = this.client.createButton(reloadId, "Neu laden", "Secondary", this.client.emotes.loading, false, null);
+        const reloadButton = this.client.createButton(reloadId, "Neu laden", "Secondary", "loading");
 
         function generateMemeEmbed(){
             const meme = memes[Math.floor(Math.random() * memes.length)];
-            const memeEmbed = self.client.generateEmbed("", "", "normal", );
+            const memeEmbed = self.client.createEmbed("", "", "normal", );
             memeEmbed.setImage(meme.data.url);
             memeEmbed.setTitle(meme.data.title);
             memeEmbed.setFooter({ text: "👍 " + meme.data.ups + " | 👎 " + meme.data.downs });
@@ -49,7 +49,7 @@ class Meme extends BaseCommand {
         const memeMessage = await this.interaction.followUp({
             embeds: [generateMemeEmbed()],
             components: [
-                this.client.createComponentsRow(reloadButton)
+                this.client.createMessageComponentsRow(reloadButton)
             ]
         });
 
@@ -59,7 +59,7 @@ class Meme extends BaseCommand {
             await interaction.update({
                 embeds: [await generateMemeEmbed()],
                 components: [
-                   this.client.createComponentsRow(reloadButton)
+                   this.client.createMessageComponentsRow(reloadButton)
                 ],
             });
         });

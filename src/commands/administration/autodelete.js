@@ -58,7 +58,7 @@ class Autodelete extends BaseCommand {
                 await this.showList(data);
                 break;
             default:
-                const unexpectedErrorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
+                const unexpectedErrorEmbed = this.client.createEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
                 return this.interaction.followUp({ embeds: [unexpectedErrorEmbed] });
         }
     }
@@ -66,13 +66,13 @@ class Autodelete extends BaseCommand {
     async addAutodelete(channel, time, data){
         // Invalid options
         if(!ms(time) || !channel || !channel.id) {
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Channel- und eine Zeitangabe machen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Channel- und eine Zeitangabe machen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Already exists for this channel
         if(data.guild.settings.autodelete.find(x => x.split("|")[0] === channel.id)){
-            const alreadyExistsEmbed = this.client.generateEmbed("Für {0} ist bereits ein Autodelete eingerichtet.", "error", "error", channel);
+            const alreadyExistsEmbed = this.client.createEmbed("Für {0} ist bereits ein Autodelete eingerichtet.", "error", "error", channel);
             return this.interaction.followUp({ embeds: [alreadyExistsEmbed] });
         }
 
@@ -81,12 +81,12 @@ class Autodelete extends BaseCommand {
 
         // Time is too short
         if(timeInMs < 1000){
-            const tooShortEmbed = this.client.generateEmbed("Die Zeit muss mindestens 1 Sekunde betragen.", "error", "error");
+            const tooShortEmbed = this.client.createEmbed("Die Zeit muss mindestens 1 Sekunde betragen.", "error", "error");
             return this.interaction.followUp({ embeds: [tooShortEmbed] });
         }
         // Time is too long
         if(timeInMs > 604800000){
-            const tooLongEmbed = this.client.generateEmbed("Die Zeit darf maximal 7 Tage betragen.", "error", "error");
+            const tooLongEmbed = this.client.createEmbed("Die Zeit darf maximal 7 Tage betragen.", "error", "error");
             return this.interaction.followUp({ embeds: [tooLongEmbed] });
         }
 
@@ -95,20 +95,20 @@ class Autodelete extends BaseCommand {
         data.guild.markModified("settings.autodelete");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("In {0} werden neue Nachrichten automatisch nach {1} gelöscht.", "success", "success", channel, msInTime);
+        const successEmbed = this.client.createEmbed("In {0} werden neue Nachrichten automatisch nach {1} gelöscht.", "success", "success", channel, msInTime);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async removeAutodelete(channel, data){
         // Invalid options
         if(!channel || !channel.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Channelangabe machen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Channelangabe machen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Doesn't exist for this channel
         if(!data.guild.settings.autodelete.find(x => x.split("|")[0] === channel.id)){
-            const doesntExistEmbed = this.client.generateEmbed("Für {0} ist kein Autodelete eingerichtet.", "error", "error", channel);
+            const doesntExistEmbed = this.client.createEmbed("Für {0} ist kein Autodelete eingerichtet.", "error", "error", channel);
             return this.interaction.followUp({ embeds: [doesntExistEmbed] });
         }
 
@@ -117,7 +117,7 @@ class Autodelete extends BaseCommand {
         data.guild.markModified("settings.autodelete");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("In {0} werden neue Nachrichten nicht mehr automatisch gelöscht.", "success", "success", channel);
+        const successEmbed = this.client.createEmbed("In {0} werden neue Nachrichten nicht mehr automatisch gelöscht.", "success", "success", channel);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

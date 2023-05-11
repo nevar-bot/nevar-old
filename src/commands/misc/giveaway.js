@@ -110,7 +110,7 @@ class Giveaway extends BaseCommand {
         const winner = this.interaction.options.getInteger("gewinner");
 
         if(!ms(duration)){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine gültige Dauer angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine gültige Dauer angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] })
         }
 
@@ -158,7 +158,7 @@ class Giveaway extends BaseCommand {
             }
         });
 
-        const successEmbed = this.client.generateEmbed("Das Gewinnspiel wurde gestartet.", "success", "success");
+        const successEmbed = this.client.createEmbed("Das Gewinnspiel wurde gestartet.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] })
     }
 
@@ -167,11 +167,11 @@ class Giveaway extends BaseCommand {
         this.client.giveawayManager
             .end(id)
             .then(async () => {
-                const successEmbed = this.client.generateEmbed("Das Gewinnspiel wurde beendet.", "success", "success");
+                const successEmbed = this.client.createEmbed("Das Gewinnspiel wurde beendet.", "success", "success");
                 return this.interaction.followUp({ embeds: [successEmbed] })
             })
             .catch(async () => {
-                const errorEmbed = this.client.generateEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
+                const errorEmbed = this.client.createEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
                 return this.interaction.followUp({ embeds: [errorEmbed] })
             });
     }
@@ -189,11 +189,11 @@ class Giveaway extends BaseCommand {
                 }
             })
             .then(async () => {
-                const successEmbed = this.client.generateEmbed("Das Gewinnspiel wurde neu ausgelost.", "success", "success");
+                const successEmbed = this.client.createEmbed("Das Gewinnspiel wurde neu ausgelost.", "success", "success");
                 return this.interaction.followUp({ embeds: [successEmbed] })
             })
             .catch(async () => {
-                const errorEmbed = this.client.generateEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
+                const errorEmbed = this.client.createEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
                 return this.interaction.followUp({ embeds: [errorEmbed] })
             })
     }
@@ -203,11 +203,11 @@ class Giveaway extends BaseCommand {
         this.client.giveawayManager
             .delete(id)
             .then(async () => {
-                const successEmbed = this.client.generateEmbed("Das Gewinnspiel wurde gelöscht.", "success", "success");
+                const successEmbed = this.client.createEmbed("Das Gewinnspiel wurde gelöscht.", "success", "success");
                 return this.interaction.followUp({ embeds: [successEmbed] })
             })
             .catch(async () => {
-                const errorEmbed = this.client.generateEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
+                const errorEmbed = this.client.createEmbed("Mit der ID habe ich kein Gewinnspiel gefunden.", "error", "error");
                 return this.interaction.followUp({ embeds: [errorEmbed] })
             });
     }

@@ -69,16 +69,16 @@ class Timestamp extends BaseCommand {
     async createTimestamp(date, type) {
         const unix = this.parseGermanDateTime(date);
         if(!unix){
-            const errorEmbed = this.client.generateEmbed("Du hast kein gültiges Datum angegeben! Dieses muss aus einem Datum und einer Uhrzeit, nur einem Datum oder nur einer Uhrzeit bestehen.", "error", "normal");
+            const errorEmbed = this.client.createEmbed("Du hast kein gültiges Datum angegeben! Dieses muss aus einem Datum und einer Uhrzeit, nur einem Datum oder nur einer Uhrzeit bestehen.", "error", "normal");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
         const timestamp = "<t:" + unix + ":" + type + ">"
         const rawTimestamp = "`<t:" + unix + ":" + type + ">`"
-        const timestampEmbed = this.client.generateEmbed("Hier ist dein generierter Zeitstempel:\n{0} {1}\n{2} {3}", "success", "normal", this.client.emotes.calendar, timestamp, this.client.emotes.text, rawTimestamp);
+        const timestampEmbed = this.client.createEmbed("Hier ist dein generierter Zeitstempel:\n{0} {1}\n{2} {3}", "success", "normal", this.client.emotes.calendar, timestamp, this.client.emotes.text, rawTimestamp);
 
         const custom_id = "timestamp_copy" + Date.now();
-        const copyButton = this.client.createButton(custom_id, "Zeitstempel kopieren", "Secondary", this.client.emotes.text, false, null);
-        const row = this.client.createComponentsRow(copyButton);
+        const copyButton = this.client.createButton(custom_id, "Zeitstempel kopieren", "Secondary", "text");
+        const row = this.client.createMessageComponentsRow(copyButton);
         await this.interaction.followUp({ embeds: [timestampEmbed], components: [row] });
 
         const filter = i => i.customId === custom_id;

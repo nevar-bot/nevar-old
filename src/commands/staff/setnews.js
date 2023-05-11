@@ -30,12 +30,12 @@ class Setnews extends BaseCommand {
         };
 
         if (!fs.existsSync('./assets/news.json')) {
-            const invalidFileEmbed = this.client.generateEmbed("Die Datei \"assets/news.json\" wurde nicht gefunden.", "error", "error");
+            const invalidFileEmbed = this.client.createEmbed("Die Datei \"assets/news.json\" wurde nicht gefunden.", "error", "error");
             return this.message.reply({ embeds: [invalidFileEmbed] });
         }
 
         fs.writeFileSync('./assets/news.json', JSON.stringify(json, null, 4));
-        const successEmbed = this.client.generateEmbed("Die Ankündigung wurde erfolgreich geändert.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Ankündigung wurde erfolgreich geändert.", "success", "success");
         return this.message.reply({ embeds: [successEmbed] });
     }
 }

@@ -28,42 +28,42 @@ class Calculator extends BaseCommand {
     async buildCalculator(user){
         const id = user.id;
 
-        const embed = this.client.generateEmbed("```\u200b```", null, "normal");
+        const embed = this.client.createEmbed("```\u200b```", null, "normal");
 
          // First button row
-        const acButton = this.client.createButton(id + "-ac", "AC", "Danger", null);
-        const openBracketButton = this.client.createButton(id + "-openbracket", "(", "Primary", null);
-        const closeBracketButton = this.client.createButton(id + "-closebracket", ")", "Primary", null);
-        const divideButton = this.client.createButton(id + "-divide", "÷", "Primary", null);
-        const firstRow = this.client.createComponentsRow(acButton, openBracketButton, closeBracketButton, divideButton);
+        const acButton = this.client.createButton(id + "-ac", "AC", "Danger");
+        const openBracketButton = this.client.createButton(id + "-openbracket", "(", "Primary");
+        const closeBracketButton = this.client.createButton(id + "-closebracket", ")", "Primary");
+        const divideButton = this.client.createButton(id + "-divide", "÷", "Primary");
+        const firstRow = this.client.createMessageComponentsRow(acButton, openBracketButton, closeBracketButton, divideButton);
 
         // Second button row
-        const Button1 = this.client.createButton(id + "-1", "1", "Secondary", null);
-        const Button2 = this.client.createButton(id + "-2", "2", "Secondary", null);
-        const Button3 = this.client.createButton(id + "-3", "3", "Secondary", null);
-        const multiplyButton = this.client.createButton(id + "-multiply", "x", "Primary", null);
-        const secondRow = this.client.createComponentsRow(Button1, Button2, Button3, multiplyButton);
+        const Button1 = this.client.createButton(id + "-1", "1", "Secondary");
+        const Button2 = this.client.createButton(id + "-2", "2", "Secondary");
+        const Button3 = this.client.createButton(id + "-3", "3", "Secondary");
+        const multiplyButton = this.client.createButton(id + "-multiply", "x", "Primary");
+        const secondRow = this.client.createMessageComponentsRow(Button1, Button2, Button3, multiplyButton);
 
         // Third button row
-        const Button4 = this.client.createButton(id + "-4", "4", "Secondary", null);
-        const Button5 = this.client.createButton(id + "-5", "5", "Secondary", null);
-        const Button6 = this.client.createButton(id + "-6", "6", "Secondary", null);
-        const minusButton = this.client.createButton(id + "-minus", "-", "Primary", null);
-        const thirdRow = this.client.createComponentsRow(Button4, Button5, Button6, minusButton);
+        const Button4 = this.client.createButton(id + "-4", "4", "Secondary");
+        const Button5 = this.client.createButton(id + "-5", "5", "Secondary");
+        const Button6 = this.client.createButton(id + "-6", "6", "Secondary");
+        const minusButton = this.client.createButton(id + "-minus", "-", "Primary");
+        const thirdRow = this.client.createMessageComponentsRow(Button4, Button5, Button6, minusButton);
 
         // Fourth button row
-        const Button7 = this.client.createButton(id + "-7", "7", "Secondary", null);
-        const Button8 = this.client.createButton(id + "-8", "8", "Secondary", null);
-        const Button9 = this.client.createButton(id + "-9", "9", "Secondary", null);
-        const plusButton = this.client.createButton(id + "-plus", "+", "Primary", null);
-        const fourthRow = this.client.createComponentsRow(Button7, Button8, Button9, plusButton);
+        const Button7 = this.client.createButton(id + "-7", "7", "Secondary");
+        const Button8 = this.client.createButton(id + "-8", "8", "Secondary");
+        const Button9 = this.client.createButton(id + "-9", "9", "Secondary");
+        const plusButton = this.client.createButton(id + "-plus", "+", "Primary");
+        const fourthRow = this.client.createMessageComponentsRow(Button7, Button8, Button9, plusButton);
 
         // Fifth button row
-        const removeButton = this.client.createButton(id + "-remove", "⌫", "Primary", null);
-        const Button0 = this.client.createButton(id + "-0", "0", "Secondary", null);
-        const commaButton = this.client.createButton(id + "-comma", ",", "Primary", null);
-        const equalButton = this.client.createButton(id + "-equal", "=", "Success", null);
-        const fifthRow = this.client.createComponentsRow(removeButton, Button0, commaButton, equalButton);
+        const removeButton = this.client.createButton(id + "-remove", "⌫", "Primary");
+        const Button0 = this.client.createButton(id + "-0", "0", "Secondary");
+        const commaButton = this.client.createButton(id + "-comma", ",", "Primary");
+        const equalButton = this.client.createButton(id + "-equal", "=", "Success");
+        const fifthRow = this.client.createMessageComponentsRow(removeButton, Button0, commaButton, equalButton);
 
         const calculatorMessage = await this.interaction.followUp({ embeds: [embed], components: [firstRow, secondRow, thirdRow, fourthRow, fifthRow] });
 

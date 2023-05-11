@@ -41,7 +41,7 @@ class Invite extends BaseCommand {
         const donateButton = this.client.createButton(null, "Unterstützen", "Link", this.client.emotes.gift, false, "https://prohosting24.de/cp/donate/nevar");
         const buttonRow2 = this.client.createComponentsRow(twitterButton, instagramButton, githubButton, donateButton);
 
-        const linksEmbed = this.client.generateEmbed("Hier hast du eine Auflistung wichtiger Links:", "arrow", "normal");
+        const linksEmbed = this.client.createEmbed("Hier hast du eine Auflistung wichtiger Links:", "arrow", "normal");
 
         return this.interaction.followUp({ embeds: [linksEmbed], components: [buttonRow, buttonRow2] });
     }

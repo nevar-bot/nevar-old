@@ -50,7 +50,7 @@ class Deletedata extends BaseCommand {
 
     async deleteData(member, type, reason, data) {
         if(type === "guild" && (await this.interaction.guild.fetchOwner()).user.id !== this.interaction.user.id){
-            const errorEmbed = this.client.generateEmbed("Nur der Eigentümer dieses Servers kann die Serverdaten löschen", "error", "error");
+            const errorEmbed = this.client.createEmbed("Nur der Eigentümer dieses Servers kann die Serverdaten löschen", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
@@ -86,10 +86,10 @@ class Deletedata extends BaseCommand {
 
         }
 
-        const confirmationEmbed = this.client.generateEmbed("Bist du dir sicher, dass du **{0}** löschen möchtest? Folgende Daten sind davon betroffen:\n\n**{1}**", "warning", "warning", types[type], this.client.emotes.arrow + " " + typeAffects[type].join("\n" + this.client.emotes.arrow + " "));
-        const buttonYes = this.client.createButton("yes", "Ja", "Success", this.client.emotes.success);
-        const buttonNo = this.client.createButton("no", "Nein", "Danger", this.client.emotes.error);
-        const buttonRow = this.client.createComponentsRow(buttonYes, buttonNo);
+        const confirmationEmbed = this.client.createEmbed("Bist du dir sicher, dass du **{0}** löschen möchtest? Folgende Daten sind davon betroffen:\n\n**{1}**", "warning", "warning", types[type], this.client.emotes.arrow + " " + typeAffects[type].join("\n" + this.client.emotes.arrow + " "));
+        const buttonYes = this.client.createButton("yes", "Ja", "Success", "success");
+        const buttonNo = this.client.createButton("no", "Nein", "Danger", "error");
+        const buttonRow = this.client.createMessageComponentsRow(buttonYes, buttonNo);
         const confirmationMessage = await this.interaction.followUp({ embeds: [confirmationEmbed], fetchReply: true, components: [buttonRow] });
 
         const filter = (button) => button.user.id === this.interaction.user.id;
@@ -97,7 +97,7 @@ class Deletedata extends BaseCommand {
 
         collector.on("collect", async (button) => {
             if(button.customId === "no"){
-                const cancelEmbed = this.client.generateEmbed("Die Daten wurden **nicht** gelöscht.", "error", "error");
+                const cancelEmbed = this.client.createEmbed("Die Daten wurden **nicht** gelöscht.", "error", "error");
                 await button.update({ embeds: [cancelEmbed], components: [] });
                 return collector.stop();
             }
@@ -112,9 +112,10 @@ class Deletedata extends BaseCommand {
                     newUserdata.markModified("blocked");
                     await newUserdata.save();
                 }
-                const successEmbed = this.client.generateEmbed("Deine Nutzerdaten wurden erfolgreich gelöscht.", "success", "success");
+                const successEmbed = this.client.createEmbed("Deine Nutzerdaten wurden erfolgreich gelöscht.", "success", "success");
                 await button.update({ embeds: [successEmbed], components: [] });
-                return collector.stop();
+                await collector.stop();
+                return this.client.alert(this.interaction.user.tag + " hat seine Nutzerdaten gelöscht" + (reason ? " mit dem Grund: " + reason : ""), "warning");
             }
             if(type === "member"){
                 const warningsOld = data.member.warnings;
@@ -134,9 +135,10 @@ class Deletedata extends BaseCommand {
                     await newMemberdata.save();
                 }
 
-                const successEmbed = this.client.generateEmbed("Deine Mitgliedsdaten wurden erfolgreich gelöscht.", "success", "success");
+                const successEmbed = this.client.createEmbed("Deine Mitgliedsdaten wurden erfolgreich gelöscht.", "success", "success");
                 await button.update({ embeds: [successEmbed], components: [] });
-                return collector.stop();
+                await collector.stop();
+                return this.client.alert(this.interaction.user.tag + " hat seine Mitgliedsdaten auf " + this.interaction.guild.name + " gelöscht" + (reason ? " mit dem Grund: " + reason : ""), "warning");
             }
             if(type === "guild"){
                 const blockedOld = data.guild.blocked;
@@ -151,9 +153,10 @@ class Deletedata extends BaseCommand {
                     await newGuilddata.save();
                 }
 
-                const successEmbed = this.client.generateEmbed("Die Serverdaten wurden erfolgreich gelöscht.", "success", "success");
+                const successEmbed = this.client.createEmbed("Die Serverdaten wurden erfolgreich gelöscht.", "success", "success");
                 await button.update({ embeds: [successEmbed], components: [] });
-                return collector.stop();
+                await collector.stop();
+                return this.client.alert(this.interaction.user.tag + " hat die Serverdaten von " + this.interaction.guild.name + " gelöscht" + (reason ? " mit dem Grund: " + reason : ""), "warning");
             }
         });
     }

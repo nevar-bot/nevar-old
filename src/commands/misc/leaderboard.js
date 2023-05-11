@@ -36,7 +36,7 @@ class Leaderboard extends BaseCommand {
                 emote + " **" + user.username + "#" + user.discriminator + "**\n" + this.client.emotes.shine2 +" Level " + user.level + "\n" + this.client.emotes.shine2 + " " + this.client.format(user.xp) + " / " + this.client.format(Levels.xpFor(user.level + 1)) + " XP"
             )
         }
-        const leaderboardEmbed = this.client.generateEmbed(beautifiedLeaderboard.join("\n\n"), null, "normal", );
+        const leaderboardEmbed = this.client.createEmbed(beautifiedLeaderboard.join("\n\n"), null, "normal", );
         leaderboardEmbed.setThumbnail(this.interaction.guild.iconURL());
         return this.interaction.followUp({ embeds: [leaderboardEmbed] });
     }

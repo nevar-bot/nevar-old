@@ -90,7 +90,7 @@ class Eightball extends BaseCommand {
 
     async getAnswer(){
         const randomAnswer = eightBallAnswers[Math.floor(Math.random() * eightBallAnswers.length)];
-        const eightBallEmbed = this.client.generateEmbed("{0}", "question", "normal", randomAnswer);
+        const eightBallEmbed = this.client.createEmbed("{0}", "question", "normal", randomAnswer);
         return this.interaction.followUp({ embeds: [eightBallEmbed] });
     }
 }

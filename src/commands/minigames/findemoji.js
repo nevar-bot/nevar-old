@@ -79,7 +79,7 @@ class FindemojiGame {
         this.emoji = this.emojis[Math.floor(Math.random() * this.emojis.length)];
 
 
-        const findEmojiEmbed = this.client.generateEmbed("Du hast 5 Sekunden, um dir die Emojis in richtiger Reihenfolge zu merken!", "arrow", "normal");
+        const findEmojiEmbed = this.client.createEmbed("Du hast 5 Sekunden, um dir die Emojis in richtiger Reihenfolge zu merken!", "arrow", "normal");
         findEmojiEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
         const msg = await this.sendMessage({ embeds: [findEmojiEmbed], components: this.getComponents(true) });
@@ -116,7 +116,7 @@ class FindemojiGame {
             string = "Du hast den falschen Emoji ausgewählt. {0}";
         }
 
-        const gameOverEmbed = this.client.generateEmbed(string, "arrow", "normal", this.emoji);
+        const gameOverEmbed = this.client.createEmbed(string, "arrow", "normal", this.emoji);
         gameOverEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
         return msg.edit({ embeds: [gameOverEmbed], components: this.disableButtons(this.getComponents(true)) });
@@ -128,7 +128,7 @@ class FindemojiGame {
         for (let x = 0; x < 2; x++) {
             const row = new ActionRowBuilder();
             for (let y = 0; y < 4; y++) {
-                const buttonEmoji = this.emojis[x * 4 + y];
+                const buttonEmoji = x * 4 + y;
 
                 const btn = this.client.createButton("findEmoji_" + (x*4 + y), "\u200b", (buttonEmoji === this.selected ? (this.selected === this.emoji ? 'Success' : 'Danger') : "Primary"), (showEmoji ? buttonEmoji : null));
                 row.addComponents(btn);

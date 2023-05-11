@@ -61,11 +61,11 @@ module.exports = class {
                 "\n\n{1} Ich bin {2} und helfe dir bei der Verwaltung deines Servers." +
                 "\n{1} Eine Übersicht meiner Befehle erhältst du durch folgenden Befehl: {3}"
 
-            const helpEmbed = this.client.generateEmbed(text, "wave", "normal", greeting, this.client.emotes.arrow, this.client.user.username, (helpCommand ? "</" + helpCommand.name + ":" + helpCommand.id + ">" : "/help"));
+            const helpEmbed = this.client.createEmbed(text, "wave", "normal", greeting, this.client.emotes.arrow, this.client.user.username, (helpCommand ? "</" + helpCommand.name + ":" + helpCommand.id + ">" : "/help"));
             helpEmbed.setThumbnail(this.client.user.displayAvatarURL({ dynamic: true }));
 
-            const inviteButton = this.client.createButton(null, "Einladen", "Link", null, false, this.client.getInvite());
-            const buttonRow = this.client.createComponentsRow(inviteButton);
+            const inviteButton = this.client.createButton(null, "Einladen", "Link", null, false, this.client.createInvite());
+            const buttonRow = this.client.createMessageComponentsRow(inviteButton);
 
             return message.reply({ embeds: [helpEmbed ], components: [buttonRow] });
         }else if(message.content){
@@ -89,7 +89,7 @@ module.exports = class {
             try {
                 clientCommand.dispatch(message, args, data);
             }catch(e){
-                return this.client.logException(e, message.guild, message.author, "<ClientMessageCommand>.dispatch(<Message>, <Args>, <Data>)");
+                return this.client.alertException(e, message.guild, message.member, "<ClientMessageCommand>.dispatch(<Message>, <Args>, <Data>)");
             }
         }
 

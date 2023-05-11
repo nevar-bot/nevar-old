@@ -26,19 +26,19 @@ class Commandstats extends BaseCommand {
 
     async sendStats(args){
         if(!args[0]){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Befehl angeben.", "error", "normal");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Befehl angeben.", "error", "normal");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
         const command = this.client.commands.get(args[0]);
         if(!command){
-            const invalidCommandEmbed = this.client.generateEmbed("Der Befehl existiert nicht.", "error", "normal");
+            const invalidCommandEmbed = this.client.createEmbed("Der Befehl existiert nicht.", "error", "normal");
             return this.message.reply({ embeds: [invalidCommandEmbed] });
         }
 
         const executedCommands = (await (await mongoose.connection.db.collection("logs").find({ "command": command.help.name })).toArray()).length;
 
-        const statsEmbed = this.client.generateEmbed("Der {0}-Command wurde {1}x ausgeführt.", "arrow", "normal", command.help.name, executedCommands);
+        const statsEmbed = this.client.createEmbed("Der {0}-Command wurde {1}x ausgeführt.", "arrow", "normal", command.help.name, executedCommands);
         return this.message.reply({ embeds: [statsEmbed] });
     }
 }

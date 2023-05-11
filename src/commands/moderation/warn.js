@@ -39,19 +39,19 @@ class Warn extends BaseCommand {
         if(!reason) reason = "Kein Grund angegeben";
         const member = await this.interaction.guild.resolveMember(user.id);
         if(!member){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst ein Mitglied angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
         if(member.user.id === this.client.user.id) {
-            const invalidOptionsEmbed = this.client.generateEmbed("Ich kann mich nicht selber verwarnen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Ich kann mich nicht selber verwarnen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
         if(member.user.id === this.client.user.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du kannst dich nicht selber verwarnen.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst dich nicht selber verwarnen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
         if(member.roles.highest.position >= this.interaction.member.roles.highest.position){
-            const higherRoleEmbed = this.client.generateEmbed("Du kannst keine Mitglieder verwarnen, die eine höhere Rolle haben als du.", "error", "error");
+            const higherRoleEmbed = this.client.createEmbed("Du kannst keine Mitglieder verwarnen, die eine höhere Rolle haben als du.", "error", "error");
             return this.interaction.followUp({ embeds: [higherRoleEmbed] });
         }
 
@@ -70,7 +70,7 @@ class Warn extends BaseCommand {
             " Du wurdest auf " + this.interaction.guild.name + " verwarnt.\n\n" +
             this.client.emotes.arrow + " Grund: " + reason + "\n" +
             this.client.emotes.arrow + " Moderator: " + this.interaction.member.user.tag
-        const privateEmbed = this.client.generateEmbed(privateText, "ban", "warning");
+        const privateEmbed = this.client.createEmbed(privateText, "ban", "warning");
         await member.user.send({ embeds:[privateEmbed] }).catch(() => {});
 
         const logText =
@@ -83,7 +83,7 @@ class Warn extends BaseCommand {
             " " + member.user.tag + " wurde verwarnt.\n\n" +
             this.client.emotes.arrow + " Grund: " + reason + "\n" +
             this.client.emotes.arrow + " Moderator: " + this.interaction.member.user.tag
-        const publicEmbed = this.client.generateEmbed(publicText, "ban", "success");
+        const publicEmbed = this.client.createEmbed(publicText, "ban", "success");
         return this.interaction.followUp({ embeds: [publicEmbed] });
     }
 }

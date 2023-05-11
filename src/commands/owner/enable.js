@@ -25,7 +25,7 @@ class Enable extends BaseCommand {
 
     async enableCommand(cmd){
         if(!cmd){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Befehl angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Befehl angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -36,14 +36,14 @@ class Enable extends BaseCommand {
                 disabledCommands = disabledCommands.filter(c => c !== command.help.name);
                 fs.writeFileSync("./assets/disabled.json", JSON.stringify(disabledCommands, null, 4));
 
-                const enabledEmbed = this.client.generateEmbed("Der Befehl wurde aktiviert.", "success", "success");
+                const enabledEmbed = this.client.createEmbed("Der Befehl wurde aktiviert.", "success", "success");
                 return this.message.reply({ embeds: [enabledEmbed] });
             }else{
-                const isNotDisabledEmbed = this.client.generateEmbed("Der Befehl ist nicht deaktiviert.", "error", "error");
+                const isNotDisabledEmbed = this.client.createEmbed("Der Befehl ist nicht deaktiviert.", "error", "error");
                 return this.message.reply({ embeds: [isNotDisabledEmbed] });
             }
         }else{
-            const invalidCommandEmbed = this.client.generateEmbed("Der Befehl existiert nicht.", "error", "error");
+            const invalidCommandEmbed = this.client.createEmbed("Der Befehl existiert nicht.", "error", "error");
             return this.message.reply({ embeds: [invalidCommandEmbed] });
         }
     }

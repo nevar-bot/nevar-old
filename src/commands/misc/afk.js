@@ -35,7 +35,7 @@ class Afk extends BaseCommand {
             const reason = data.user.afk.reason || "Kein Grund angegeben";
 
             const relativeTime = this.client.utils.getRelativeTime(afkSince);
-            const welcomeBackEmbed = this.client.generateEmbed("Willkommen zurück! Du warst AFK für {0}", "reminder", "normal", relativeTime + " (" + reason + ")");
+            const welcomeBackEmbed = this.client.createEmbed("Willkommen zurück! Du warst AFK für {0}", "reminder", "normal", relativeTime + " (" + reason + ")");
 
             data.user.afk = {
                 state: false,
@@ -55,7 +55,7 @@ class Afk extends BaseCommand {
         data.user.markModified("afk");
         await data.user.save();
 
-        const seeYouLaterEmbed = this.client.generateEmbed("Bis später! Du bist jetzt AFK: {0}", "reminder", "normal", reason || "Kein Grund angegeben");
+        const seeYouLaterEmbed = this.client.createEmbed("Bis später! Du bist jetzt AFK: {0}", "reminder", "normal", reason || "Kein Grund angegeben");
         return this.interaction.followUp({ embeds: [seeYouLaterEmbed] });
     }
 }

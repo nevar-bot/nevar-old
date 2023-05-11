@@ -25,7 +25,7 @@ class Disable extends BaseCommand {
 
     async disableCommand(cmd){
         if(!cmd){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Befehl angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Befehl angeben.", "error", "error");
             return this.message.reply({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -34,22 +34,22 @@ class Disable extends BaseCommand {
             const disabledCommands = JSON.parse(fs.readFileSync("./assets/disabled.json"));
 
             if(disabledCommands.includes(command.help.name)){
-                const alreadyDisabledEmbed = this.client.generateEmbed("Der Befehl ist bereits deaktiviert.", "error", "error");
+                const alreadyDisabledEmbed = this.client.createEmbed("Der Befehl ist bereits deaktiviert.", "error", "error");
                 return this.message.reply({ embeds: [alreadyDisabledEmbed] });
             }
 
             disabledCommands.push(command.help.name);
             fs.writeFileSync("./assets/disabled.json", JSON.stringify(disabledCommands, null, 4));
-            const disabledEmbed = this.client.generateEmbed("Der Befehl wurde deaktiviert.", "success", "success");
+            const disabledEmbed = this.client.createEmbed("Der Befehl wurde deaktiviert.", "success", "success");
             return this.message.reply({ embeds: [disabledEmbed] });
 
         }else if(cmd.toLowerCase() === "list"){
             let disabledCommands = JSON.parse(fs.readFileSync("./assets/disabled.json"));
             if(disabledCommands.length === 0) disabledCommands = ["Keine Befehle deaktiviert"];
-            const disabledListEmbed = this.client.generateEmbed("Folgende Befehle sind deaktiviert:\n\n{0} {1}", "success", "normal", this.client.emotes.arrow, disabledCommands.join("\n" + this.client.emotes.arrow + " "))
+            const disabledListEmbed = this.client.createEmbed("Folgende Befehle sind deaktiviert:\n\n{0} {1}", "success", "normal", this.client.emotes.arrow, disabledCommands.join("\n" + this.client.emotes.arrow + " "))
             return this.message.reply({ embeds: [disabledListEmbed] });
         }else{
-            const invalidCommandEmbed = this.client.generateEmbed("Der Befehl existiert nicht.", "error", "error");
+            const invalidCommandEmbed = this.client.createEmbed("Der Befehl existiert nicht.", "error", "error");
             return this.message.reply({ embeds: [invalidCommandEmbed] });
         }
     }

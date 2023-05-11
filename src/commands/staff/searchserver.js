@@ -26,7 +26,7 @@ class Searchserver extends BaseCommand {
 
     async searchServer(id){
         if(!id || !this.client.guilds.cache.get(id)){
-            const notFoundEmbed = this.client.generateEmbed("Der Server wurde nicht gefunden.", "error", "error");
+            const notFoundEmbed = this.client.createEmbed("Der Server wurde nicht gefunden.", "error", "error");
             return this.message.reply({ embeds: [notFoundEmbed] });
         }
 
@@ -56,7 +56,7 @@ class Searchserver extends BaseCommand {
             this.client.emotes.reminder + " Eingeladen vor: **" + invitedDiff + "**\n\n" +
             this.client.emotes.slashcommand + " Befehle ausgeführt: **" + this.client.format(executedCommands) + "**";
 
-        const searchServerEmbed = this.client.generateEmbed(text, null, "normal");
+        const searchServerEmbed = this.client.createEmbed(text, null, "normal");
         searchServerEmbed.setTitle(this.client.emotes.information + " Informationen zu " + guild.name);
         searchServerEmbed.setThumbnail(guild.iconURL({ dynamic: true }));
 

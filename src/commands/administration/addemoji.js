@@ -43,7 +43,7 @@ class Addemoji extends BaseCommand {
         const emote = { name: undefined, url: undefined };
         // Invalid options
         if((!stringIsCustomEmoji(emoji) && !stringIsUrl(emoji)) || (stringIsUrl(emoji) && !urlIsImage(emoji)) || (stringIsUrl(emoji) && urlIsImage(emoji) && !name)){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst einen Emoji oder einen Link zu einem Bild angeben. Bei einem Link muss zusätzlich ein Name gegeben sein.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst einen Emoji oder einen Link zu einem Bild angeben. Bei einem Link muss zusätzlich ein Name gegeben sein.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
@@ -63,11 +63,11 @@ class Addemoji extends BaseCommand {
                 reason: "/addemoji Command"
             });
             // Success
-            const successEmbed = this.client.generateEmbed("Ich habe {0} für dich erstellt.", "success", "success", createdEmote);
+            const successEmbed = this.client.createEmbed("Ich habe {0} für dich erstellt.", "success", "success", createdEmote);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(exception){
             // Error
-            const errorEmbed = this.client.generateEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Ein unerwarteter Fehler ist aufgetreten.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }

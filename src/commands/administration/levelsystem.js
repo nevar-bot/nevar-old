@@ -222,7 +222,7 @@ class Levelsystem extends BaseCommand {
         // This status is already chosen
         if(data.guild.settings.levels.enabled === JSON.parse(status)){
             const text = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-            const infoEmbed = this.client.generateEmbed("Das Levelsystem ist bereits {0}.", "error", "error", text);
+            const infoEmbed = this.client.createEmbed("Das Levelsystem ist bereits {0}.", "error", "error", text);
             return this.interaction.followUp({ embeds: [infoEmbed] });
         }
 
@@ -231,14 +231,14 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.enabled");
         await data.guild.save();
         const text = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-        const successEmbed = this.client.generateEmbed("Das Levelsystem wurde {0}.", "success", "success", text);
+        const successEmbed = this.client.createEmbed("Das Levelsystem wurde {0}.", "success", "success", text);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setChannel(channel, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
@@ -248,20 +248,20 @@ class Levelsystem extends BaseCommand {
         await data.guild.save();
 
         const text = channel ? "in " + channel.toString() : "im jeweils aktuellen Channel";
-        const successEmbed = this.client.generateEmbed("Level-Up Nachrichten kommen absofort {0}.", "success", "success", text);
+        const successEmbed = this.client.createEmbed("Level-Up Nachrichten kommen absofort {0}.", "success", "success", text);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setMessage(message, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Message is too long
         if(message.length > 2000){
-            const errorEmbed = this.client.generateEmbed("Die Nachricht darf maximal 2.000 Zeichen lang sein.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Die Nachricht darf maximal 2.000 Zeichen lang sein.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
@@ -270,44 +270,44 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.message");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Level-Up Nachricht wurde geändert.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Level-Up Nachricht wurde geändert.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async addRole(role, level, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Missing options
         if(!role || !role.id || !level){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle und ein Level angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle und ein Level angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is already added
         if(data.guild.settings.levels.roles.find(r => r.split("|")[0] === role.id)){
-            const alreadyAddedEmbed = this.client.generateEmbed("Diese Rolle ist bereits als Levelrolle hinzugefügt.", "error", "error");
+            const alreadyAddedEmbed = this.client.createEmbed("Diese Rolle ist bereits als Levelrolle hinzugefügt.", "error", "error");
             return this.interaction.followUp({ embeds: [alreadyAddedEmbed] });
         }
 
         // Role is @everyone
         if(role.id === this.interaction.guild.roles.everyone.id){
-            const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht als eine Levelrolle hinzugefügt werden.", "error", "error");
+            const everyoneEmbed = this.client.createEmbed("Die @everyone Rolle kann nicht als eine Levelrolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [everyoneEmbed] });
         }
 
         // Role is managed by an integration
         if(role.managed){
-            const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Levelrolle hinzugefügt werden.", "error", "error");
+            const roleIsManagedEmbed = this.client.createEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Levelrolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
         }
 
         // Role is higher than the bot's highest role
         if(this.interaction.guild.members.me.roles.highest.position <= role.position){
-            const roleIsTooHighEmbed = this.client.generateEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Levelrolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
+            const roleIsTooHighEmbed = this.client.createEmbed("Da {0} eine höhere oder gleiche Position wie meine höchste Rolle ({1}) hat, kann sie nicht als Levelrolle hinzugefügt werden.", "error", "error", role, this.interaction.guild.members.me.roles.highest);
             return this.interaction.followUp({ embeds: [roleIsTooHighEmbed] });
         }
 
@@ -316,26 +316,26 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.roles");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Levelrolle hinzugefügt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Levelrolle hinzugefügt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async removeRole(role, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Missing options
         if(!role || !role.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is not a levelrole
         if(!data.guild.settings.levels.roles.find(r => r.split("|")[0] === role.id)){
-            const isNoLevelroleEmbed = this.client.generateEmbed("{0} ist keine Levelrolle.", "error", "error", role);
+            const isNoLevelroleEmbed = this.client.createEmbed("{0} ist keine Levelrolle.", "error", "error", role);
             return this.interaction.followUp({ embeds: [isNoLevelroleEmbed] });
         }
 
@@ -344,7 +344,7 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.roles");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Levelrolle entfernt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Levelrolle entfernt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
@@ -373,31 +373,31 @@ class Levelsystem extends BaseCommand {
     async addDoubleXp(role, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Missing options
         if(!role || !role.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is already added
         if(data.guild.settings.levels.doubleXP.includes(role.id)){
-            const alreadyAddedEmbed = this.client.generateEmbed("Diese Rolle ist bereits als Doppel-XP Rolle hinzugefügt.", "error", "error");
+            const alreadyAddedEmbed = this.client.createEmbed("Diese Rolle ist bereits als Doppel-XP Rolle hinzugefügt.", "error", "error");
             return this.interaction.followUp({ embeds: [alreadyAddedEmbed] });
         }
 
         // Role is @everyone
         if(role.id === this.interaction.guild.roles.everyone.id){
-            const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht als eine Doppel-XP Rolle hinzugefügt werden.", "error", "error");
+            const everyoneEmbed = this.client.createEmbed("Die @everyone Rolle kann nicht als eine Doppel-XP Rolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [everyoneEmbed] });
         }
 
         // Role is managed by an integration
         if(role.managed){
-            const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Doppel-XP Rolle hinzugefügt werden.", "error", "error");
+            const roleIsManagedEmbed = this.client.createEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht als Doppel-XP Rolle hinzugefügt werden.", "error", "error");
             return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
         }
 
@@ -406,26 +406,26 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.doubleXP");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Doppel-XP Rolle hinzugefügt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Doppel-XP Rolle hinzugefügt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async removeDoubleXp(role, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Missing options
         if(!role || !role.id){
-            const invalidOptionsEmbed = this.client.generateEmbed("Du musst eine Rolle angeben.", "error", "error");
+            const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Rolle angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
 
         // Role is not a doublexp role
         if(!data.guild.settings.levels.doubleXP.includes(role.id)){
-            const isNoDoubleXPRoleEmbed = this.client.generateEmbed("{0} ist keine Doppel-XP Rolle.", "error", "error", role);
+            const isNoDoubleXPRoleEmbed = this.client.createEmbed("{0} ist keine Doppel-XP Rolle.", "error", "error", role);
             return this.interaction.followUp({ embeds: [isNoDoubleXPRoleEmbed] });
         }
 
@@ -434,7 +434,7 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.doubleXP");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("{0} wurde als Doppel-XP Rolle entfernt.", "success", "success", role);
+        const successEmbed = this.client.createEmbed("{0} wurde als Doppel-XP Rolle entfernt.", "success", "success", role);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
@@ -462,13 +462,13 @@ class Levelsystem extends BaseCommand {
     async setXp(min, max, data){
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         // Min is higher than max
         if(min > max){
-            const errorEmbed = this.client.generateEmbed("Der Minimalwert darf nicht höher sein als der Maximalwert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Der Minimalwert darf nicht höher sein als der Maximalwert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
@@ -480,7 +480,7 @@ class Levelsystem extends BaseCommand {
         data.guild.markModified("settings.levels.xp");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Der Minimalwert wurde auf {0} und der Maximalwert auf {1} gesetzt.", "success", "success", min, max);
+        const successEmbed = this.client.createEmbed("Der Minimalwert wurde auf {0} und der Maximalwert auf {1} gesetzt.", "success", "success", min, max);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
@@ -502,11 +502,11 @@ class Levelsystem extends BaseCommand {
 
     async sendPreview(data){
         if(!data.guild.settings.levels.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
         if(!data.guild.settings.levels.message){
-            const noMessageEmbed = this.client.generateEmbed("Es wurde keine Nachricht für die Level-Up Nachricht festgelegt.", "error", "error");
+            const noMessageEmbed = this.client.createEmbed("Es wurde keine Nachricht für die Level-Up Nachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noMessageEmbed] });
         }
 
@@ -531,10 +531,10 @@ class Levelsystem extends BaseCommand {
 
         try {
             await channel.send({ content: message });
-            const successEmbed = this.client.generateEmbed("Die Level-Up Nachricht wurde getestet", "success", "success");
+            const successEmbed = this.client.createEmbed("Die Level-Up Nachricht wurde getestet", "success", "success");
             return this.interaction.followUp({ embeds: [successEmbed] });
         }catch(e){
-            const errorEmbed = this.client.generateEmbed("Die Level-Up Nachricht konnte nicht gesendet werden", "error", "error");
+            const errorEmbed = this.client.createEmbed("Die Level-Up Nachricht konnte nicht gesendet werden", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
     }
@@ -551,21 +551,21 @@ class Levelsystem extends BaseCommand {
 
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         const toExclude = channel || role;
         // No channel or role was given
         if(!toExclude || toExclude.constructor.name !== "TextChannel" && toExclude.constructor.name !== "Role"){
-            const errorEmbed = this.client.generateEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(toExclude.constructor.name === "TextChannel"){
             // Channel is already on the blacklist
             if(data.guild.settings.levels.exclude.channels.includes(toExclude.id)){
-                const errorEmbed = this.client.generateEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
+                const errorEmbed = this.client.createEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             }
 
@@ -573,24 +573,24 @@ class Levelsystem extends BaseCommand {
             data.guild.settings.levels.exclude.channels.push(toExclude.id);
             data.guild.markModified("settings.levels.exclude.channels");
             await data.guild.save();
-            const successEmbed = this.client.generateEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
+            const successEmbed = this.client.createEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }else if(toExclude.constructor.name === "Role"){
             // Role is already on the blacklist
             if(data.guild.settings.levels.exclude.roles.includes(toExclude.id)){
-                const errorEmbed = this.client.generateEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
+                const errorEmbed = this.client.createEmbed("{0} ist bereits auf der Blacklist.", "error", "error", toExclude);
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             }
 
             // Role is @everyone
             if(toExclude.id === this.interaction.guild.roles.everyone.id){
-                const everyoneEmbed = this.client.generateEmbed("Die @everyone Rolle kann nicht auf die Blacklist gesetzt werden.", "error", "error");
+                const everyoneEmbed = this.client.createEmbed("Die @everyone Rolle kann nicht auf die Blacklist gesetzt werden.", "error", "error");
                 return this.interaction.followUp({ embeds: [everyoneEmbed] });
             }
 
             // Role is managed by an integration
             if(toExclude.managed){
-                const roleIsManagedEmbed = this.client.generateEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht auf die Blacklist gesetzt werden.", "error", "error");
+                const roleIsManagedEmbed = this.client.createEmbed("Rollen welche durch eine Integration verwaltet werden, können nicht auf die Blacklist gesetzt werden.", "error", "error");
                 return this.interaction.followUp({ embeds: [roleIsManagedEmbed] });
             }
 
@@ -598,7 +598,7 @@ class Levelsystem extends BaseCommand {
             data.guild.settings.levels.exclude.roles.push(toExclude.id);
             data.guild.markModified("settings.levels.exclude.roles");
             await data.guild.save();
-            const successEmbed = this.client.generateEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
+            const successEmbed = this.client.createEmbed("{0} wurde zur Blacklist hinzugefügt.", "success", "success", toExclude);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }
     }
@@ -615,21 +615,21 @@ class Levelsystem extends BaseCommand {
 
         // Levelsystem is disabled
         if(!data.guild.settings.levels.enabled){
-            const errorEmbed = this.client.generateEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Das Levelsystem ist deaktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         const toExclude = channel || role;
         // No channel or role was given
         if(!toExclude || toExclude.constructor.name !== "TextChannel" && toExclude.constructor.name !== "Role"){
-            const errorEmbed = this.client.generateEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
+            const errorEmbed = this.client.createEmbed("Bitte gib einen Channel oder eine Rolle an.", "error", "error");
             return this.interaction.followUp({ embeds: [errorEmbed] });
         }
 
         if(toExclude.constructor.name === "TextChannel"){
             // Channel is not on the blacklist
             if(!data.guild.settings.levels.exclude.channels.includes(toExclude.id)){
-                const errorEmbed = this.client.generateEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
+                const errorEmbed = this.client.createEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             }
 
@@ -637,12 +637,12 @@ class Levelsystem extends BaseCommand {
             data.guild.settings.levels.exclude.channels = data.guild.settings.levels.exclude.channels.filter(c => c !== toExclude.id);
             data.guild.markModified("settings.levels.exclude.channels");
             await data.guild.save();
-            const successEmbed = this.client.generateEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
+            const successEmbed = this.client.createEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }else if(toExclude.constructor.name === "Role"){
             // Role is not on the blacklist
             if(!data.guild.settings.levels.exclude.roles.includes(toExclude.id)){
-                const errorEmbed = this.client.generateEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
+                const errorEmbed = this.client.createEmbed("{0} ist nicht auf der Blacklist.", "error", "error", toExclude);
                 return this.interaction.followUp({ embeds: [errorEmbed] });
             }
 
@@ -650,7 +650,7 @@ class Levelsystem extends BaseCommand {
             data.guild.settings.levels.exclude.roles = data.guild.settings.levels.exclude.roles.filter(r => r !== toExclude.id);
             data.guild.markModified("settings.levels.exclude.roles");
             await data.guild.save();
-            const successEmbed = this.client.generateEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
+            const successEmbed = this.client.createEmbed("{0} wurde von der Blacklist entfernt.", "success", "success", toExclude);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }
     }

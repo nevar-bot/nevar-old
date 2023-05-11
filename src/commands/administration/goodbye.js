@@ -104,7 +104,7 @@ class Goodbye extends BaseCommand {
     async setStatus(status, data){
         if(data.guild.settings.farewell.enabled === JSON.parse(status)){
             const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-            const isAlreadyEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht ist bereits {0}.", "error", "error", string);
+            const isAlreadyEmbed = this.client.createEmbed("Die Verabschiedungsnachricht ist bereits {0}.", "error", "error", string);
             return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
         }
 
@@ -113,25 +113,25 @@ class Goodbye extends BaseCommand {
         await data.guild.save();
 
         const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-        const successEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wurde {0}.", "success", "success", string);
+        const successEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wurde {0}.", "success", "success", string);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async sendPreview(data){
         if(!data.guild.settings.farewell.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
         if(!data.guild.settings.farewell.channel || !this.client.channels.cache.get(data.guild.settings.farewell.channel)){
-            const noChannelEmbed = this.client.generateEmbed("Es wurde kein Channel für die Verabschiedungsnachricht festgelegt.", "error", "error");
+            const noChannelEmbed = this.client.createEmbed("Es wurde kein Channel für die Verabschiedungsnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noChannelEmbed] });
         }
         if(!data.guild.settings.farewell.message){
-            const noMessageEmbed = this.client.generateEmbed("Es wurde keine Nachricht für die Verabschiedungsnachricht festgelegt.", "error", "error");
+            const noMessageEmbed = this.client.createEmbed("Es wurde keine Nachricht für die Verabschiedungsnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noMessageEmbed] });
         }
         if(!data.guild.settings.farewell.type){
-            const noTypeEmbed = this.client.generateEmbed("Es wurde kein Typ für die Verabschiedungsnachricht festgelegt.", "error", "error");
+            const noTypeEmbed = this.client.createEmbed("Es wurde kein Typ für die Verabschiedungsnachricht festgelegt.", "error", "error");
             return this.interaction.followUp({ embeds: [noTypeEmbed] });
         }
 
@@ -153,20 +153,20 @@ class Goodbye extends BaseCommand {
         const message = parseMessage(data.guild.settings.farewell.message);
 
         if(data.guild.settings.farewell.type === "embed"){
-            const previewEmbed = this.client.generateEmbed("{0}", null, "normal", message);
+            const previewEmbed = this.client.createEmbed("{0}", null, "normal", message);
             previewEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
             await channel.send({ embeds: [previewEmbed] }).catch(() => {});
         }else if(data.guild.settings.farewell.type === "text"){
             await channel.send({ content: message }).catch(() => {});
         }
 
-        const testExecutedEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wurde getestet", "success", "success");
+        const testExecutedEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wurde getestet", "success", "success");
         return this.interaction.followUp({ embeds: [testExecutedEmbed] });
     }
 
     async setChannel(channel, data){
         if(!data.guild.settings.farewell.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
@@ -174,19 +174,19 @@ class Goodbye extends BaseCommand {
         data.guild.markModified("settings.farewell.channel");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wird ab jetzt in {0} gesendet.", "success", "success", channel.toString());
+        const successEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wird ab jetzt in {0} gesendet.", "success", "success", channel.toString());
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setType(type, data){
         if(!data.guild.settings.farewell.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
         if(data.guild.settings.farewell.type === type){
             const string = type === "embed" ? "Embed" : "Textnachricht";
-            const isAlreadyEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wird bereits als {0} gesendet.", "error", "error", string);
+            const isAlreadyEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wird bereits als {0} gesendet.", "error", "error", string);
             return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
         }
 
@@ -195,13 +195,13 @@ class Goodbye extends BaseCommand {
         await data.guild.save();
 
         const string = type === "embed" ? "Embed" : "Textnachricht";
-        const successEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wird ab jetzt als {0} gesendet.", "success", "success", string);
+        const successEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wird ab jetzt als {0} gesendet.", "success", "success", string);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setMessage(message, data){
         if(!data.guild.settings.farewell.enabled){
-            const notEnabledEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
+            const notEnabledEmbed = this.client.createEmbed("Die Verabschiedungsnachricht ist nicht aktiviert.", "error", "error");
             return this.interaction.followUp({ embeds: [notEnabledEmbed] });
         }
 
@@ -209,7 +209,7 @@ class Goodbye extends BaseCommand {
         data.guild.markModified("settings.farewell.message");
         await data.guild.save();
 
-        const successEmbed = this.client.generateEmbed("Die Verabschiedungsnachricht wurde geändert.", "success", "success");
+        const successEmbed = this.client.createEmbed("Die Verabschiedungsnachricht wurde geändert.", "success", "success");
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 

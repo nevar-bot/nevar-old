@@ -77,8 +77,8 @@ module.exports = class Utils {
 
         const backId = interaction.member.user.id + "_back";
         const forwardId = interaction.member.user.id + "_forward";
-        const backButton = client.createButton(backId, "Zurück", "Secondary", client.emotes.arrows.left, false, null);
-        const forwardButton = client.createButton(forwardId, "Weiter", "Secondary", client.emotes.arrows.right, false, null);
+        const backButton = client.createButton(backId, "Zurück", "Secondary", client.emotes.arrows.left);
+        const forwardButton = client.createButton(forwardId, "Weiter", "Secondary", client.emotes.arrows.right);
 
         async function generatePaginateEmbed(start){
             const current = data.slice(start, start + entriesPerPage);
@@ -91,7 +91,7 @@ module.exports = class Utils {
             if(pages.total === 0) pages.total = 1;
             if(data.length === 0) text = (emote ? client.emotes[emote] + " " : "") + empty;
 
-            const paginatedEmbed = client.generateEmbed(text, null, "normal");
+            const paginatedEmbed = client.createEmbed(text, null, "normal");
             paginatedEmbed.setTitle(title + " ● Seite " + pages.current + " von " + pages.total);
             paginatedEmbed.setThumbnail(interaction.guild.iconURL({ dynamic: true, size: 4096 }));
             return paginatedEmbed;
@@ -101,7 +101,7 @@ module.exports = class Utils {
 
         const embedMessage = await interaction.followUp({
             embeds: [ await generatePaginateEmbed(0) ],
-            components: fitOnePage ? [] : [ client.createComponentsRow(forwardButton) ]
+            components: fitOnePage ? [] : [ client.createMessageComponentsRow(forwardButton) ]
         });
 
         const pageCollector = embedMessage.createMessageComponentCollector({ filter: i => i.user.id === interaction.member.user.id });
@@ -131,8 +131,8 @@ module.exports = class Utils {
 
         const backId = message.member.user.id + "_back";
         const forwardId = message.member.user.id + "_forward";
-        const backButton = client.createButton(backId, "Zurück", "Secondary", client.emotes.arrows.left, false, null);
-        const forwardButton = client.createButton(forwardId, "Weiter", "Secondary", client.emotes.arrows.right, false, null);
+        const backButton = client.createButton(backId, "Zurück", "Secondary", client.emotes.arrows.left);
+        const forwardButton = client.createButton(forwardId, "Weiter", "Secondary", client.emotes.arrows.right);
 
         async function generatePaginateEmbed(start){
             const current = data.slice(start, start + entriesPerPage);
@@ -145,7 +145,7 @@ module.exports = class Utils {
             if(pages.total === 0) pages.total = 1;
             if(data.length === 0) text = (emote ? client.emotes[emote] + " " : "") + empty;
 
-            const paginatedEmbed = client.generateEmbed(text, null, "normal");
+            const paginatedEmbed = client.createEmbed(text, null, "normal");
             paginatedEmbed.setTitle(title + " ● Seite " + pages.current + " von " + pages.total);
             paginatedEmbed.setThumbnail(message.guild.iconURL({ dynamic: true, size: 4096 }));
             return paginatedEmbed;
@@ -155,7 +155,7 @@ module.exports = class Utils {
 
         const embedMessage = await message.reply({
             embeds: [ await generatePaginateEmbed(0) ],
-            components: fitOnePage ? [] : [ client.createComponentsRow(forwardButton) ]
+            components: fitOnePage ? [] : [ client.createMessageComponentsRow(forwardButton) ]
         });
 
         const pageCollector = embedMessage.createMessageComponentCollector({ filter: i => i.user.id === message.member.user.id });

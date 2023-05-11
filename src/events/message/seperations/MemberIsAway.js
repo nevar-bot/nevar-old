@@ -46,7 +46,7 @@ module.exports = class {
                 this.client.emotes.arrow + " Grund: " + afkUser.reason + "\n" +
                 this.client.emotes.arrow + " Abwesend seit: " + afkUser.since;
 
-            const isAwayEmbed = this.client.generateEmbed("{0}", "reminder", "normal", text);
+            const isAwayEmbed = this.client.createEmbed("{0}", "reminder", "normal", text);
             await message.reply({ embeds: [isAwayEmbed] }).catch(() => {});
         }
     }
