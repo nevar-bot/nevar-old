@@ -21,8 +21,14 @@ async function post(req, res){
         const supportGuildData = await client.findOrCreateGuild({id: supportGuild.id});
         if(!supportGuildData) return res.sendStatus(500);
 
+        const userData = await client.findOrCreateUser({ id: userId });
+        if(!userData.voteCount) userData.voteCount = 0;
+        userData.voteCount = userData.voteCount + 1;
+        userData.markModified("voteCount");
+        await userData.save();
+        const voteCount = userData ? userData.voteCount : null;
         const text =
-            "**" + user.tag + "** hat gerade für uns gevotet!\n" +
+            "**" + user.tag + "** hat gerade " + (voteCount ? "zum " + voteCount + " Mal" : "") + "für uns gevotet!\n" +
             client.emotes.arrow + " Auf **[discordbotlist.com](https://discordbotlist.com/bots/" + client.user.id + "/upvote)** könnt ihr alle 12 Stunden für Nevar voten.";
         const voteEmbed = client.createEmbed(text, "shine", "normal");
         voteEmbed.setThumbnail(user.displayAvatarURL());

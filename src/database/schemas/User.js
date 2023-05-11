@@ -38,7 +38,9 @@ const Schema = new mongoose.Schema({
         default: {
             state: false,
         }
-    }
+    },
+
+    voteCount: { type: Number, default: 0 }
 })
 
 module.exports = mongoose.model("User", Schema);
