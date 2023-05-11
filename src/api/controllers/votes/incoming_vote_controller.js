@@ -28,7 +28,7 @@ async function post(req, res){
         await userData.save();
         const voteCount = userData ? userData.voteCount : null;
         const text =
-            "**" + user.tag + "** hat gerade " + (voteCount ? "zum " + voteCount + " Mal" : "") + "für uns gevotet!\n" +
+            "**" + user.tag + "** hat gerade " + (voteCount ? "zum " + voteCount + ". Mal " : "") + "für uns gevotet!\n" +
             client.emotes.arrow + " Auf **[discordbotlist.com](https://discordbotlist.com/bots/" + client.user.id + "/upvote)** könnt ihr alle 12 Stunden für Nevar voten.";
         const voteEmbed = client.createEmbed(text, "shine", "normal");
         voteEmbed.setThumbnail(user.displayAvatarURL());
