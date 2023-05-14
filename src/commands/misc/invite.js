@@ -28,7 +28,7 @@ class Invite extends BaseCommand {
     async sendLinks(){
 
         // First row
-        const inviteButton = this.client.createButton(null, "Einladen", "Link", this.client.emotes.growth_up, false, this.client.getInvite());
+        const inviteButton = this.client.createButton(null, "Einladen", "Link", this.client.emotes.growth_up, false, this.client.createInvite());
         const supportButton = this.client.createButton(null, "Support", "Link", this.client.emotes.discord, false, this.client.config.support["INVITE"]);
         const websiteButton = this.client.createButton(null, "Website", "Link", this.client.emotes.text, true, this.client.config.general["WEBSITE"]);
         const voteButton = this.client.createButton(null, "Voten", "Link", this.client.emotes.heart, false, "https://discordbotlist.com/bots/" + this.client.user.id + "/upvote");
