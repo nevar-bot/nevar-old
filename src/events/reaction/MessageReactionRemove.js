@@ -16,6 +16,7 @@ module.exports = class {
 
             if(messageReaction.message.channel.id === channelId && messageReaction.message.id === messageId && emoji === emojiId){
                 const member = await messageReaction.message.guild.members.fetch(user.id).catch(() => {});
+                if(!member) return;
                 member.roles.remove(roleId, "REACTION ROLE").catch((e) => {
                     const logText =
                         " **Entziehen von Reaction-Rolle fehlgeschlagen**";
