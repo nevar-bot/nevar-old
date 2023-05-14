@@ -47,7 +47,7 @@ class Rank extends BaseCommand {
             // Rank and rank
             .setLevel(userData.level.level || 0, "LEVEL")
             .setLevelColor('#5773c9')
-            .setRank(userData.level.position, "RANG")
+            .setRank(userData.level.position || 100, "RANG")
 
             // Progress bar
             .setProgressBar('#5773c9', "COLOR", true)
