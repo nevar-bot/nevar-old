@@ -3,7 +3,7 @@ module.exports = class {
         this.client = client;
     }
     async dispatch(messageReaction, user){
-        if(!user || !messageReaction || user.bot) return;
+        if(!user || !messageReaction || user.bot || !messageReaction.guild) return;
 
         const guildData = await this.client.findOrCreateGuild({id: messageReaction.message.guild.id});
         for(let reactionRole of guildData.settings.reactionroles){
