@@ -8,6 +8,7 @@ async function get(req, res){
         commands.push({
             name: command.help.name,
             description: command.help.description,
+            category: command.help.category,
             cooldown: command.conf.cooldown / 1000,
             member_permissions: command.conf.memberPermissions,
             bot_permissions: command.conf.botPermissions,
