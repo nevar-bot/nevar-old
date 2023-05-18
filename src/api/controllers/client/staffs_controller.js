@@ -4,15 +4,18 @@ async function get(req, res) {
     const { app } = req;
     const { client } = require("@src/app");
 
-    const staffs = [];
+    const headStaffs = [];
+    const normalStaffs = [];
+
     for(let ownerId of client.config.general["OWNER_IDS"]){
         const user = await client.users.fetch(ownerId).catch(() => {});
         if(!user) continue;
-        staffs.push({
+        headStaffs.push({
             username: user.username,
             discriminator: user.discriminator,
             avatar: user.displayAvatarURL(),
-            id: user.id
+            id: user.id,
+            role: "Head-Staff"
         });
     }
 
@@ -21,14 +24,20 @@ async function get(req, res) {
     for(let staffData of staffsData){
         const user = await client.users.fetch(staffData.id).catch(() => {});
         if(!user) continue;
-        if(staffs.find((s) => s.id === user.id)) continue;
-        staffs.push({
+        if(headStaffs.find((s) => s.id === user.id)) continue;
+        const staffToPush = {
             username: user.username,
             discriminator: user.discriminator,
             avatar: user.displayAvatarURL(),
-            id: user.id
-        });
+            id: user.id,
+            role: staffData.staff.role === "head-staff" ? "Head-Staff" : "Staff"
+        }
+
+        if(staffData.staff.role === "head-staff") headStaffs.push(staffToPush);
+        else normalStaffs.push(staffToPush);
     }
+
+    const staffs = [...headStaffs, ...normalStaffs];
 
     const json = {
         status_code: 200,
