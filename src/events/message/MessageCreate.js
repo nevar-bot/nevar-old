@@ -84,7 +84,7 @@ module.exports = class {
             const clientCommand = this.client.commands.get(command);
             if(!clientCommand || !clientCommand.conf.staffOnly && !clientCommand.conf.ownerOnly) return;
             if(!data.user.staff.state && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
-            if(clientCommand.help.category === "owner" && data.user.staff.role !== "owner" && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
+            if(clientCommand.help.category === "owner" && data.user.staff.role !== "head-staff" && !this.client.config.general["OWNER_IDS"].includes(message.author.id)) return;
 
             try {
                 clientCommand.dispatch(message, args, data);
