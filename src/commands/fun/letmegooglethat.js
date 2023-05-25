@@ -37,7 +37,7 @@ class Letmegooglethat extends BaseCommand {
     }
 
     async googleThat(text, user = null){
-        const searchUrl = "https://letmegooglethat.com/?q=" + encodeURIComponent(text);
+        const searchUrl = "https://google.com/search?q=" + encodeURIComponent(text);
         const googleText = user ? "Lass mich das für dich googlen, " + user.username + ": [{0}]({1})" : "Lass mich das für dich googlen: [{0}]({1})";
         const letMeGoogleThatEmbed = this.client.createEmbed(googleText, "search", "normal", text, searchUrl);
         return this.interaction.followUp({ embeds: [letMeGoogleThatEmbed] });
