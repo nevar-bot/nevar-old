@@ -17,6 +17,8 @@ class Help extends BaseCommand {
             cooldown: 3000,
             dirname: __dirname,
 
+            botPermissions: ["ReadMessageHistory"],
+
             slashCommand: {
                 addCommand: true,
                 data: new SlashCommandBuilder()
