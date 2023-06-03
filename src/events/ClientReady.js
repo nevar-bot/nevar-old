@@ -3,6 +3,7 @@ const schedule = require('node-schedule');
 const moment = require("moment");
 const presenceHandler = require("@handlers/presence");
 const levels = require("discord-xp");
+const { Collection } = require("discord.js");
 
 module.exports = class {
     constructor(client) {
@@ -58,6 +59,13 @@ module.exports = class {
                     .replace('{month}', month))
             }, 120 * 1000)
         }
+
+        // Cache invites
+        client.guilds.cache.forEach((guild) => {
+            guild.invites.fetch().then((invites) => {
+                client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
+            });
+        });
 
         client.logger.log("Loaded " + client.guilds.cache.size + " guilds", "info")
         client.logger.success("Logged in as " + client.user.tag);

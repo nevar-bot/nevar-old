@@ -43,6 +43,11 @@ const Schema = new mongoose.Schema({
         default: []
     },
     reminders: [],
-})
+    invites: [],
+    inviteUsed: {
+        type: String,
+        default: null
+    }
+});
 
 module.exports = mongoose.model("Member", Schema);

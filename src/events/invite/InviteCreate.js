@@ -8,6 +8,20 @@ module.exports = class {
         if(!invite || !invite.guild || !invite.inviter) return;
         const { guild } = invite;
 
+        // Update invites cache
+        this.client.invites.get(invite.guild.id).set(invite.code, invite.uses);
+
+        // Add invite to member data
+        const memberData = await this.client.findOrCreateMember({ id: invite.inviter.id, guildID: invite.guild.id });
+        if(!memberData.invites) memberData.invites = [];
+        memberData.invites.push({
+            code: invite.code,
+            uses: invite.uses,
+            fake: 0
+        });
+        memberData.markModified("invites");
+        await memberData.save();
+
         const logText =
             " ** Einladung " + invite.code + " wurde erstellt**\n\n" +
             this.client.emotes.link + " Link: **" + invite.url + "**\n" +
