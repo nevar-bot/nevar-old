@@ -27,10 +27,7 @@ class Invites extends BaseCommand {
 
     async showInvites(memberData){
         const guildInvites = await this.interaction.guild.invites.fetch().catch(() => {});
-        if(!guildInvites){
-            const errorEmbed = this.client.createEmbed("Ich habe keine Berechtigung, um Einladungslinks zu analysieren.", "error", "error");
-            return this.interaction.followUp({ embeds: [errorEmbed] });
-        }
+
         const memberInvites = guildInvites.filter(i => i.inviterId === memberData.id);
         for(let invite of memberInvites.values()){
             if(!this.client.invites.get(this.interaction.guild.id).has(invite.code)) this.client.invites.get(this.interaction.guild.id).set(invite.code, invite.uses);
@@ -42,10 +39,10 @@ class Invites extends BaseCommand {
         const invites = memberData.invites;
         const invitesData = [];
         for(const invite of invites){
-            invitesData.push("**" + invite.code + "** | " + invite.uses + " Verwendungen");
+            invitesData.push("**discord.gg/" + invite.code + "**\n" + this.client.emotes.users + " Verwendungen: **" + invite.uses + "**\n" + this.client.emotes.leave + " Server verlassen: **" + (invite.left || 0) + "**\n" + this.client.emotes.error + " Gefälscht: **" + (invite.fake || 0) + "**\n");
         }
 
-        await this.client.utils.sendPaginatedEmbed(this.interaction, 10, invitesData, "Deine Einladungen", "Du hast noch keine Nutzer eingeladen", "invite");
+        await this.client.utils.sendPaginatedEmbed(this.interaction, 5, invitesData, "Deine Einladungen", "Du hast noch keine Nutzer eingeladen", "invite");
     }
 }
 module.exports = Invites;

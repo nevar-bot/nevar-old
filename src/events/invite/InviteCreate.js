@@ -17,7 +17,8 @@ module.exports = class {
         memberData.invites.push({
             code: invite.code,
             uses: invite.uses,
-            fake: 0
+            fake: 0,
+            left: 0
         });
         memberData.markModified("invites");
         await memberData.save();

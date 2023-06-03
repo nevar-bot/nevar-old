@@ -25,7 +25,6 @@ module.exports = class {
         guild.invites.fetch().then((invites) => {
             this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
         });
-        if(invite) memberData.inviteUsed = invite.code;
 
         // Log to member log
         const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
@@ -115,9 +114,18 @@ module.exports = class {
                 inviterData.invites.push({
                     code: invite.code,
                     uses: invite.uses,
-                    fake: 0
+                    fake: 0,
+                    left: 0
                 });
             }
+            if(inviter.id === member.user.id) inviterData.invites.find((i) => i.code === invite.code).fake++;
+            if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).fake++;
+            if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).left--;
+            if(invite) memberData.inviteUsed = invite.code;
+
+            memberData.markModified("inviteUsed")
+            await memberData.save();
+
             inviterData.markModified("invites");
             await inviterData.save();
         }
