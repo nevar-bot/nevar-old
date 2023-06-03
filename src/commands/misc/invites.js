@@ -27,7 +27,11 @@ class Invites extends BaseCommand {
 
     async showInvites(memberData){
         const guildInvites = await this.interaction.guild.invites.fetch().catch(() => {});
-        const memberInvites = guildInvites.filter(i => i.inviter.id === memberData.id);
+        if(!guildInvites){
+            const errorEmbed = this.client.createEmbed("Ich habe keine Berechtigung, um Einladungslinks zu analysieren.", "error", "error");
+            return this.interaction.followUp({ embeds: [errorEmbed] });
+        }
+        const memberInvites = guildInvites.filter(i => i.inviterId === memberData.id);
         for(let invite of memberInvites.values()){
             if(!this.client.invites.get(this.interaction.guild.id).has(invite.code)) this.client.invites.get(this.interaction.guild.id).set(invite.code, invite.uses);
             if(!memberData.invites) memberData.invites = [];
