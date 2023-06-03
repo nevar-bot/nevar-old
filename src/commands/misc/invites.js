@@ -5,7 +5,7 @@ class Invites extends BaseCommand {
     constructor(client) {
         super(client, {
             name: "invites",
-            description: "Invitesystem",
+            description: "Zeigt Statistiken zu deinen Invites",
 
             cooldown: 5000,
             dirname: __dirname,

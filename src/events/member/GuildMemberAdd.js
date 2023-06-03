@@ -21,7 +21,7 @@ module.exports = class {
         const newInvites = await member.guild.invites.fetch().catch(() => {});
         const oldInvites = this.client.invites.get(member.guild.id);
         const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
-        const inviter = await this.client.users.fetch(invite.inviter.id).catch(() => {});
+        let inviter = await this.client.users.fetch(invite.inviter.id).catch(() => {});
         guild.invites.fetch().then((invites) => {
             this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
         });
@@ -61,6 +61,14 @@ module.exports = class {
         }
 
         // Welcome message
+        if(!inviter){
+            inviter = {
+                username: "Unbekannt",
+                tag: "Unbekannt#0000",
+                discriminator: "0000",
+                id: "000000000000000000"
+            }
+        }
         if(guildData.settings?.welcome.enabled){
             function parseMessage(str){
                 return str
