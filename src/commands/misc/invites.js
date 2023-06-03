@@ -26,6 +26,15 @@ class Invites extends BaseCommand {
     }
 
     async showInvites(memberData){
+        const guildInvites = await this.interaction.guild.invites.fetch().catch(() => {});
+        const memberInvites = guildInvites.filter(i => i.inviter.id === memberData.id);
+        for(let invite of memberInvites.values()){
+            if(!this.client.invites.get(this.interaction.guild.id).has(invite.code)) this.client.invites.get(this.interaction.guild.id).set(invite.code, invite.uses);
+            if(!memberData.invites) memberData.invites = [];
+            if(!memberData.invites.find(i => i.code === invite.code)) memberData.invites.push({ code: invite.code, uses: invite.uses, fake: 0 });
+        }
+        memberData.markModified("invites");
+        await memberData.save();
         const invites = memberData.invites;
         const invitesData = [];
         for(const invite of invites){
