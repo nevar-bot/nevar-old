@@ -241,7 +241,7 @@ module.exports = class BaseClient extends Client {
                 "ViewAuditLog", "ManageRoles", "ManageChannels", "KickMembers", "BanMembers",
                 "ManageGuildExpressions", "ManageWebhooks", "ViewChannel", "SendMessages",
                 "ManageMessages", "AttachFiles", "EmbedLinks", "ReadMessageHistory", "UseExternalEmojis",
-                "AddReactions"
+                "AddReactions",  "ManageGuild"
             ]
         })
     }
