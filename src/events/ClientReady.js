@@ -62,9 +62,11 @@ module.exports = class {
 
         // Cache invites
         client.guilds.cache.forEach((guild) => {
-            guild.invites.fetch().then((invites) => {
-                client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
-            });
+            guild.invites.fetch()
+                .then((invites) => {
+                    client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
+                })
+                .catch(() => {});
         });
 
         client.logger.log("Loaded " + client.guilds.cache.size + " guilds", "info")
