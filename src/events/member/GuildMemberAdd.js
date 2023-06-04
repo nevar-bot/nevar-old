@@ -21,8 +21,9 @@ module.exports = class {
         const newInvites = await member.guild.invites.fetch().catch(() => {});
         const oldInvites = this.client.invites.get(member.guild.id);
         let inviter;
+        let invite;
         if(newInvites && oldInvites){
-            const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
+            invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
             inviter = await this.client.users.fetch(invite.inviterId).catch(() => {});
             guild.invites.fetch()
                 .then((invites) => {
@@ -30,6 +31,15 @@ module.exports = class {
                 })
                 .catch(() => {});
         }
+        // Invites by inviter
+        let totalInvites = 0;
+        if(inviter){
+            for(const invite of newInvites.values()){
+                if(invite.inviterId === inviter.id) totalInvites += invite.uses;
+            }
+        }
+
+        const invitesByInviter = newInvites.find(i => i.inviterId === inviter?.id).uses;
 
         // Log to member log
         const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
@@ -82,6 +92,7 @@ module.exports = class {
                     .replaceAll(/{inviter:tag}/g, inviter.tag || "Unbekannt#0000")
                     .replaceAll(/{inviter:discriminator}/g, inviter.discriminator || "0000")
                     .replaceAll(/{inviter:id}/g, inviter.id || "000000000000000000")
+                    .replaceAll(/{inviter:invites}/g, totalInvites || 0)
                     .replaceAll(/{newline}/g, "\n");
             }
 
@@ -95,13 +106,13 @@ module.exports = class {
                 if(guildData.settings.welcome.type === "embed"){
                     const welcomeEmbed = this.client.createEmbed("{0}", null, "normal", welcomeMessage);
                     welcomeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
-                    return welcomeChannel.send({ embeds: [welcomeEmbed] }).catch((e) => {
+                    welcomeChannel.send({ embeds: [welcomeEmbed] }).catch((e) => {
                         const desc =
                             " **Senden von Willkommensnachricht fehlgeschlagen**";
                         guild.logAction(desc, "guild", this.client.emotes.error, "error");
                     });
                 }else if(guildData.settings.welcome.type === "text"){
-                    return welcomeChannel.send({ content: welcomeMessage }).catch((e) => {
+                    welcomeChannel.send({ content: welcomeMessage }).catch((e) => {
                         const desc =
                             " **Senden von Willkommensnachricht fehlgeschlagen**";
                         guild.logAction(desc, "guild", this.client.emotes.error, "error");
@@ -111,7 +122,7 @@ module.exports = class {
         }
 
         // Invite system
-        if(inviter) {
+        if(inviter && invite) {
             const inviterData = await this.client.findOrCreateMember({id: inviter.id, guildID: guild.id});
             if(!inviterData.invites) inviterData.invites = [];
             if (inviterData.invites.find((i) => i.code === invite.code)) {
@@ -127,7 +138,7 @@ module.exports = class {
             if(inviter.id === member.user.id) inviterData.invites.find((i) => i.code === invite.code).fake++;
             if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).fake++;
             if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).left--;
-            if(invite) memberData.inviteUsed = invite.code;
+            memberData.inviteUsed = invite.code;
 
             memberData.markModified("inviteUsed")
             await memberData.save();
