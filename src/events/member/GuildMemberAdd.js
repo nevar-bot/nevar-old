@@ -20,11 +20,16 @@ module.exports = class {
         // Get inviter
         const newInvites = await member.guild.invites.fetch().catch(() => {});
         const oldInvites = this.client.invites.get(member.guild.id);
-        const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
-        let inviter = await this.client.users.fetch(invite.inviter.id).catch(() => {});
-        guild.invites.fetch().then((invites) => {
-            this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
-        });
+        let inviter;
+        if(newInvites && oldInvites){
+            const invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
+            inviter = await this.client.users.fetch(invite.inviterId).catch(() => {});
+            guild.invites.fetch()
+                .then((invites) => {
+                    this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
+                })
+                .catch(() => {});
+        }
 
         // Log to member log
         const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
@@ -61,14 +66,6 @@ module.exports = class {
         }
 
         // Welcome message
-        if(!inviter){
-            inviter = {
-                username: "Unbekannt",
-                tag: "Unbekannt#0000",
-                discriminator: "0000",
-                id: "000000000000000000"
-            }
-        }
         if(guildData.settings?.welcome.enabled){
             function parseMessage(str){
                 return str

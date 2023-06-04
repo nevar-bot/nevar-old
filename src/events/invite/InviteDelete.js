@@ -12,7 +12,7 @@ module.exports = class {
         this.client.invites.get(invite.guild.id).delete(invite.code);
 
         // Remove invite from member data
-        const memberData = await this.client.findOrCreateMember({ id: invite.inviter.id, guildID: invite.guild.id });
+        const memberData = await this.client.findOrCreateMember({ id: invite.inviterId, guildID: invite.guild.id });
         if(!memberData.invites) memberData.invites = [];
         memberData.invites = memberData.invites.filter(i => i.code !== invite.code);
         memberData.markModified("invites");
