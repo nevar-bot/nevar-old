@@ -77,11 +77,11 @@ module.exports = class {
                     .replaceAll(/{server:name}/g, guild.name)
                     .replaceAll(/{server:id}/g, guild.id)
                     .replaceAll(/{server:membercount}/g, guild.memberCount)
-                    .replaceAll(/{inviter}/g, inviter)
-                    .replaceAll(/{inviter:username}/g, inviter.username)
-                    .replaceAll(/{inviter:tag}/g, inviter.tag)
-                    .replaceAll(/{inviter:discriminator}/g, inviter.discriminator)
-                    .replaceAll(/{inviter:id}/g, inviter.id)
+                    .replaceAll(/{inviter}/g, inviter || "Unbekannt")
+                    .replaceAll(/{inviter:username}/g, inviter.username || "Unbekannt")
+                    .replaceAll(/{inviter:tag}/g, inviter.tag || "Unbekannt#0000")
+                    .replaceAll(/{inviter:discriminator}/g, inviter.discriminator || "0000")
+                    .replaceAll(/{inviter:id}/g, inviter.id || "000000000000000000")
             }
 
             const welcomeMessage = parseMessage(guildData.settings.welcome.message);
