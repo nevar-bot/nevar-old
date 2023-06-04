@@ -40,6 +40,7 @@ module.exports = class {
                     .replaceAll(/{server:name}/g, guild.name)
                     .replaceAll(/{server:id}/g, guild.id)
                     .replaceAll(/{server:membercount}/g, guild.memberCount)
+                    .replaceAll(/{newline}/g, "\n");
             }
             const goodbyeMessage = parseMessage(guildData.settings.farewell.message);
             const goodbyeChannel = guild.channels.cache.get(guildData.settings.farewell.channel) || await guild.channels.fetch(guildData.settings.farewell.channel).catch(() => {});

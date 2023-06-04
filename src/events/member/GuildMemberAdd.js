@@ -82,6 +82,7 @@ module.exports = class {
                     .replaceAll(/{inviter:tag}/g, inviter.tag || "Unbekannt#0000")
                     .replaceAll(/{inviter:discriminator}/g, inviter.discriminator || "0000")
                     .replaceAll(/{inviter:id}/g, inviter.id || "000000000000000000")
+                    .replaceAll(/{newline}/g, "\n");
             }
 
             const welcomeMessage = parseMessage(guildData.settings.welcome.message);

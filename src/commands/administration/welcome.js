@@ -152,6 +152,7 @@ class Welcome extends BaseCommand {
                 .replaceAll(/{inviter:tag}/g, member.user.tag)
                 .replaceAll(/{inviter:discriminator}/g, member.user.discriminator)
                 .replaceAll(/{inviter:id}/g, member.user.id)
+                .replaceAll(/{newline}/g, "\n");
 
         }
 
@@ -234,6 +235,7 @@ class Welcome extends BaseCommand {
             "**{inviter:tag}** - Der volle Name des Einladenden mit Discriminator",
             "**{inviter:discriminator}** - Der Discriminator des Einladenden",
             "**{inviter:id}** - ID des Einladenden",
+            "**{newline}** - Fügt eine neue Zeile ein"
         ];
         await this.client.utils.sendPaginatedEmbed(this.interaction, 10, variables, "Verfügbare Variablen", "Es sind keine Variablen verfügbar", "shine");
 
