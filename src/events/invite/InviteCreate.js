@@ -1,4 +1,5 @@
 const moment = require("moment");
+const {Collection} = require("discord.js");
 module.exports = class {
     constructor(client) {
         this.client = client;
@@ -9,7 +10,11 @@ module.exports = class {
         const { guild } = invite;
 
         // Update invites cache
-        this.client.invites.get(invite.guild.id).set(invite.code, invite.uses);
+        if(this.client.invites.get(invite.guild.id)){
+            this.client.invites.get(invite.guild.id).set(invite.code, invite.uses);
+        }else{
+            this.client.invites.set(guild.id, new Collection().set(invite.code, invite.uses));
+        }
 
         // Add invite to member data
         const memberData = await this.client.findOrCreateMember({ id: invite.inviter.id, guildID: invite.guild.id });
