@@ -39,8 +39,6 @@ module.exports = class {
             }
         }
 
-        const invitesByInviter = newInvites.find(i => i.inviterId === inviter?.id).uses;
-
         // Log to member log
         const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
         const createdDiff = this.client.utils.getRelativeTime(member.user.createdTimestamp);
