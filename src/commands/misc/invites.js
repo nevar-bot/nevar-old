@@ -10,6 +10,8 @@ class Invites extends BaseCommand {
             cooldown: 5000,
             dirname: __dirname,
 
+            memberPermissions: ["ManageGuild"],
+
             slashCommand: {
                 addCommand: true,
                 data: new SlashCommandBuilder()
@@ -21,7 +23,7 @@ class Invites extends BaseCommand {
     async dispatch(interaction, data) {
         this.interaction = interaction;
 
-        const invites = await interaction.guild.invites.fetch();
+        const invites = await interaction.guild.invites.fetch().catch(() => {});
         await this.showInvites(data.member);
     }
 

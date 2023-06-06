@@ -1,45 +1,45 @@
 const moment = require("moment/moment");
-const {Collection} = require("discord.js");
+const { Collection } = require("discord.js");
+
 module.exports = class {
     constructor(client){
         this.client = client;
     }
+
     async dispatch(member){
         if(!member || !member.id || !member.guild || member.pending) return;
-        const guild = member.guild;
 
-        const guildData = await this.client.findOrCreateGuild({
-            id: guild.id
-        });
+        const { guild } = member;
+        if(!guild.available) return;
 
-        const memberData = await this.client.findOrCreateMember({
-            id: member.user.id,
-            guildID: guild.id
-        });
+        // Guild and member data
+        const guildData = await this.client.findOrCreateGuild({ id: guild.id });
+        const memberData = await this.client.findOrCreateMember({ id: member.user.id, guildID: guild.id });
 
-        // Get inviter
-        const newInvites = await member.guild.invites.fetch().catch(() => {});
-        const oldInvites = this.client.invites.get(member.guild.id);
-        let inviter;
-        let invite;
-        if(newInvites && oldInvites){
-            invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
-            inviter = await this.client.users.fetch(invite?.inviterId).catch(() => {});
-            guild.invites.fetch()
-                .then((invites) => {
-                    this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
-                })
-                .catch(() => {});
-        }
-        // Invites by inviter
-        let totalInvites = 0;
-        if(inviter){
-            for(const invite of newInvites.values()){
-                if(invite.inviterId === inviter.id) totalInvites += invite.uses;
-            }
+        // Invite data
+        const [ fetchedInvites, cachedInvites ] = await Promise.all([
+            guild.invites.fetch().catch(() => {}),
+            this.client.invites.get(guild.id)
+        ]);
+
+        const inviteData = {
+            inviter: undefined,
+            invite: undefined,
+            totalInvites: 0
+        };
+
+        // Get used invite and inviter
+        if(fetchedInvites && cachedInvites){
+            inviteData.invite = fetchedInvites.find(i => i.uses > cachedInvites.get(i.code));
+            inviteData.inviter = await this.client.users.fetch(inviteData.invite?.inviterId).catch(() => {});
+            inviteData.totalInvites = [...fetchedInvites.values()]
+                .filter(invite => invite?.inviterId === inviteData.inviter?.id)
+                .reduce((total, invite) => total + invite.uses, inviteData.totalInvites || 0);
+
+            this.client.invites.set(guild.id, new Collection(fetchedInvites.map((invite) => [invite.code, invite.uses])));
         }
 
-        // Log to member log
+        // Send log
         const createdAt = moment(member.user.createdTimestamp).format("DD.MM.YYYY HH:mm");
         const createdDiff = this.client.utils.getRelativeTime(member.user.createdTimestamp);
 
@@ -47,11 +47,11 @@ module.exports = class {
             " **" + member.user.tag + " hat den Server betreten**\n\n" +
             this.client.emotes.calendar + " Account erstellt am: **" + createdAt + "**\n" +
             this.client.emotes.reminder + " Account erstellt vor: **" + createdDiff + "**\n" +
-            (inviter ? this.client.emotes.invite + " Eingeladen von: **" + inviter.tag + "**" : "");
+            (inviteData.inviter ? this.client.emotes.invite + " Eingeladen von: **" + inviteData.inviter.tag + "**" : "");
 
         await guild.logAction(logText, "guild", this.client.emotes.events.member.unban, "success", member.user.displayAvatarURL({ dynamic: true }));
 
-        // User is muted
+        // Member is muted, add mute role
         if(memberData.muted?.state){
             member.roles.add(guildData.settings.muterole).catch(async (e) => {
                 const desc =
@@ -61,7 +61,7 @@ module.exports = class {
             });
         }
 
-        // Autoroles
+        // Add autoroles
         for(let roleId of guildData.settings.welcome.autoroles){
             const role = guild.roles.cache.get(roleId) || await guild.roles.fetch(roleId).catch(() => {});
             if(!role) continue;
@@ -73,7 +73,7 @@ module.exports = class {
             });
         }
 
-        // Welcome message
+        // Send welcome message
         if(guildData.settings?.welcome.enabled){
             function parseMessage(str){
                 return str
@@ -85,19 +85,18 @@ module.exports = class {
                     .replaceAll(/{server:name}/g, guild.name)
                     .replaceAll(/{server:id}/g, guild.id)
                     .replaceAll(/{server:membercount}/g, guild.memberCount)
-                    .replaceAll(/{inviter}/g, inviter || "Unbekannt")
-                    .replaceAll(/{inviter:username}/g, inviter.username || "Unbekannt")
-                    .replaceAll(/{inviter:tag}/g, inviter.tag || "Unbekannt#0000")
-                    .replaceAll(/{inviter:discriminator}/g, inviter.discriminator || "0000")
-                    .replaceAll(/{inviter:id}/g, inviter.id || "000000000000000000")
-                    .replaceAll(/{inviter:invites}/g, totalInvites || 0)
+                    .replaceAll(/{inviter}/g, inviteData.inviter || "Unbekannt")
+                    .replaceAll(/{inviter:username}/g, inviteData.inviter?.username || "Unbekannt")
+                    .replaceAll(/{inviter:tag}/g, inviteData.inviter?.tag || "Unbekannt#0000")
+                    .replaceAll(/{inviter:discriminator}/g, inviteData.inviter?.discriminator || "0000")
+                    .replaceAll(/{inviter:id}/g, inviteData.inviter?.id || "000000000000000000")
+                    .replaceAll(/{inviter:invites}/g, inviteData.totalInvites || 0)
                     .replaceAll(/{newline}/g, "\n");
             }
 
             const welcomeMessage = parseMessage(guildData.settings.welcome.message);
             const welcomeChannel = guild.channels.cache.get(guildData.settings.welcome.channel) || await guild.channels.fetch(guildData.settings.welcome.channel).catch((e) => {
-                const desc =
-                    " **Senden von Willkommensnachricht fehlgeschlagen, da der Channel nicht gefunden wurde**";
+                const desc = " **Senden von Willkommensnachricht fehlgeschlagen, da der Channel nicht gefunden wurde**";
                 guild.logAction(desc, "guild", this.client.emotes.error, "error");
             });
             if(welcomeChannel){
@@ -119,24 +118,24 @@ module.exports = class {
             }
         }
 
-        // Invite system
-        if(inviter && invite) {
-            const inviterData = await this.client.findOrCreateMember({id: inviter.id, guildID: guild.id});
+        // Track invite stats
+        if(inviteData.inviter && inviteData.invite) {
+            const inviterData = await this.client.findOrCreateMember({id: inviteData.inviter.id, guildID: guild.id});
             if(!inviterData.invites) inviterData.invites = [];
-            if (inviterData.invites.find((i) => i.code === invite.code)) {
-                inviterData.invites.find((i) => i.code === invite.code).uses++;
+            if (inviterData.invites.find((i) => i.code === inviteData.invite.code)) {
+                inviterData.invites.find((i) => i.code === inviteData.invite.code).uses++;
             } else {
                 inviterData.invites.push({
-                    code: invite.code,
-                    uses: invite.uses,
+                    code: inviteData.invite.code,
+                    uses: inviteData.invite.uses,
                     fake: 0,
                     left: 0
                 });
             }
-            if(inviter.id === member.user.id) inviterData.invites.find((i) => i.code === invite.code).fake++;
-            if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).fake++;
-            if(memberData.inviteUsed === invite.code) inviterData.invites.find((i) => i.code === invite.code).left--;
-            memberData.inviteUsed = invite.code;
+            if(inviteData.inviter.id === member.user.id) inviterData.invites.find((i) => i.code === inviteData.invite.code).fake++;
+            if(memberData.inviteUsed === inviteData.invite.code) inviterData.invites.find((i) => i.code === inviteData.invite.code).fake++;
+            if(memberData.inviteUsed === inviteData.invite.code) inviterData.invites.find((i) => i.code === inviteData.invite.code).left--;
+            memberData.inviteUsed = inviteData.invite.code;
 
             memberData.markModified("inviteUsed")
             await memberData.save();
