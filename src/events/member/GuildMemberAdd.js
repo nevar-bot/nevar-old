@@ -24,7 +24,7 @@ module.exports = class {
         let invite;
         if(newInvites && oldInvites){
             invite = newInvites.find(i => i.uses > oldInvites.get(i.code));
-            inviter = await this.client.users.fetch(invite.inviterId).catch(() => {});
+            inviter = await this.client.users.fetch(invite?.inviterId).catch(() => {});
             guild.invites.fetch()
                 .then((invites) => {
                     this.client.invites.set(guild.id, new Collection(invites.map((invite) => [invite.code, invite.uses])));
