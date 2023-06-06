@@ -52,6 +52,7 @@ module.exports = class BaseClient extends Client {
         this.databaseCache.bannedUsers = new Collection();
         this.databaseCache.mutedUsers = new Collection();
         this.databaseCache.reminders = new Collection();
+        this.invites = new Collection();
     }
 
     // Database methods
@@ -240,7 +241,7 @@ module.exports = class BaseClient extends Client {
                 "ViewAuditLog", "ManageRoles", "ManageChannels", "KickMembers", "BanMembers",
                 "ManageGuildExpressions", "ManageWebhooks", "ViewChannel", "SendMessages",
                 "ManageMessages", "AttachFiles", "EmbedLinks", "ReadMessageHistory", "UseExternalEmojis",
-                "AddReactions"
+                "AddReactions",  "ManageGuild"
             ]
         })
     }

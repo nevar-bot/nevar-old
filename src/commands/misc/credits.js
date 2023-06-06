@@ -38,6 +38,7 @@ class Credits extends BaseCommand {
             this.client.emotes.arrow + " [**enhanced-ms**](https://npmjs.com/package/enhanced-ms) - Umgang mit Zeit-Strings\n" +
             this.client.emotes.arrow + " [**express**](https://npmjs.com/package/express) - Web Framework\n" +
             this.client.emotes.arrow + " [**helmet**](https://npmjs.com/package/helmet) - Sicherheits Middleware\n" +
+            this.client.emotes.arrow + " [**jimp**](https://npmjs.com/package/jimp) - Bildmanipulation\n" +
             this.client.emotes.arrow + " [**mathjs**](https://npmjs.com/package/mathjs) - mathematische Berechnungen\n" +
             this.client.emotes.arrow + " [**module-alias**](https://npmjs.com/package/module-alias) - Modulpfadleasing\n" +
             this.client.emotes.arrow + " [**moment**](https://npmjs.com/package/moment) - Umgang mit Daten\n" +

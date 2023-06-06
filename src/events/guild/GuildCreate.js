@@ -9,6 +9,11 @@ module.exports = class {
         if(!guild || !guild.id || !guild.available) return
         await guild.fetch();
 
+        // Cache guild invites
+        guild.invites.fetch().then(guildInvites => {
+            this.client.invites.set(guild.id, new Map(guildInvites.map((invite) => [invite.code, invite.uses])));
+        });
+
         // Send welcome message
         const firstChannel = guild.channels.cache.find(c => (c.type === ChannelType.GuildText || c.type === ChannelType.GuildText) && c.permissionsFor(guild.members.me).has(PermissionsBitField.Flags.SendMessages));
 

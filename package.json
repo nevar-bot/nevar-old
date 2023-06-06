@@ -44,6 +44,7 @@
     "enhanced-ms": "^2.2.0",
     "express": "^4.17.1",
     "helmet": "^6.0.0",
+    "jimp": "^0.22.8",
     "mathjs": "^10.0.0",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",

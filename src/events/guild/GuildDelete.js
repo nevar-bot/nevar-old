@@ -7,6 +7,9 @@ module.exports = class {
     async dispatch(guild) {
         if (!guild || !guild.id || !guild.ownerId) return
 
+        // Delete invites from cache
+        await this.client.invites.delete(guild.id);
+
         // Send log message to support server
         const supportGuild = this.client.guilds.cache.get(this.client.config.support["ID"]);
         if(!supportGuild) return;

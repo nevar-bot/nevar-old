@@ -147,6 +147,8 @@ class Goodbye extends BaseCommand {
                 .replaceAll(/{server:name}/g, self.interaction.guild.name)
                 .replaceAll(/{server:id}/g, self.interaction.guild.id)
                 .replaceAll(/{server:membercount}/g, self.interaction.guild.memberCount)
+                .replaceAll(/{newline}/g, "\n");
+
         }
 
         const channel = this.client.channels.cache.get(data.guild.settings.farewell.channel);
@@ -222,7 +224,8 @@ class Goodbye extends BaseCommand {
             "**{user:id}** - ID des Mitglieds",
             "**{server:name}** - Name des Servers",
             "**{server:id}** - ID des Servers",
-            "**{server:membercount}** - Anzahl an Mitgliedern des Servers"
+            "**{server:membercount}** - Anzahl an Mitgliedern des Servers",
+            "**{newline}** - Fügt eine neue Zeile ein"
         ];
         await this.client.utils.sendPaginatedEmbed(this.interaction, 10, variables, "Verfügbare Variablen", "Es sind keine Variablen verfügbar", "shine");
 

@@ -10,6 +10,19 @@ module.exports = class {
             id: guild.id
         });
 
+        // Update invite cache
+        const memberData = await this.client.findOrCreateMember({ id: member.id, guildID: guild.id });
+        if(memberData.inviteUsed){
+            const invite = await guild.invites.fetch(memberData.inviteUsed).catch(() => {});
+            if(invite){
+                const inviterData = await this.client.findOrCreateMember({ id: invite.inviterId, guildID: guild.id });
+                if(!inviterData.invites) inviterData.invites = [];
+                inviterData.invites.find(i => i.code === invite.code).left++;
+                inviterData.markModified("invites");
+                await inviterData.save();
+            }
+        }
+
         // Log to member log
         const logText =
             " **" + member.user.tag + " hat den Server verlassen**";
@@ -27,6 +40,7 @@ module.exports = class {
                     .replaceAll(/{server:name}/g, guild.name)
                     .replaceAll(/{server:id}/g, guild.id)
                     .replaceAll(/{server:membercount}/g, guild.memberCount)
+                    .replaceAll(/{newline}/g, "\n");
             }
             const goodbyeMessage = parseMessage(guildData.settings.farewell.message);
             const goodbyeChannel = guild.channels.cache.get(guildData.settings.farewell.channel) || await guild.channels.fetch(guildData.settings.farewell.channel).catch(() => {});

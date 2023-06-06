@@ -1,4 +1,5 @@
 const moment = require("moment");
+const {Collection} = require("discord.js");
 module.exports = class {
     constructor(client) {
         this.client = client;
@@ -7,6 +8,25 @@ module.exports = class {
     async dispatch(invite) {
         if(!invite || !invite.guild || !invite.inviter) return;
         const { guild } = invite;
+
+        // Update invites cache
+        if(this.client.invites.get(invite.guild.id)){
+            this.client.invites.get(invite.guild.id).set(invite.code, invite.uses);
+        }else{
+            this.client.invites.set(guild.id, new Collection().set(invite.code, invite.uses));
+        }
+
+        // Add invite to member data
+        const memberData = await this.client.findOrCreateMember({ id: invite.inviter.id, guildID: invite.guild.id });
+        if(!memberData.invites) memberData.invites = [];
+        memberData.invites.push({
+            code: invite.code,
+            uses: invite.uses,
+            fake: 0,
+            left: 0
+        });
+        memberData.markModified("invites");
+        await memberData.save();
 
         const logText =
             " ** Einladung " + invite.code + " wurde erstellt**\n\n" +
