@@ -159,7 +159,7 @@ module.exports = class BaseClient extends Client {
         }
     }
 
-    
+
     // Command methods
     loadCommand (commandPath, commandName) {
         try {

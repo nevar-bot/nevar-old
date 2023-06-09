@@ -23,7 +23,6 @@ class Invites extends BaseCommand {
     async dispatch(interaction, data) {
         this.interaction = interaction;
 
-        const invites = await interaction.guild.invites.fetch().catch(() => {});
         await this.showInvites(data.member);
     }
 
