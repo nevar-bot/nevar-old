@@ -114,7 +114,7 @@ module.exports = class {
             for(let autoreact of data.guild.settings.autoreact){
                 const channelId = autoreact.split("|")[0];
                 const emoji = autoreact.split("|")[1];
-                if(channelId !== message.channel.id) continue;
+                if((channelId !== message.channel.id && message.channel.type !== 11) || (message.channel.type === 11 && message.channel.parentId !== channelId)) continue;
                 message.react(emoji).catch((exception) => {
                     const logText =
                         " **Reagieren auf Nachricht durch Autoreact fehlgeschlagen**";

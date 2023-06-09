@@ -31,7 +31,7 @@ class Autoreact extends BaseCommand {
                         .setName("channel")
                         .setDescription("Wähle einen Channel")
                         .setRequired(false)
-                        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews)
+                        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews, ChannelType.GuildForum)
                     )
                     .addStringOption(option => option
                         .setName("emoji")
