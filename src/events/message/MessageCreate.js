@@ -98,7 +98,7 @@ module.exports = class {
             for(let autodelete of data.guild.settings.autodelete){
                 const channelId = autodelete.split("|")[0];
                 const time = autodelete.split("|")[1];
-                if((channelId !== message.channel.id && message.channel.type !== 11) || (message.channel.type === 11 && message.channel.parentId !== channelId)) continue;
+                if ((channelId !== message.channel.id && message.channel.type !== 11) || (message.channel.type === 11 && (message.channel.parentId !== channelId && message.channel.id !== channelId))) continue;
                 this.client.wait(Number(time)).then(() => {
                    if(!message.pinned) message.delete().catch((exception) => {
                        const logText =
@@ -114,7 +114,7 @@ module.exports = class {
             for(let autoreact of data.guild.settings.autoreact){
                 const channelId = autoreact.split("|")[0];
                 const emoji = autoreact.split("|")[1];
-                if((channelId !== message.channel.id && message.channel.type !== 11) || (message.channel.type === 11 && message.channel.parentId !== channelId)) continue;
+                if ((channelId !== message.channel.id && message.channel.type !== 11) || (message.channel.type === 11 && (message.channel.parentId !== channelId && message.channel.id !== channelId))) continue;
                 message.react(emoji).catch((exception) => {
                     const logText =
                         " **Reagieren auf Nachricht durch Autoreact fehlgeschlagen**";

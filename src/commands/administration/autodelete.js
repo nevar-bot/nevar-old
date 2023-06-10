@@ -31,7 +31,7 @@ class Autodelete extends BaseCommand {
                         .setName("channel")
                         .setDescription("Wähle einen Channel")
                         .setRequired(false)
-                        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews, ChannelType.GuildForum)
+                        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildNews, ChannelType.GuildForum, ChannelType.GuildPublicThread)
                     )
                     .addStringOption(option => option
                         .setName("zeit")
@@ -65,7 +65,7 @@ class Autodelete extends BaseCommand {
 
     async addAutodelete(channel, time, data){
         // Invalid options
-        if(!ms(time) || !channel || !channel.id) {
+        if(!time || !ms(time) || !channel || !channel.id) {
             const invalidOptionsEmbed = this.client.createEmbed("Du musst eine Channel- und eine Zeitangabe machen.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
