@@ -1,5 +1,5 @@
 const BaseCommand = require('@structures/BaseCommand');
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, ChannelType, EmbedBuilder} = require('discord.js');
 
 class Welcome extends BaseCommand {
     constructor(client){
@@ -67,6 +67,28 @@ class Welcome extends BaseCommand {
                         .setName("variablen")
                         .setDescription("Listet alle Variablen, die in der Willkommensnachricht verwendet werden können")
                     )
+                    .addSubcommand(subcommand => subcommand
+                        .setName("color")
+                        .setDescription("Die Farbe von der Nachricht (nur bei Embed) (Default #5865F2)")
+                        .addStringOption(option => option
+                            .setName("farbe")
+                            .setDescription("Gib eine Farbe ein")
+                            .setRequired(true)
+                        )
+                    )
+                    .addSubcommand(subcommand => subcommand
+                        .setName("profilepicture")
+                        .setDescription("Soll das Profilbild angezeigt werden? (nur bei Embed)")
+                        .addStringOption(option => option
+                            .setName("status")
+                            .setDescription("Wähle einen Status")
+                            .setRequired(true)
+                            .addChoices(
+                                { name: "an", value: "true" },
+                                { name: "aus", value: "false" }
+                            )
+                        )
+                    )
 
             }
         })
@@ -95,11 +117,57 @@ class Welcome extends BaseCommand {
             case "nachricht":
                 await this.setMessage(interaction.options.getString("nachricht"), data);
                 break;
+            case "color":
+                await this.setColor(interaction.options.getString("farbe"), data);
+                break;
+            case "profilepicture":
+                await this.setProfilePicture(interaction.options.getString("status"), data);
+                break;
             case "variablen":
                 await this.showVariables();
                 break;
         }
     }
+
+    async setProfilePicture(status, data){
+        if (data.guild.settings.welcome.type === "text") {
+            const embedNotEnabled = this.client.createEmbed("Die Willkommensnachricht ist nicht als Embed aktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [embedNotEnabled] });
+        }
+
+        if(data.guild.settings.welcome.profilePicture === JSON.parse(status)){
+            const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
+            const isAlreadyEmbed = this.client.createEmbed("Das Profilbild aus der Willkommensnachricht ist bereits {0}.", "error", "error", string);
+            return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
+        }
+
+        data.guild.settings.welcome.profilePicture = JSON.parse(status);
+        data.guild.markModified("settings.farewell.profilePicture");
+        await data.guild.save();
+
+        const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
+        const successEmbed = this.client.createEmbed("Das Profilbild aus Willkommensnachricht wurde {0}.", "success", "success", string);
+        return this.interaction.followUp({ embeds: [successEmbed] });
+    }
+
+    async setColor(color, data){
+        if(data.guild.settings.farewell.type === "text"){
+            const embedNotEnabled = this.client.createEmbed("Die Willkommensnachricht ist nicht als Embed aktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [embedNotEnabled] });
+        } else if(data.guild.settings.farewell.type === "embed"){
+            if(!/^#([0-9A-F]{3}){1,2}$/i.test(color)){
+                const invalidColorEmbed = this.client.createEmbed("Bitte gebe eine gültige Hex Color an. (Beispiel #5865F2)", "error", "error");
+                return this.interaction.followUp({ embeds: [invalidColorEmbed] });
+            }
+            data.guild.settings.welcome.color = color;
+            data.guild.markModified("settings.welcome.color");
+            await data.guild.save();
+
+            const successEmbed = this.client.createEmbed("Die Farbe von der Willkommensnachricht wurde auf {0} geändert.", "success", "success", color);
+            return this.interaction.followUp({ embeds: [successEmbed] });
+        }
+    }
+
 
     async setStatus(status, data){
         if(data.guild.settings.welcome.enabled === JSON.parse(status)){
@@ -160,8 +228,16 @@ class Welcome extends BaseCommand {
         const message = parseMessage(data.guild.settings.welcome.message);
 
         if(data.guild.settings.welcome.type === "embed"){
-            const previewEmbed = this.client.createEmbed("{0}", null, "normal", message);
-            previewEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+            const previewEmbed = new EmbedBuilder()
+                .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
+                .setDescription(message)
+                .setColor(data.guild.settings.welcome.color)
+                .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
+
+            if (data.guild.settings.welcome.profilePicture) {
+                previewEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+            }
+
             await channel.send({ embeds: [previewEmbed] }).catch(() => {});
         }else if(data.guild.settings.welcome.type === "text"){
             await channel.send({ content: message }).catch(() => {});

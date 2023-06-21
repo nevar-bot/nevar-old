@@ -1,5 +1,5 @@
 const moment = require("moment/moment");
-const { Collection } = require("discord.js");
+const { Collection, EmbedBuilder} = require("discord.js");
 
 module.exports = class {
     constructor(client){
@@ -101,8 +101,16 @@ module.exports = class {
             });
             if(welcomeChannel){
                 if(guildData.settings.welcome.type === "embed"){
-                    const welcomeEmbed = this.client.createEmbed("{0}", null, "normal", welcomeMessage);
-                    welcomeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                    const welcomeEmbed = new EmbedBuilder()
+                        .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
+                        .setDescription(welcomeMessage)
+                        .setColor(guildData.settings.welcome.color)
+                        .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
+
+                    if (guildData.settings.welcome.profilePicture) {
+                        welcomeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                    }
+
                     welcomeChannel.send({ embeds: [welcomeEmbed] }).catch((e) => {
                         const desc =
                             " **Senden von Willkommensnachricht fehlgeschlagen**";

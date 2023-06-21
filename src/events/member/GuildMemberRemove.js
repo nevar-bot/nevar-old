@@ -1,3 +1,4 @@
+const {EmbedBuilder} = require("discord.js");
 module.exports = class {
     constructor(client){
         this.client = client;
@@ -51,8 +52,16 @@ module.exports = class {
             }
 
             if(guildData.settings.farewell.type === "embed"){
-                const goodbyeEmbed = this.client.createEmbed("{0}", null, "normal", goodbyeMessage);
-                goodbyeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                const goodbyeEmbed = new EmbedBuilder()
+                    .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
+                    .setDescription(goodbyeMessage)
+                    .setColor(guildData.settings.farewell.color)
+                    .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
+
+                if (guildData.settings.farewell.profilePicture) {
+                    goodbyeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
+                }
+
                 return goodbyeChannel.send({ embeds: [goodbyeEmbed] }).catch((e) => {
                     const desc =
                         " **Senden von Verabschiedungsnachricht fehlgeschlagen**";
