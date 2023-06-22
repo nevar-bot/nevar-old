@@ -30,10 +30,10 @@ class Pull extends BaseCommand {
         exec('git pull', (err, stdout, stderr) => {
             if (err) {
                 const errorEmbed = this.client.createEmbed(`Beim Pullen ist ein Fehler aufgetreten:\`\`\`${err}\`\`\``, "error", "error", );
-                return repliedMessage.update({ embeds: [errorEmbed] });
+                return repliedMessage.edit({ embeds: [errorEmbed] });
             }
             const successEmbed = this.client.createEmbed("Pull erfolgreich, starte neu...", "success", "success");
-            repliedMessage.update({ embeds: [successEmbed] })
+            repliedMessage.edit({ embeds: [successEmbed] })
                 .then(() => {
                     process.exit(1);
                 });
