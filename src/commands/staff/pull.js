@@ -23,7 +23,6 @@ class Pull extends BaseCommand {
     }
 
     async pull(){
-        console.log("Pulling from GitHub...");
         const pullEmbed = this.client.createEmbed("Es wird von GitHub gepullt..", "warning", "warning", );
         this.message.reply({ embeds: [pullEmbed] });
         const { exec } = require('child_process');
@@ -34,8 +33,6 @@ class Pull extends BaseCommand {
                 this.message.reply({ embeds: [errorEmbed] });
                 return;
             }
-            console.log(stdout);
-            console.log(stderr);
             let successEmbed = this.client.createEmbed("Erfolgreich von GitHub gepullt! Der Bot wird jetzt neugestartet.", "success", "success", );
             this.message.reply({ embeds: [successEmbed] });
             setTimeout(() => {
