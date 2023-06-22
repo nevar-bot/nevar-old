@@ -104,10 +104,10 @@ module.exports = class {
                     const welcomeEmbed = new EmbedBuilder()
                         .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
                         .setDescription(welcomeMessage)
-                        .setColor(guildData.settings.welcome.color)
+                        .setColor(guildData.settings.welcome.color || this.client.config.embeds["DEFAULT_COLOR"])
                         .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
 
-                    if (guildData.settings.welcome.profilePicture) {
+                    if (guildData.settings.welcome?.profilePicture) {
                         welcomeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
                     }
 

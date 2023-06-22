@@ -1,10 +1,11 @@
 const BaseCommand = require('@structures/BaseCommand');
+const { exec } = require('child_process');
 
 class Pull extends BaseCommand {
     constructor(client){
         super(client, {
             name: "pull",
-            description: "Pull den neuen Code von GitHub und starte den Bot neu.",
+            description: "Pullt den aktuellen Sourcecode von GitHub",
 
             cooldown: 3000,
             staffOnly: true,
@@ -23,20 +24,19 @@ class Pull extends BaseCommand {
     }
 
     async pull(){
-        const pullEmbed = this.client.createEmbed("Es wird von GitHub gepullt..", "warning", "warning", );
-        this.message.reply({ embeds: [pullEmbed] });
-        const { exec } = require('child_process');
+        const pullEmbed = this.client.createEmbed("Starte Pull...", "warning", "warning", );
+        const repliedMessage = await this.message.reply({ embeds: [pullEmbed] });
+
         exec('git pull', (err, stdout, stderr) => {
             if (err) {
-                let errorEmbed = this.client.createEmbed(`Es ist ein Fehler aufgetreten!\`\`\`${err}\`\`\``, "error", "error", );
-                this.message.reply({ embeds: [errorEmbed] });
-                return;
+                const errorEmbed = this.client.createEmbed(`Beim Pullen ist ein Fehler aufgetreten:\`\`\`${err}\`\`\``, "error", "error", );
+                return repliedMessage.update({ embeds: [errorEmbed] });
             }
-            let successEmbed = this.client.createEmbed("Erfolgreich von GitHub gepullt! Der Bot wird jetzt neugestartet.", "success", "success", );
-            this.message.reply({ embeds: [successEmbed] });
-            setTimeout(() => {
-                process.exit(1);
-            }, 1000);
+            const successEmbed = this.client.createEmbed("Pull erfolgreich, starte neu...", "success", "success");
+            repliedMessage.update({ embeds: [successEmbed] })
+                .then(() => {
+                    process.exit(1);
+                });
         });
     }
 }

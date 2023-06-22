@@ -1,5 +1,5 @@
 const BaseCommand = require('@structures/BaseCommand');
-const { SlashCommandBuilder, ChannelType, EmbedBuilder} = require('discord.js');
+const { SlashCommandBuilder, ChannelType, EmbedBuilder } = require('discord.js');
 
 class Welcome extends BaseCommand {
     constructor(client){
@@ -69,16 +69,16 @@ class Welcome extends BaseCommand {
                     )
                     .addSubcommand(subcommand => subcommand
                         .setName("color")
-                        .setDescription("Die Farbe von der Nachricht (nur bei Embed) (Default #5865F2)")
+                        .setDescription("Die Farbe des Embeds (Standard: #5865F2)")
                         .addStringOption(option => option
                             .setName("farbe")
-                            .setDescription("Gib eine Farbe ein")
+                            .setDescription("Gib eine Farbe im HEX-Format ein")
                             .setRequired(true)
                         )
                     )
                     .addSubcommand(subcommand => subcommand
                         .setName("profilepicture")
-                        .setDescription("Soll das Profilbild angezeigt werden? (nur bei Embed)")
+                        .setDescription("Soll das Profilbild im Embed angezeigt werden?")
                         .addStringOption(option => option
                             .setName("status")
                             .setDescription("Wähle einen Status")
@@ -130,40 +130,60 @@ class Welcome extends BaseCommand {
     }
 
     async setProfilePicture(status, data){
+        if(!data.guild.settings.welcome.profilePicture){
+            data.guild.settings.welcome.profilePicture = true;
+            data.guild.markModified("settings.welcome.profilePicture");
+        }
+
+        if(!data.guild.settings.welcome.enabled){
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            return this.interaction.followUp({ embeds: [notEnabledEmbed] });
+        }
+
         if (data.guild.settings.welcome.type === "text") {
-            const embedNotEnabled = this.client.createEmbed("Die Willkommensnachricht ist nicht als Embed aktiviert.", "error", "error");
+            const embedNotEnabled = this.client.createEmbed("Der Typ der Verabschiedungsnachricht muss auf Embed gesetzt sein.", "error", "error");
             return this.interaction.followUp({ embeds: [embedNotEnabled] });
         }
 
         if(data.guild.settings.welcome.profilePicture === JSON.parse(status)){
             const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-            const isAlreadyEmbed = this.client.createEmbed("Das Profilbild aus der Willkommensnachricht ist bereits {0}.", "error", "error", string);
+            const isAlreadyEmbed = this.client.createEmbed("Das Profilbild im Embed ist bereits {0}.", "error", "error", string);
             return this.interaction.followUp({ embeds: [isAlreadyEmbed] });
         }
 
         data.guild.settings.welcome.profilePicture = JSON.parse(status);
-        data.guild.markModified("settings.farewell.profilePicture");
+        data.guild.markModified("settings.welcome.profilePicture");
         await data.guild.save();
 
         const string = JSON.parse(status) ? "aktiviert" : "deaktiviert";
-        const successEmbed = this.client.createEmbed("Das Profilbild aus Willkommensnachricht wurde {0}.", "success", "success", string);
+        const successEmbed = this.client.createEmbed("Das Profilbild im Embed wurde {0}.", "success", "success", string);
         return this.interaction.followUp({ embeds: [successEmbed] });
     }
 
     async setColor(color, data){
-        if(data.guild.settings.farewell.type === "text"){
-            const embedNotEnabled = this.client.createEmbed("Die Willkommensnachricht ist nicht als Embed aktiviert.", "error", "error");
+        if(!data.guild.settings.welcome.color){
+            data.guild.settings.welcome.color = "#5865F2";
+            data.guild.markModified("settings.welcome.color");
+        }
+
+        if(!data.guild.settings.welcome.enabled) {
+            const notEnabledEmbed = this.client.createEmbed("Die Willkommensnachricht ist nicht aktiviert.", "error", "error");
+            return this.interaction.followUp({embeds: [notEnabledEmbed]});
+        }
+
+        if(data.guild.settings.welcome.type === "text"){
+            const embedNotEnabled = this.client.createEmbed("Der Typ der Willkommensnachricht muss auf Embed gesetzt sein.", "error", "error");
             return this.interaction.followUp({ embeds: [embedNotEnabled] });
-        } else if(data.guild.settings.farewell.type === "embed"){
-            if(!/^#([0-9A-F]{3}){1,2}$/i.test(color)){
-                const invalidColorEmbed = this.client.createEmbed("Bitte gebe eine gültige Hex Color an. (Beispiel #5865F2)", "error", "error");
+        } else if(data.guild.settings.welcome.type === "embed"){
+            if(!this.client.utils.stringIsHexColor(color)){
+                const invalidColorEmbed = this.client.createEmbed("Du musst eine gültige Farbe im HEX-Format angeben.", "error", "error");
                 return this.interaction.followUp({ embeds: [invalidColorEmbed] });
             }
             data.guild.settings.welcome.color = color;
             data.guild.markModified("settings.welcome.color");
             await data.guild.save();
 
-            const successEmbed = this.client.createEmbed("Die Farbe von der Willkommensnachricht wurde auf {0} geändert.", "success", "success", color);
+            const successEmbed = this.client.createEmbed("Die Farbe des Embeds wurde auf {0} geändert.", "success", "success", color);
             return this.interaction.followUp({ embeds: [successEmbed] });
         }
     }
@@ -231,7 +251,7 @@ class Welcome extends BaseCommand {
             const previewEmbed = new EmbedBuilder()
                 .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
                 .setDescription(message)
-                .setColor(data.guild.settings.welcome.color)
+                .setColor(data.guild.settings.welcome.color || this.client.config.embeds["DEFAULT_COLOR"])
                 .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
 
             if (data.guild.settings.welcome.profilePicture) {

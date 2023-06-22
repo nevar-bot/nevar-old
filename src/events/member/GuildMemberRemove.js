@@ -55,10 +55,10 @@ module.exports = class {
                 const goodbyeEmbed = new EmbedBuilder()
                     .setAuthor({ name: this.client.user.username, iconURL: this.client.user.displayAvatarURL()})
                     .setDescription(goodbyeMessage)
-                    .setColor(guildData.settings.farewell.color)
+                    .setColor(guildData.settings.farewell.color || this.client.config.embeds["DEFAULT_COLOR"])
                     .setFooter({ text: this.client.config.embeds["FOOTER_TEXT"] });
 
-                if (guildData.settings.farewell.profilePicture) {
+                if (guildData.settings.farewell?.profilePicture) {
                     goodbyeEmbed.setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 512 }));
                 }
 
