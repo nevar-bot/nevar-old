@@ -28,7 +28,6 @@ class Pull extends BaseCommand {
         const { exec } = require('child_process');
         exec('git pull', (err, stdout, stderr) => {
             if (err) {
-                console.error(err);
                 let errorEmbed = this.client.createEmbed(`Es ist ein Fehler aufgetreten!\`\`\`${err}\`\`\``, "error", "error", );
                 this.message.reply({ embeds: [errorEmbed] });
                 return;
