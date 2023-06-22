@@ -10,6 +10,7 @@ module.exports = class {
         this.client = client;
     }
     async dispatch() {
+        console.log("test");
         const client = this.client;
         const config = client.config;
 
