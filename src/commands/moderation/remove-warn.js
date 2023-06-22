@@ -42,6 +42,12 @@ class RemoveWarn extends BaseCommand {
             const invalidOptionsEmbed = this.client.createEmbed("Du musst ein Mitglied angeben.", "error", "error");
             return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
         }
+
+        if(user.id === this.interaction.user.id){
+            const invalidOptionsEmbed = this.client.createEmbed("Du kannst nicht eine Verwarnung von dir entfernen.", "error", "error");
+            return this.interaction.followUp({ embeds: [invalidOptionsEmbed] });
+        }
+
         const targetData = await this.client.findOrCreateMember({ id: member.user.id, guildID: this.interaction.guild.id });
 
         if(!targetData.warnings.list[num -1]){
