@@ -1,6 +1,6 @@
 require("module-alias/register");
 require("@helpers/extenders/Guild");
-
+// Test for staff pull command
 const BaseClient = require("@structures/BaseClient");
 const { initializeMongoose } = require("@database/mongoose");
 const { configValidator } = require("@helpers/Validator");
