@@ -4,7 +4,7 @@
 [![Stars][stars-shield]][stars-url]
 
 ## 🚀 Nevar
-Nevar is a simple, lightweight, and fast discord bot built with discord.js
+Nevar is a simple, lightweight, and fast discord bot built with discord.js and node.js
 
 [![Banner][banner-url]][website-url]
 
