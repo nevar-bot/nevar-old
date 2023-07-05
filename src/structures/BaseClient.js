@@ -14,6 +14,7 @@ module.exports = class BaseClient extends Client {
                 GatewayIntentBits["GuildBans"], GatewayIntentBits["GuildMessages"],
                 GatewayIntentBits["GuildMessageTyping"], GatewayIntentBits["GuildEmojisAndStickers"],
                 GatewayIntentBits["GuildScheduledEvents"], GatewayIntentBits["GuildInvites"],
+GatewayIntentBits["MessageContent"],
             ],
             partials: [
                 Partials.User, Partials.Message,
